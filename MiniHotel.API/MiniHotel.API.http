@@ -1,0 +1,6 @@
+@MiniHotel.API_HostAddress = http://localhost:5138
+
+GET {{MiniHotel.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
