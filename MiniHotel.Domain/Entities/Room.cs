@@ -16,10 +16,10 @@ namespace MiniHotel.Domain.Entities
         public RoomType RoomType { get; set; }
 
         [Range(0, 999999.99)]
-        public decimal Price { get; set; }
+        public decimal PricePerDay { get; set; }
 
         [Required]
-        public RoomStatus Status { get; set; }
+        public RoomStatus RoomStatus { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }

@@ -1,6 +1,6 @@
 ﻿using MiniHotel.Application.DTOs;
 
-namespace MiniHotel.Application.Interfaces
+namespace MiniHotel.Application.Interfaces.IService
 {
     public interface IAuthService
     {

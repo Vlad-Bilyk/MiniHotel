@@ -9,9 +9,5 @@
   <ItemGroup>
     <ProjectReference Include="..\MiniHotel.Domain\MiniHotel.Domain.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
 
 </Project>

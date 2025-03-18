@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
-using MiniHotel.Application.Interfaces;
+using MiniHotel.Application.Interfaces.IService;
 namespace MiniHotel.API.Controllers
 {
     [Route("api/[controller]")]

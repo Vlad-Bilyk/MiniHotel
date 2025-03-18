@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MiniHotel.Application.DTOs;
-using MiniHotel.Application.Interfaces;
+using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 using MiniHotel.Infrastructure.Data;
