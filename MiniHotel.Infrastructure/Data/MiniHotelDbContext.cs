@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Identity;
 
@@ -35,10 +36,19 @@ namespace MiniHotel.Infrastructure.Data
                 .HasForeignKey<User>(u => u.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<User>()
-                .Property(u => u.Role)
-                .HasConversion<string>();
-
+            // Global convention: for all enum properties, use EnumToStringConverter
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType.IsEnum)
+                    {
+                        var converterType = typeof(EnumToStringConverter<>).MakeGenericType(property.ClrType);
+                        var converter = (ValueConverter)Activator.CreateInstance(converterType)!;
+                        property.SetValueConverter(converter);
+                    }
+                }
+            }
         }
     }
 }
