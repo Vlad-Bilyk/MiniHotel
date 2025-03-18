@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MiniHotel.Domain.Entities;
+using MiniHotel.Infrastructure.Identity;
 
 namespace MiniHotel.Infrastructure.Data
 {
-    public class MiniHotelDbContext : DbContext
+    public class MiniHotelDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
         public MiniHotelDbContext(DbContextOptions<MiniHotelDbContext> options) : base(options)
         {
@@ -16,15 +19,26 @@ namespace MiniHotel.Infrastructure.Data
         public DbSet<BookingService> BookingServices { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
-            modelBuilder.Entity<BookingService>()
+            builder.Entity<BookingService>()
                 .HasKey(bs => new { bs.BookingId, bs.ServiceId });
 
-            modelBuilder.Entity<Booking>()
+            builder.Entity<Booking>()
                 .ToTable(t => t.HasCheckConstraint("CK_Booking_EndDate", "\"EndDate\" >= \"StartDate\""));
+
+            builder.Entity<User>()
+                .HasOne<ApplicationUser>()
+                .WithOne()
+                .HasForeignKey<User>(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>();
+
         }
     }
 }

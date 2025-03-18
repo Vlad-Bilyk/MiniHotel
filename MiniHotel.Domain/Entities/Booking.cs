@@ -9,7 +9,7 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int BookingId { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; } = default!;
 
         [ForeignKey("UserId")]
         public User User { get; set; } = default!;

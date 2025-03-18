@@ -5,13 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\MiniHotel.Domain\MiniHotel.Domain.csproj" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <Folder Include="DTOs\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

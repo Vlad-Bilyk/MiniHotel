@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MiniHotel.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Domain.Entities
 {
     public class User
     {
         [Key]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -16,19 +17,14 @@ namespace MiniHotel.Domain.Entities
         public string LastName { get; set; } = default!;
 
         [Required]
-        [StringLength(100)]
-        public string Password { get; set; } = default!;
-
-        [Required]
         [EmailAddress]
         public string Email { get; set; } = default!;
 
         [Required]
         [Phone]
-        public string Phone { get; set; } = default!;
+        public string PhoneNumber { get; set; } = default!;
 
-        [Required]
-        public string Role { get; set; } = "customer";
+        public UserRole Role { get; set; } = UserRole.Customer;
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
