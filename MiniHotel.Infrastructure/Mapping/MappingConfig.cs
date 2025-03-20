@@ -12,9 +12,13 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<RegisterRequestDto, User>();
             CreateMap<ApplicationUser, User>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<User, UserDto>().ReverseMap();
 
             CreateMap<Room, RoomDto>().ReverseMap();
-            CreateMap<Room, RoomCreateDto>().ReverseMap();
+            CreateMap<Room, RoomUpsertDto>().ReverseMap();
+
+            CreateMap<Service, ServiceDto>().ReverseMap();
+            CreateMap<Service, ServiceUpsertDto>().ReverseMap();
         }
     }
 }

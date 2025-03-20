@@ -6,12 +6,12 @@ using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Infrastructure.Data;
 using MiniHotel.Infrastructure.Identity;
 using MiniHotel.Infrastructure.Mapping;
-using MiniHotel.Infrastructure.Services;
 using MiniHotel.Infrastructure.Reposiitories;
+using MiniHotel.Infrastructure.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
- 
+
 // Add services to the container.
 builder.Services.AddDbContext<MiniHotelDbContext>(options =>
 {
@@ -23,6 +23,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IBookingServiceRepository, BookingServiceRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 

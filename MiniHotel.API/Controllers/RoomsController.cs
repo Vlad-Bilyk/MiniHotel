@@ -20,6 +20,7 @@ namespace MiniHotel.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
         {
             IEnumerable<Room> rooms = await _roomRepository.GetAllAsync();
@@ -27,14 +28,26 @@ namespace MiniHotel.API.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetRoomById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetRoomById(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
+
+            if (room == null)
+            {
+                return NotFound();
+            }
+
             return Ok(_mapper.Map<RoomDto>(room));
         }
 
         [HttpPost]
-        public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomCreateDto createDto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
             Room room = _mapper.Map<Room>(createDto);
             await _roomRepository.CreateAsync(room);
@@ -43,26 +56,27 @@ namespace MiniHotel.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateSubscriber(int id, [FromBody] RoomDto updateDto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateSubscriber(int id, [FromBody] RoomUpsertDto updateDto)
         {
-            if (updateDto == null || id != updateDto.RoomId)
+            if (updateDto == null)
             {
                 return BadRequest();
             }
 
-            Room room = _mapper.Map<Room>(updateDto);
-            await _roomRepository.UpdateAsync(room);
+            var existingRoom = await _roomRepository.GetAsync(r => r.RoomId == id);
+            _mapper.Map(updateDto, existingRoom);
+            await _roomRepository.UpdateAsync(existingRoom);
             return NoContent();
         }
 
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteSubscriber(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest();
-            }
-
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
             if (room == null)
             {
