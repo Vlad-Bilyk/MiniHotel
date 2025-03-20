@@ -6,7 +6,7 @@ namespace MiniHotel.Domain.Entities
     public class User
     {
         [Key]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = default!;
 
         [Required]
         [StringLength(50)]
