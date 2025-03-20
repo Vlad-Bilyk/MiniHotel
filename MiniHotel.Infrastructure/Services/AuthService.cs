@@ -72,7 +72,7 @@ namespace MiniHotel.Infrastructure.Services
 
             try
             {
-                _context.Users.Add(domainUser); // TODO: change to repository
+                _context.HotelUsers.Add(domainUser); // TODO: change to repository
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return new AuthenticationResultDto { Success = true };

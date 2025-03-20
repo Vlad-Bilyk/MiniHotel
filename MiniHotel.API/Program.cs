@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using MiniHotel.API;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Application.Services;
 using MiniHotel.Infrastructure.Data;
 using MiniHotel.Infrastructure.Identity;
 using MiniHotel.Infrastructure.Mapping;
 using MiniHotel.Infrastructure.Reposiitories;
 using MiniHotel.Infrastructure.Services;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IBookingServiceRepository, BookingServiceRepository>(
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
@@ -58,6 +62,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// TODO: Remove this middleware in production
+app.Use(async (context, next) =>
+{
+    var identity = new ClaimsIdentity("Fake");
+    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "e09dc253-eaec-4204-80f2-e62025881eca"));
+    identity.AddClaim(new Claim(ClaimTypes.Name, "TestUser"));
+    var principal = new ClaimsPrincipal(identity);
+
+    context.User = principal;
+    await next();
+});
 
 app.UseHttpsRedirection();
 

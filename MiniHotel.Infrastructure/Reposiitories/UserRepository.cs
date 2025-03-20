@@ -15,7 +15,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
 
         public async Task<User> UpdateAsync(User entity)
         {
-            _context.Users.Update(entity);
+            _context.HotelUsers.Update(entity);
             await SaveAsync();
             return entity;
         }

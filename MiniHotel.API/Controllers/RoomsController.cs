@@ -85,5 +85,15 @@ namespace MiniHotel.API.Controllers
             await _roomRepository.RemoveAsync(room);
             return NoContent();
         }
+
+        [HttpGet("{startDate:datetime}, {endDate:datetime}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate)
+        {
+            IEnumerable<Room> rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
+            return Ok(_mapper.Map<List<RoomDto>>(rooms));
+        }
     }
 }

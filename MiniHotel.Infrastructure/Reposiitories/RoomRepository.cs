@@ -1,5 +1,7 @@
-﻿using MiniHotel.Application.Interfaces.IRepository;
+﻿using Microsoft.EntityFrameworkCore;
+using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
+using MiniHotel.Domain.Enums;
 using MiniHotel.Infrastructure.Data;
 
 namespace MiniHotel.Infrastructure.Reposiitories
@@ -17,6 +19,20 @@ namespace MiniHotel.Infrastructure.Reposiitories
         {
             await _context.Rooms.AddAsync(entity);
             await SaveAsync();
+        }
+
+        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
+        {
+            var boookedRooms = await _context.Bookings
+                .Where(b => !(b.EndDate <= startDate || b.StartDate >= endDate)
+                       && b.BookingStatus != BookingStatus.Cancelled)
+                .Select(b => b.RoomId)
+                .Distinct()
+                .ToListAsync();
+
+            return await _context.Rooms
+                .Where(r => !boookedRooms.Contains(r.RoomId))
+                .ToListAsync();
         }
 
         public async Task<Room> UpdateAsync(Room entity)

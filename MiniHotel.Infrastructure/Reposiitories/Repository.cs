@@ -16,7 +16,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = "")
         {
             IQueryable<T> query = _dbSet;
 
@@ -25,16 +25,32 @@ namespace MiniHotel.Infrastructure.Reposiitories
                 query = query.Where(filter);
             }
 
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
             return await query.ToListAsync();
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = "")
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
             }
 
             return await query.FirstOrDefaultAsync();

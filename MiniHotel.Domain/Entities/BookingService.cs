@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Domain.Entities
 {
-    public class BookingService
+    public class BookingService // TODO: Rename
     {
         public int BookingId { get; set; }
         public Booking Booking { get; set; } = default!;

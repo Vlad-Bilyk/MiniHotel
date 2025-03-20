@@ -13,7 +13,7 @@ namespace MiniHotel.Infrastructure.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> HotelUsers { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -35,6 +35,10 @@ namespace MiniHotel.Infrastructure.Data
                 .WithOne()
                 .HasForeignKey<User>(u => u.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Room>()
+                .HasIndex(r => r.RoomNumber)
+                .IsUnique();
 
             // Global convention: for all enum properties, use EnumToStringConverter
             foreach (var entityType in builder.Model.GetEntityTypes())
