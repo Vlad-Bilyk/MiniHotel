@@ -15,6 +15,7 @@ namespace MiniHotel.Infrastructure.Data
 
         public DbSet<HotelUser> HotelUsers { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
@@ -32,6 +33,12 @@ namespace MiniHotel.Infrastructure.Data
                 .WithOne(i => i.Booking)
                 .HasForeignKey<Invoice>(i => i.BookingId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<HotelUser>()
                 .HasOne<ApplicationUser>()

@@ -9,8 +9,7 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int BookingId { get; set; }
 
-        [Required]
-        public required string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public int RoomId { get; set; }
 
@@ -24,7 +23,7 @@ namespace MiniHotel.Domain.Entities
         public BookingStatus BookingStatus { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public HotelUser User { get; set; } = null!;    
+        public HotelUser? User { get; set; }
 
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; } = null!;

@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniHotel.API;
+using MiniHotel.Application.Interfaces;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Application.Services;
 using MiniHotel.Infrastructure.Data;
+using MiniHotel.Infrastructure.Data.Seed;
 using MiniHotel.Infrastructure.Identity;
 using MiniHotel.Infrastructure.Mapping;
 using MiniHotel.Infrastructure.Reposiitories;
@@ -34,6 +36,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 
+builder.Services.AddTransient<ISeeder, RoleSeeder>();
+builder.Services.AddTransient<ISeeder, HotelUserSeeder>();
+builder.Services.AddTransient<ISeeder, RoomTypeSeeder>();
+builder.Services.AddTransient<ISeeder, RoomSeeder>();
+builder.Services.AddTransient<ISeeder, ServiceSeeder>();
+builder.Services.AddTransient<ISeeder, BookingSeeder>();
+
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -49,10 +58,16 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-using (var scope = app.Services.CreateScope())
+// Migrate the database
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<MiniHotelDbContext>();
+await db.Database.MigrateAsync();
+
+// Seed the database
+var seeders = scope.ServiceProvider.GetServices<ISeeder>();
+foreach (var seeder in seeders)
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await RoleSeeder.SeedRolesAsync(roleManager);
+    await seeder.SeedAsync();
 }
 
 // Configure the HTTP request pipeline.
@@ -81,4 +96,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

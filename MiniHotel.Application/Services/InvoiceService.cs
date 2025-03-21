@@ -26,7 +26,7 @@ namespace MiniHotel.Application.Services
 
             var totalDays = (booking.EndDate.Date - booking.StartDate.Date).Days;
 
-            decimal roomCost = booking.Room.PricePerNight * totalDays;
+            decimal roomCost = booking.Room.RoomType.PricePerNight * totalDays;
 
             decimal totalCost = roomCost;
             return totalCost;

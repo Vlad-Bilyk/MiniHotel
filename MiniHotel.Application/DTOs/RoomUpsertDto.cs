@@ -10,7 +10,7 @@ namespace MiniHotel.Application.DTOs
         public string RoomNumber { get; set; } = default!;
 
         [Required]
-        public RoomType RoomType { get; set; } = default!;
+        public RoomCategory RoomType { get; set; } = default!;
 
         [Range(0, 999999.99)]
         public decimal PricePerDay { get; set; }

@@ -12,14 +12,13 @@ namespace MiniHotel.Domain.Entities
         [StringLength(4), Required]
         public required string RoomNumber { get; set; }
 
-        [Required]
-        public RoomType RoomType { get; set; }
-
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal PricePerNight { get; set; }
+        public int RoomTypeId { get; set; }
 
         [Required]
         public RoomStatus RoomStatus { get; set; }
+
+        [ForeignKey(nameof(RoomTypeId))]
+        public RoomType RoomType { get; set; } = null!;
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
