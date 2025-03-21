@@ -1,35 +1,97 @@
-﻿using MiniHotel.Application.Interfaces.IRepository;
+﻿using AutoMapper;
+using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Entities;
+using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.Application.Services
 {
     public class InvoiceService : IInvoiceService
     {
+        private readonly IInvoiceRepository _invoiceRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IMapper _mapper;
 
-        public InvoiceService(IBookingRepository bookingRepository)
+        public InvoiceService(IInvoiceRepository invoiceRepository, IBookingRepository bookingRepository, IMapper mapper)
         {
+            _invoiceRepository = invoiceRepository;
             _bookingRepository = bookingRepository;
+            _mapper = mapper;
         }
 
-        // TODO: Refactor this method with the correct implementation
-        public async Task<decimal> CalculateFinalInvoiceAsync(int bookingId)
+        public async Task<InvoiceDto> AddItemAsync(int bookingId, InvoiceItemCreateDto createItem)
         {
-            var booking = await _bookingRepository.GetAsync(
-                b => b.BookingId == bookingId,
-                includeProperties: "Room,BookingServices.Service");
+            var invoice = await _invoiceRepository.GetByBookingIdAsync(bookingId)
+                          ?? throw new KeyNotFoundException("Invoice not found");
 
-            if (booking == null)
+            var item = new InvoiceItem
             {
-                throw new KeyNotFoundException("Booking is not found.");
-            }
+                InvoiceId = invoice.InvoiceId,
+                Description = createItem.Description,
+                Quantity = createItem.Quantity,
+                UnitPrice = createItem.UnitPrice,
+                ServiceId = createItem.ServiceId
+            };
 
-            var totalDays = (booking.EndDate.Date - booking.StartDate.Date).Days;
+            var updatedInvoice = await _invoiceRepository.AddItemAsync(item);
+            return _mapper.Map<InvoiceDto>(updatedInvoice);
+        }
 
-            decimal roomCost = booking.Room.RoomType.PricePerNight * totalDays;
+        public async Task<InvoiceDto> CreateInvoiceForBookingAsync(int bookingId)
+        {
+            var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, includeProperties: "Room,Room.RoomType")
+                          ?? throw new KeyNotFoundException("Booking not found");
 
-            decimal totalCost = roomCost;
-            return totalCost;
+            var nights = (booking.EndDate.Date - booking.StartDate.Date).Days;
+
+            var invoice = new Invoice
+            {
+                BookingId = bookingId,
+                CreatedAt = DateTime.UtcNow,
+                Status = InvoiceStatus.Pending,
+                InvoiceItems = new List<InvoiceItem>
+                {
+                    new InvoiceItem
+                    {
+                        Description = $"Бронюванян номеру {booking.Room.RoomNumber} - {nights} ночей",
+                        Quantity = nights,
+                        UnitPrice = booking.Room.RoomType.PricePerNight,
+                        ServiceId = 1
+                    }
+                }
+            };
+
+            await _invoiceRepository.CreateAsync(invoice);
+            return _mapper.Map<InvoiceDto>(invoice);
+        }
+
+        public async Task<IEnumerable<InvoiceDto>> GetAllInvoices()
+        {
+            var includeProp = "InvoiceItems";
+            var invoices = await _invoiceRepository.GetAllAsync(includeProperties: includeProp);
+            return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
+        }
+
+        public async Task<InvoiceDto> GetInvoiceAsync(int bookingId)
+        {
+            var invoice = await _invoiceRepository.GetByBookingIdAsync(bookingId)
+                          ?? throw new KeyNotFoundException("Invoice not found");
+            return _mapper.Map<InvoiceDto>(invoice);
+        }
+
+        public async Task RemoveItemAsync(int invoiceItemId)
+        {
+            await _invoiceRepository.RemoveItemAsync(invoiceItemId);
+        }
+
+        public async Task<InvoiceDto> UpdateStatusAsync(int invoiceId, InvoiceStatus status)
+        {
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+                          ?? throw new KeyNotFoundException("Invoice not found");
+            invoice.Status = status;
+            await _invoiceRepository.UpdateAsync(invoice);
+            return _mapper.Map<InvoiceDto>(invoice);
         }
     }
 }

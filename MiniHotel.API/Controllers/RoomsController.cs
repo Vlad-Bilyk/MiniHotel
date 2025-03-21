@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
+using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.API.Controllers
 {
@@ -94,6 +95,13 @@ namespace MiniHotel.API.Controllers
         {
             IEnumerable<Room> rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
+        }
+
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult<RoomDto>> UpdateStatus(int id, RoomStatus newStatus)
+        {
+            var roomDto = await _roomRepository.UpdateStatusAsync(id, newStatus);
+            return Ok(roomDto);
         }
     }
 }

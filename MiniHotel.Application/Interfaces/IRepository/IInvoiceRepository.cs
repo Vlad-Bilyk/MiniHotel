@@ -4,7 +4,10 @@ namespace MiniHotel.Application.Interfaces.IRepository
 {
     public interface IInvoiceRepository : IRepository<Invoice>
     {
-        Task CreateAsync(Invoice entity);
-        Task<Invoice> UpdateAsync(Invoice entity);
+        Task<Invoice?> GetByBookingIdAsync(int bookingId);
+        Task<Invoice> AddItemAsync(InvoiceItem item);
+        Task UpdateAsync(Invoice invoice);
+        Task CreateAsync(Invoice invoice);
+        Task RemoveItemAsync(int invoiceItemId);
     }
 }

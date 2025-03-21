@@ -51,7 +51,6 @@ namespace MiniHotel.Application.Services
 
             await _bookingRepository.CreateAsync(booking);
             var bookingDto = _mapper.Map<BookingDto>(booking);
-            bookingDto.FinalInvoiceAmount = await GetFinalInvoiceAsync(booking.BookingId);
             return bookingDto;
         }
 
@@ -83,11 +82,6 @@ namespace MiniHotel.Application.Services
             var includeProps = "Room,User";
             var bookings = await _bookingRepository.GetAllAsync(filter, includeProps);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
-        }
-
-        private async Task<decimal> GetFinalInvoiceAsync(int bookingId)
-        {
-            return await _invoiceService.CalculateFinalInvoiceAsync(bookingId);
         }
     }
 }

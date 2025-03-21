@@ -42,6 +42,7 @@ builder.Services.AddTransient<ISeeder, RoomTypeSeeder>();
 builder.Services.AddTransient<ISeeder, RoomSeeder>();
 builder.Services.AddTransient<ISeeder, ServiceSeeder>();
 builder.Services.AddTransient<ISeeder, BookingSeeder>();
+builder.Services.AddTransient<ISeeder, InvoiceSeeder>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 

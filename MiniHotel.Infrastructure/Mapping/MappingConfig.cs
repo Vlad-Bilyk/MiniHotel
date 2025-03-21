@@ -12,6 +12,7 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<RegisterRequestDto, HotelUser>();
             CreateMap<ApplicationUser, HotelUser>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
+
             CreateMap<HotelUser, UserDto>().ReverseMap();
 
             CreateMap<Room, RoomDto>().ReverseMap();
@@ -25,6 +26,11 @@ namespace MiniHotel.Infrastructure.Mapping
                 opt => opt.MapFrom(src => src.Room.RoomNumber));
             CreateMap<Booking, BookingCreateDto>().ReverseMap();
             CreateMap<Booking, BookingUpdateDto>().ReverseMap();
+
+            CreateMap<Invoice, InvoiceDto>().ReverseMap();
+
+            CreateMap<InvoiceItem, InvoiceItemDto>().ReverseMap();
+            CreateMap<InvoiceItem, InvoiceItemCreateDto>().ReverseMap();
 
             CreateMap<DateTime, DateOnly>().ConvertUsing(dateTime => DateOnly.FromDateTime(dateTime));
         }

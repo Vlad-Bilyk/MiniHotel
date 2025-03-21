@@ -11,13 +11,11 @@ namespace MiniHotel.API.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
-        private readonly IInvoiceService _invoiceService;
         private readonly ILogger<BookingsController> _logger;
 
-        public BookingsController(IBookingService bookingService, IInvoiceService invoiceService, ILogger<BookingsController> logger)
+        public BookingsController(IBookingService bookingService, ILogger<BookingsController> logger)
         {
             _bookingService = bookingService;
-            _invoiceService = invoiceService;
             _logger = logger;
         }
 
@@ -25,7 +23,6 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
         {
-            // TODO: Add invoice sum for each booking
             var bookings = await _bookingService.GetBookingsAsync();
             return Ok(bookings);
         }
@@ -43,8 +40,6 @@ namespace MiniHotel.API.Controllers
                 {
                     return NotFound("Booking not found.");
                 }
-
-                bookingDto.FinalInvoiceAmount = await _invoiceService.CalculateFinalInvoiceAsync(id); // TODO: Move to service
 
                 return Ok(bookingDto);
             }
@@ -87,7 +82,7 @@ namespace MiniHotel.API.Controllers
             }
         }
 
-        [HttpPut("{id:int}/cancel")]
+        [HttpPatch("{id:int}/cancel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,7 +91,7 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.Cancelled);
         }
 
-        [HttpPut("{id:int}/checkin")]
+        [HttpPatch("{id:int}/checkin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -105,7 +100,7 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.CheckedIn);
         }
 
-        [HttpPut("{id:int}/checkout")]
+        [HttpPatch("{id:int}/checkout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -114,7 +109,7 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.CheckedOut);
         }
 
-        [HttpPut("{id:int}/confirmed")]
+        [HttpPatch("{id:int}/confirmed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -123,7 +118,7 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.Confirmed);
         }
 
-        [HttpPut("{id:int}/completed")]
+        [HttpPatch("{id:int}/completed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

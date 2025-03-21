@@ -42,5 +42,17 @@ namespace MiniHotel.Infrastructure.Reposiitories
             await SaveAsync();
             return entity;
         }
+
+        public async Task<Room> UpdateStatusAsync(int id, RoomStatus status)
+        {
+            var room = await GetAsync(r => r.RoomId == id);
+            if (room == null)
+            {
+                throw new KeyNotFoundException("Room not found");
+            }
+
+            room.RoomStatus = status;
+            return await UpdateAsync(room);
+        }
     }
 }

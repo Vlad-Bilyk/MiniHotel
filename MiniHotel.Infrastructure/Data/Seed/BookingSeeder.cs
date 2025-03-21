@@ -25,7 +25,6 @@ namespace MiniHotel.Infrastructure.Data.Seed
             var rooms = await _db.Rooms
                 .Include(r => r.RoomType)
                 .ToListAsync();
-            var service = await _db.Services.FirstAsync();
 
             var baseDate = DateTime.UtcNow.Date.AddDays(-14);
             var bookings = new List<Booking>();
@@ -51,36 +50,6 @@ namespace MiniHotel.Infrastructure.Data.Seed
             }
 
             _db.Bookings.AddRange(bookings);
-            await _db.SaveChangesAsync();
-
-            var invoices = bookings.Select(b => new Invoice
-            {
-                BookingId = b.BookingId,
-                CreatedAt = DateTime.UtcNow,
-                Status = InvoiceStatus.Pending,
-                InvoiceItems =
-                {
-                    // Room
-                    new InvoiceItem
-                    {
-                        ServiceId = null,
-                        Description = $"Room charge {b.Room.RoomNumber} - { (b.EndDate - b.StartDate).Days } nights",
-                        Quantity = (b.EndDate - b.StartDate).Days,
-                        UnitPrice = b.Room.RoomType.PricePerNight
-                    },
-
-                    // Service
-                    new InvoiceItem
-                    {
-                        ServiceId = service.ServiceId,
-                        Quantity = 1,
-                        UnitPrice = service.Price
-                    }
-                }
-
-            }).ToList();
-
-            _db.Invoices.AddRange(invoices);
             await _db.SaveChangesAsync();
         }
     }
