@@ -25,6 +25,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
         {
+            // TODO: Add invoice sum for each booking
             var bookings = await _bookingService.GetBookingsAsync();
             return Ok(bookings);
         }
@@ -43,7 +44,7 @@ namespace MiniHotel.API.Controllers
                     return NotFound("Booking not found.");
                 }
 
-                bookingDto.FinalInvoiceAmount = await _invoiceService.CalculateFinalInvoiceAsync(id);
+                bookingDto.FinalInvoiceAmount = await _invoiceService.CalculateFinalInvoiceAsync(id); // TODO: Move to service
 
                 return Ok(bookingDto);
             }
@@ -86,32 +87,56 @@ namespace MiniHotel.API.Controllers
             }
         }
 
-        [HttpPut("{id:int}/status")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BookingDto>> UpdateBookingStatus(int id, [FromBody] BookingStatus newStatus)
-        {
-            try
-            {
-                var bookingDto = await _bookingService.UpdateBookingStatusAsync(id, newStatus);
-                return Ok(bookingDto);
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
         [HttpPut("{id:int}/cancel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BookingDto>> CancelBooking(int id)
+        public Task<ActionResult<BookingDto>> CancelBooking(int id)
+        {
+            return UpdateStatusAsync(id, BookingStatus.Cancelled);
+        }
+
+        [HttpPut("{id:int}/checkin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public Task<ActionResult<BookingDto>> CheckInBooking(int id)
+        {
+            return UpdateStatusAsync(id, BookingStatus.CheckedIn);
+        }
+
+        [HttpPut("{id:int}/checkout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public Task<ActionResult<BookingDto>> CheckOutBooking(int id)
+        {
+            return UpdateStatusAsync(id, BookingStatus.CheckedOut);
+        }
+
+        [HttpPut("{id:int}/confirmed")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public Task<ActionResult<BookingDto>> ConfirmedBooking(int id)
+        {
+            return UpdateStatusAsync(id, BookingStatus.Confirmed);
+        }
+
+        [HttpPut("{id:int}/completed")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public Task<ActionResult<BookingDto>> CompletedBooking(int id)
+        {
+            return UpdateStatusAsync(id, BookingStatus.Completed);
+        }
+
+        private async Task<ActionResult<BookingDto>> UpdateStatusAsync(int id, BookingStatus newStatus)
         {
             try
             {
-                var bookingDto = await _bookingService.UpdateBookingStatusAsync(id, BookingStatus.Cancelled);
+                var bookingDto = await _bookingService.UpdateBookingStatusAsync(id, newStatus);
                 return Ok(bookingDto);
             }
             catch (Exception ex)

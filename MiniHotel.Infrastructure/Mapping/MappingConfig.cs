@@ -27,6 +27,8 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<Booking, BookingUpdateDto>().ReverseMap();
 
             CreateMap<BookingService, ServiceToBookingDto>().ReverseMap();
+
+            CreateMap<DateTime, DateOnly>().ConvertUsing(dateTime => DateOnly.FromDateTime(dateTime));
         }
     }
 }

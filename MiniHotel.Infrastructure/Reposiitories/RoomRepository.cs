@@ -31,7 +31,8 @@ namespace MiniHotel.Infrastructure.Reposiitories
                 .ToListAsync();
 
             return await _context.Rooms
-                .Where(r => !boookedRooms.Contains(r.RoomId))
+                .Where(r => !boookedRooms.Contains(r.RoomId)
+                       && r.RoomStatus != RoomStatus.UnderMaintenance)
                 .ToListAsync();
         }
 

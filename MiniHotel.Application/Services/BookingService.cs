@@ -56,7 +56,6 @@ namespace MiniHotel.Application.Services
             return bookingDto;
         }
 
-        // TODO: Implement cancellation logic
         public async Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
         {
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId)

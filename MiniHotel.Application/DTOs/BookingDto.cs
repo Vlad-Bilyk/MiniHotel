@@ -7,8 +7,8 @@ namespace MiniHotel.Application.DTOs
         public int BookingId { get; set; }
         public string UserId { get; set; } = default!;
         public string RoomNumber { get; set; } = default!;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public BookingStatus BookingStatus { get; set; }
         public decimal FinalInvoiceAmount { get; set; }
         public bool IsFullPaid { get; set; }
