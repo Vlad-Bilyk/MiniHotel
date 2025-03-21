@@ -47,7 +47,6 @@ namespace MiniHotel.Application.Services
                 StartDate = bookingcreateDto.StartDate,
                 EndDate = bookingcreateDto.EndDate,
                 BookingStatus = BookingStatus.Pending,
-                IsFullPaid = false
             };
 
             await _bookingRepository.CreateAsync(booking);
@@ -70,12 +69,6 @@ namespace MiniHotel.Application.Services
             await _bookingRepository.UpdateAsync(booking);
 
             return _mapper.Map<BookingDto>(booking);
-        }
-
-        // TODO: Implement this method
-        public async Task<BookingDto> AddServicesToBookingAsync(int bookingId, IEnumerable<ServiceToBookingDto> services)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)

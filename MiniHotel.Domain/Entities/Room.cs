@@ -1,5 +1,6 @@
 ﻿using MiniHotel.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniHotel.Domain.Entities
 {
@@ -8,15 +9,14 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int RoomId { get; set; }
 
-        [Required]
-        [StringLength(4)]
-        public string RoomNumber { get; set; } = default!;
+        [StringLength(4), Required]
+        public required string RoomNumber { get; set; }
 
         [Required]
         public RoomType RoomType { get; set; }
 
-        [Range(0, 999999.99)]
-        public decimal PricePerDay { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal PricePerNight { get; set; }
 
         [Required]
         public RoomStatus RoomStatus { get; set; }

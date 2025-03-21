@@ -4,24 +4,24 @@ using MiniHotel.Infrastructure.Data;
 
 namespace MiniHotel.Infrastructure.Reposiitories
 {
-    public class PaymentRepository : Repository<Payment>, IPaymentRepository
+    public class InvoiceRepository : Repository<Invoice>, IInvoiceRepository
     {
         private readonly MiniHotelDbContext _context;
 
-        public PaymentRepository(MiniHotelDbContext context) : base(context)
+        public InvoiceRepository(MiniHotelDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task CreateAsync(Payment entity)
+        public async Task CreateAsync(Invoice entity)
         {
-            await _context.Payments.AddAsync(entity);
+            await _context.Invoices.AddAsync(entity);
             await SaveAsync();
         }
 
-        public async Task<Payment> UpdateAsync(Payment entity)
+        public async Task<Invoice> UpdateAsync(Invoice entity)
         {
-            _context.Payments.Update(entity);
+            _context.Invoices.Update(entity);
             await SaveAsync();
             return entity;
         }

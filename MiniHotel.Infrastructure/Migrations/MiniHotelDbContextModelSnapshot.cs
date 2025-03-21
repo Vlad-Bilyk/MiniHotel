@@ -169,9 +169,6 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsFullPaid")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
@@ -194,58 +191,95 @@ namespace MiniHotel.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MiniHotel.Domain.Entities.BookingService", b =>
+            modelBuilder.Entity("MiniHotel.Domain.Entities.HotelUser", b =>
                 {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("HotelUsers");
+                });
+
+            modelBuilder.Entity("MiniHotel.Domain.Entities.Invoice", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceId"));
+
                     b.Property<int>("BookingId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("BookingId", "ServiceId");
+                    b.HasKey("InvoiceId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("BookingId")
+                        .IsUnique();
 
-                    b.ToTable("BookingServices");
+                    b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("MiniHotel.Domain.Entities.Payment", b =>
+            modelBuilder.Entity("MiniHotel.Domain.Entities.InvoiceItem", b =>
                 {
-                    b.Property<int>("PaymentId")
+                    b.Property<int>("InvoiceItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaymentId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceItemId"));
 
-                    b.Property<int>("BookingId")
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18, 2)");
 
-                    b.Property<decimal>("PaymentSum")
-                        .HasColumnType("numeric");
+                    b.HasKey("InvoiceItemId");
 
-                    b.HasKey("PaymentId");
+                    b.HasIndex("InvoiceId");
 
-                    b.HasIndex("BookingId");
+                    b.HasIndex("ServiceId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("InvoiceItems");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Room", b =>
@@ -256,8 +290,8 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoomId"));
 
-                    b.Property<decimal>("PricePerDay")
-                        .HasColumnType("numeric");
+                    b.Property<decimal>("PricePerNight")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -289,6 +323,7 @@ namespace MiniHotel.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ServiceId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
@@ -301,43 +336,11 @@ namespace MiniHotel.Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("ServiceId");
 
                     b.ToTable("Services");
-                });
-
-            modelBuilder.Entity("MiniHotel.Domain.Entities.User", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("HotelUsers");
                 });
 
             modelBuilder.Entity("MiniHotel.Infrastructure.Identity.ApplicationUser", b =>
@@ -469,7 +472,7 @@ namespace MiniHotel.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MiniHotel.Domain.Entities.User", "User")
+                    b.HasOne("MiniHotel.Domain.Entities.HotelUser", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -480,50 +483,56 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MiniHotel.Domain.Entities.BookingService", b =>
+            modelBuilder.Entity("MiniHotel.Domain.Entities.HotelUser", b =>
+                {
+                    b.HasOne("MiniHotel.Infrastructure.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("MiniHotel.Domain.Entities.HotelUser", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MiniHotel.Domain.Entities.Invoice", b =>
                 {
                     b.HasOne("MiniHotel.Domain.Entities.Booking", "Booking")
-                        .WithMany("BookingServices")
-                        .HasForeignKey("BookingId")
+                        .WithOne("Invoice")
+                        .HasForeignKey("MiniHotel.Domain.Entities.Invoice", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("MiniHotel.Domain.Entities.InvoiceItem", b =>
+                {
+                    b.HasOne("MiniHotel.Domain.Entities.Invoice", "Invoice")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MiniHotel.Domain.Entities.Service", "Service")
-                        .WithMany("BookingServices")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("ServiceId");
 
-                    b.Navigation("Booking");
+                    b.Navigation("Invoice");
 
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("MiniHotel.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("MiniHotel.Domain.Entities.Booking", "Booking")
-                        .WithMany("Payments")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
-            modelBuilder.Entity("MiniHotel.Domain.Entities.User", b =>
-                {
-                    b.HasOne("MiniHotel.Infrastructure.Identity.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("MiniHotel.Domain.Entities.User", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MiniHotel.Domain.Entities.Booking", b =>
                 {
-                    b.Navigation("BookingServices");
+                    b.Navigation("Invoice");
+                });
 
-                    b.Navigation("Payments");
+            modelBuilder.Entity("MiniHotel.Domain.Entities.HotelUser", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("MiniHotel.Domain.Entities.Invoice", b =>
+                {
+                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Room", b =>
@@ -533,12 +542,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Service", b =>
                 {
-                    b.Navigation("BookingServices");
-                });
-
-            modelBuilder.Entity("MiniHotel.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Bookings");
+                    b.Navigation("InvoiceItems");
                 });
 #pragma warning restore 612, 618
         }

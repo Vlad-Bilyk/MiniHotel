@@ -2,8 +2,8 @@
 
 namespace MiniHotel.Application.Interfaces.IRepository
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<HotelUser>
     {
-        Task<User> UpdateAsync(User entity);
+        Task<HotelUser> UpdateAsync(HotelUser entity);
     }
 }

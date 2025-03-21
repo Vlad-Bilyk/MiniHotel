@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniHotel.Domain.Entities
 {
@@ -7,19 +8,18 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int ServiceId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; } = default!;
+        [StringLength(100), Required]
+        public required string Name { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+        [StringLength(500), Required]
+        public required string Description { get; set; }
 
-        [Range(0, 999999.99)]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
         [Required]
         public bool IsAvailable { get; set; } = false;
 
-        public ICollection<BookingService> BookingServices { get; set; } = new List<BookingService>();
+        public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
     }
 }

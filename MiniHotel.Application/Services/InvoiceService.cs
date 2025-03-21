@@ -1,6 +1,5 @@
 ﻿using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
-using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.Application.Services
 {
@@ -13,6 +12,7 @@ namespace MiniHotel.Application.Services
             _bookingRepository = bookingRepository;
         }
 
+        // TODO: Refactor this method with the correct implementation
         public async Task<decimal> CalculateFinalInvoiceAsync(int bookingId)
         {
             var booking = await _bookingRepository.GetAsync(
@@ -26,13 +26,9 @@ namespace MiniHotel.Application.Services
 
             var totalDays = (booking.EndDate.Date - booking.StartDate.Date).Days;
 
-            decimal roomCost = booking.Room.PricePerDay * totalDays;
+            decimal roomCost = booking.Room.PricePerNight * totalDays;
 
-            decimal serviceCost = booking.BookingServices
-                .Where(bs => bs.Status != BookingServiceStatus.Cancelled)
-                .Sum(bs => bs.Service.Price * bs.Quantity);
-
-            decimal totalCost = roomCost + serviceCost;
+            decimal totalCost = roomCost;
             return totalCost;
         }
     }

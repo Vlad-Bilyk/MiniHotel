@@ -67,7 +67,7 @@ namespace MiniHotel.Infrastructure.Services
                 await _userManager.AddToRoleAsync(applicationUser, result.ToString());
             }
 
-            var domainUser = _mapper.Map<User>(request);
+            var domainUser = _mapper.Map<HotelUser>(request);
             domainUser.UserId = applicationUser.Id;
 
             try

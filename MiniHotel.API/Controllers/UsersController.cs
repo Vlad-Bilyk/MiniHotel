@@ -23,7 +23,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            IEnumerable<User> users = await _userRepository.GetAllAsync();
+            IEnumerable<HotelUser> users = await _userRepository.GetAllAsync();
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
@@ -33,7 +33,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetUserById(string id)
         {
-            User user = await _userRepository.GetAsync(r => r.UserId == id);
+            HotelUser user = await _userRepository.GetAsync(r => r.UserId == id);
 
             if (user == null)
             {
@@ -71,7 +71,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            User user = await _userRepository.GetAsync(r => r.UserId == id);
+            HotelUser user = await _userRepository.GetAsync(r => r.UserId == id);
             if (user == null)
             {
                 return NotFound();

@@ -1,8 +1,8 @@
 ﻿namespace MiniHotel.Domain.Enums
 {
-    public enum PaymentStatus
+    public enum InvoiceStatus
     {
         Paid,
-        NotPaid
+        Pending
     }
 }
