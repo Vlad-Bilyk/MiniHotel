@@ -11,12 +11,15 @@ namespace MiniHotel.Application.Services
     {
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
 
-        public InvoiceService(IInvoiceRepository invoiceRepository, IBookingRepository bookingRepository, IMapper mapper)
+        public InvoiceService(IInvoiceRepository invoiceRepository, IBookingRepository bookingRepository,
+                              IServiceRepository serviceRepository, IMapper mapper)
         {
             _invoiceRepository = invoiceRepository;
             _bookingRepository = bookingRepository;
+            _serviceRepository = serviceRepository;
             _mapper = mapper;
         }
 
@@ -25,13 +28,16 @@ namespace MiniHotel.Application.Services
             var invoice = await _invoiceRepository.GetByBookingIdAsync(bookingId)
                           ?? throw new KeyNotFoundException("Invoice not found");
 
+            var service = await _serviceRepository.GetAsync(s => s.Name == createItem.ServiceName)
+                            ?? throw new KeyNotFoundException("Service not found");
+
             var item = new InvoiceItem
             {
                 InvoiceId = invoice.InvoiceId,
-                Description = createItem.Description,
+                ServiceId = service.ServiceId,
+                Description = string.IsNullOrEmpty(createItem.Description) ? service.Description : createItem.Description,
                 Quantity = createItem.Quantity,
-                UnitPrice = createItem.UnitPrice,
-                ServiceId = createItem.ServiceId
+                UnitPrice = service.Price
             };
 
             var updatedInvoice = await _invoiceRepository.AddItemAsync(item);
@@ -66,9 +72,9 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<InvoiceDto>(invoice);
         }
 
-        public async Task<IEnumerable<InvoiceDto>> GetAllInvoices()
+        public async Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync()
         {
-            var includeProp = "InvoiceItems";
+            var includeProp = "InvoiceItems,InvoiceItems.Service";
             var invoices = await _invoiceRepository.GetAllAsync(includeProperties: includeProp);
             return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
         }

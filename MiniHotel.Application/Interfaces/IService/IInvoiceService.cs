@@ -5,7 +5,7 @@ namespace MiniHotel.Application.Interfaces.IService
 {
     public interface IInvoiceService
     {
-        Task<IEnumerable<InvoiceDto>> GetAllInvoices();
+        Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync();
         Task<InvoiceDto> GetInvoiceAsync(int bookingId);
         Task<InvoiceDto> CreateInvoiceForBookingAsync(int bookingId);
         Task<InvoiceDto> AddItemAsync (int bookingId, InvoiceItemCreateDto createItem);

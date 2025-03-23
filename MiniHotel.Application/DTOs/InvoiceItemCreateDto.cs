@@ -1,10 +1,16 @@
-﻿namespace MiniHotel.Application.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MiniHotel.Application.DTOs
 {
     public class InvoiceItemCreateDto
     {
-        public int? ServiceId { get; set; }
-        public string Description { get; set; } = string.Empty;
+        [Required]
+        public string ServiceName { get; set; } = string.Empty;
+
+        [StringLength(200)]
+        public string? Description { get; set; } = string.Empty;
+
+        [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
     }
 }

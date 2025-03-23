@@ -20,7 +20,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetBookings()
         {
-            var invoices = await _invoiceService.GetAllInvoices();
+            var invoices = await _invoiceService.GetAllInvoicesAsync();
             return Ok(invoices);
         }
 
@@ -50,7 +50,7 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<InvoiceDto>> AddItem(int bookingId, InvoiceItemCreateDto createItem)
         {
             var dto = await _invoiceService.AddItemAsync(bookingId, createItem);
-            return CreatedAtAction(nameof(GetInvoice), new { bookingId }, dto);
+            return Ok(dto);
         }
 
         [HttpDelete("items/{id}")]

@@ -3,6 +3,8 @@
     public enum InvoiceStatus
     {
         Paid,
-        Pending
+        Pending,
+        Cancelled,
+        Refunded
     }
 }
