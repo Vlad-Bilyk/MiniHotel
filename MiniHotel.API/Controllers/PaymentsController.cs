@@ -59,7 +59,20 @@ namespace MiniHotel.API.Controllers
             {
                 await _paymentService.ProcessCallbackAsync(dto);
                 return Ok();
-            }, description: "Обробка LiqPay callback"); 
+            }, description: "Обробка LiqPay callback");
+        }
+
+        [HttpPost("{invoiceId:int}/refund")]
+        [ProducesResponseType(typeof(InvoiceDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<InvoiceDto>> Refund([FromRoute] int invoiceId)
+        {
+            return await ExecuteSafeAsync(async () =>
+            {
+                var updatedInvoice = await _paymentService.MarkRefundAsync(invoiceId);
+                return Ok(updatedInvoice);
+            }, invoiceId, "повернення коштів");
         }
 
         private async Task<ActionResult> ExecuteSafeAsync(Func<Task<object>> action, int? invoiceId = null, string description = "")

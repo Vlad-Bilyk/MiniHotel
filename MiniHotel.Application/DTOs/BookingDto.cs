@@ -10,7 +10,5 @@ namespace MiniHotel.Application.DTOs
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public BookingStatus BookingStatus { get; set; }
-        public decimal FinalInvoiceAmount { get; set; }
-        public bool IsFullPaid { get; set; }
     }
 }

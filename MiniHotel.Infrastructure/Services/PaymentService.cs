@@ -8,14 +8,17 @@ using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Enums;
+using Newtonsoft.Json;
 using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
 using System.Text;
-using System.Text.Json;
 
 namespace MiniHotel.Infrastructure.Services
 {
     public class PaymentService : IPaymentService
     {
+        private const string includeProps = "InvoiceItems,InvoiceItems.Service";
+
         private readonly LiqPayClient _liqPayClient;
         private readonly IConfiguration _configuration;
         private readonly IInvoiceRepository _invoiceRepository;
@@ -38,8 +41,13 @@ namespace MiniHotel.Infrastructure.Services
 
         public async Task<string> CreatePaymentUrlAsync(int invoiceId, string description)
         {
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
                           ?? throw new KeyNotFoundException("Invoice not found");
+
+            if (invoice.Status == InvoiceStatus.Paid)
+            {
+                throw new InvalidOperationException("Рахунок уже оплачено");
+            }
 
             var request = new LiqPayRequest
             {
@@ -50,6 +58,7 @@ namespace MiniHotel.Infrastructure.Services
                 Currency = "UAH",
                 Description = description,
                 OrderId = invoiceId.ToString(),
+                ServerUrl = _configuration["LiqPay:ServerUrl"],
                 ResultUrl = _configuration["LiqPay:ResultUrl"],
                 IsSandbox = true
             };
@@ -60,8 +69,13 @@ namespace MiniHotel.Infrastructure.Services
 
         public async Task<InvoiceDto> MarkPaidOfflineAsync(int invoiceId)
         {
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
                           ?? throw new KeyNotFoundException("Invoice not found");
+
+            if (invoice.Status == InvoiceStatus.Paid)
+            {
+                throw new InvalidOperationException("Рахунок уже оплачено");
+            }
 
             invoice.Status = InvoiceStatus.Paid;
             await _invoiceRepository.UpdateAsync(invoice);
@@ -70,40 +84,52 @@ namespace MiniHotel.Infrastructure.Services
 
         public async Task ProcessCallbackAsync(LiqPayCallbackDto dto)
         {
-            var privateKey = _configuration["LiqPay:PrivateKey"];
-            var expectedSignature = Convert.ToBase64String(SHA1.Create().ComputeHash(
-                Encoding.UTF8.GetBytes($"{privateKey}{dto.Data}{privateKey}")));
+            string expectedSign = _liqPayClient.CreateSignature(dto.Data);
+            Console.WriteLine(expectedSign);
 
-            if (!expectedSignature.Equals(dto.Signature, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException("Invalid LiqPay signature");
-            }
+            if (!expectedSign.Equals(dto.Signature.Trim(), StringComparison.Ordinal))
+                throw new InvalidOperationException($"Invalid LiqPay signature (expected={expectedSign})");
 
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(dto.Data));
-            var response = JsonSerializer.Deserialize<LiqPayResponse>(json);
+            Console.WriteLine(json);
+            var response = JsonConvert.DeserializeObject<LiqPayData>(json);
 
             if (response is null)
             {
                 throw new InvalidOperationException("Invalid callback data");
             }
 
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == int.Parse(response.OrderId))
+            if (!int.TryParse(response.OrderId, out var invoiceId))
+                throw new InvalidOperationException("Invalid OrderId in callback");
+
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
                           ?? throw new KeyNotFoundException($"Invoice not found");
 
-            _logger.LogInformation("LiqPay callback received for Invoice {InvoiceId}: status={Status}", invoice.InvoiceId, response.Status);
+            _logger.LogInformation("LiqPay callback received for Invoice {InvoiceId}: status={Status}", invoiceId, response.Status);
 
-            invoice.Status = response.Status switch
-            {
-                LiqPayResponseStatus.Success => InvoiceStatus.Paid,
-                LiqPayResponseStatus.Failure => InvoiceStatus.Cancelled,
-                LiqPayResponseStatus.Error => InvoiceStatus.Cancelled,
-                LiqPayResponseStatus.Reversed => InvoiceStatus.Refunded,
-                _ => InvoiceStatus.Pending,
-            };
+            invoice.Status = response.Status.Equals("success", StringComparison.OrdinalIgnoreCase)
+                ? InvoiceStatus.Paid
+                : InvoiceStatus.Cancelled;
 
-            _logger.LogInformation("Invoice {InvoiceId} status updated to {NewStatus}", invoice.InvoiceId, invoice.Status);
+            _logger.LogInformation("Invoice {InvoiceId} status updated to {NewStatus}", invoiceId, invoice.Status);
 
             await _invoiceRepository.UpdateAsync(invoice);
+        }
+
+        public async Task<InvoiceDto> MarkRefundAsync(int invoiceId)
+        {
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
+                          ?? throw new KeyNotFoundException("Invoice not found");
+
+            if (invoice.Status != InvoiceStatus.Paid)
+            {
+                throw new InvalidOperationException("Рахунок ще не оплачено");
+            }
+
+            _logger.LogInformation("Refunding Invoice {InvoiceId}", invoiceId);
+            invoice.Status = InvoiceStatus.Refunded;
+            await _invoiceRepository.UpdateAsync(invoice);
+            return _mapper.Map<InvoiceDto>(invoice);
         }
     }
 }

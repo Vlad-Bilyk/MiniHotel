@@ -5,6 +5,7 @@
         Paid,
         Pending,
         Cancelled,
-        Refunded
+        Refunded,
+        Undefiend
     }
 }
