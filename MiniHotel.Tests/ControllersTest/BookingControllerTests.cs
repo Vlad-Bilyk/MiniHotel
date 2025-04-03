@@ -11,16 +11,14 @@ namespace MiniHotel.Tests.ControllersTest
     public class BookingControllerTests
     {
         private readonly Mock<IBookingService> _bookingServiceMock;
-        private readonly Mock<IInvoiceService> _invoiceServiceMock;
         private readonly Mock<ILogger<BookingsController>> _loggerMock;
         private readonly BookingsController _controller;
 
         public BookingControllerTests()
         {
             _bookingServiceMock = new Mock<IBookingService>();
-            _invoiceServiceMock = new Mock<IInvoiceService>();
             _loggerMock = new Mock<ILogger<BookingsController>>();
-            _controller = new BookingsController(_bookingServiceMock.Object, _invoiceServiceMock.Object, _loggerMock.Object);
+            _controller = new BookingsController(_bookingServiceMock.Object, _loggerMock.Object);
         }
 
         [Fact]

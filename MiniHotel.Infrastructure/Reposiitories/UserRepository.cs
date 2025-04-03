@@ -4,7 +4,7 @@ using MiniHotel.Infrastructure.Data;
 
 namespace MiniHotel.Infrastructure.Reposiitories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<HotelUser>, IUserRepository
     {
         private readonly MiniHotelDbContext _context;
 
@@ -13,7 +13,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
             _context = context;
         }
 
-        public async Task<User> UpdateAsync(User entity)
+        public async Task<HotelUser> UpdateAsync(HotelUser entity)
         {
             _context.HotelUsers.Update(entity);
             await SaveAsync();

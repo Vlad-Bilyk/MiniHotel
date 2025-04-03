@@ -47,12 +47,10 @@ namespace MiniHotel.Application.Services
                 StartDate = bookingcreateDto.StartDate,
                 EndDate = bookingcreateDto.EndDate,
                 BookingStatus = BookingStatus.Pending,
-                IsFullPaid = false
             };
 
             await _bookingRepository.CreateAsync(booking);
             var bookingDto = _mapper.Map<BookingDto>(booking);
-            bookingDto.FinalInvoiceAmount = await GetFinalInvoiceAsync(booking.BookingId);
             return bookingDto;
         }
 
@@ -72,12 +70,6 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<BookingDto>(booking);
         }
 
-        // TODO: Implement this method
-        public async Task<BookingDto> AddServicesToBookingAsync(int bookingId, IEnumerable<ServiceToBookingDto> services)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)
         {
             var includeProps = "Room,User";
@@ -90,11 +82,6 @@ namespace MiniHotel.Application.Services
             var includeProps = "Room,User";
             var bookings = await _bookingRepository.GetAllAsync(filter, includeProps);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
-        }
-
-        private async Task<decimal> GetFinalInvoiceAsync(int bookingId)
-        {
-            return await _invoiceService.CalculateFinalInvoiceAsync(bookingId);
         }
     }
 }

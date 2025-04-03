@@ -1,6 +1,6 @@
 ﻿namespace MiniHotel.Domain.Enums
 {
-    public enum RoomType
+    public enum RoomCategory
     {
         Single,
         Double,

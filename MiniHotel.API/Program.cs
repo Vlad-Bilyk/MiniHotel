@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniHotel.API;
+using MiniHotel.API.Configuration;
+using MiniHotel.Application.Interfaces;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Application.Services;
 using MiniHotel.Infrastructure.Data;
+using MiniHotel.Infrastructure.Data.Seed;
 using MiniHotel.Infrastructure.Identity;
 using MiniHotel.Infrastructure.Mapping;
 using MiniHotel.Infrastructure.Reposiitories;
@@ -28,12 +31,20 @@ builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-builder.Services.AddScoped<IBookingServiceRepository, BookingServiceRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+builder.Services.AddTransient<ISeeder, RoleSeeder>();
+builder.Services.AddTransient<ISeeder, HotelUserSeeder>();
+builder.Services.AddTransient<ISeeder, RoomTypeSeeder>();
+builder.Services.AddTransient<ISeeder, RoomSeeder>();
+builder.Services.AddTransient<ISeeder, ServiceSeeder>();
+builder.Services.AddTransient<ISeeder, BookingSeeder>();
+builder.Services.AddTransient<ISeeder, InvoiceSeeder>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
@@ -41,6 +52,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.Configure<LiqPayOptions>(builder.Configuration.GetSection("LiqPay"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -50,10 +63,16 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-using (var scope = app.Services.CreateScope())
+// Migrate the database
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<MiniHotelDbContext>();
+await db.Database.MigrateAsync();
+
+// Seed the database
+var seeders = scope.ServiceProvider.GetServices<ISeeder>();
+foreach (var seeder in seeders)
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await RoleSeeder.SeedRolesAsync(roleManager);
+    await seeder.SeedAsync();
 }
 
 // Configure the HTTP request pipeline.
@@ -82,4 +101,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

@@ -9,15 +9,9 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int BookingId { get; set; }
 
-        public string UserId { get; set; } = default!;
-
-        [ForeignKey("UserId")]
-        public User User { get; set; } = default!;
+        public string? UserId { get; set; }
 
         public int RoomId { get; set; }
-
-        [ForeignKey("RoomId")]
-        public Room Room { get; set; } = default!;
 
         [Required]
         public DateTime StartDate { get; set; }
@@ -28,11 +22,12 @@ namespace MiniHotel.Domain.Entities
         [Required]
         public BookingStatus BookingStatus { get; set; }
 
-        [Required]
-        public bool IsFullPaid { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public HotelUser? User { get; set; }
 
-        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        [ForeignKey(nameof(RoomId))]
+        public Room Room { get; set; } = null!;
 
-        public ICollection<BookingService> BookingServices { get; set; } = new List<BookingService>();
+        public Invoice? Invoice { get; set; }
     }
 }

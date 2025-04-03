@@ -1,4 +1,5 @@
 ﻿using MiniHotel.Domain.Entities;
+using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.Application.Interfaces.IRepository
 {
@@ -6,6 +7,7 @@ namespace MiniHotel.Application.Interfaces.IRepository
     {
         Task CreateAsync(Room entity);
         Task<Room> UpdateAsync(Room entity);
+        Task<Room> UpdateStatusAsync(int id, RoomStatus status);
         Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate);
     }
 }
