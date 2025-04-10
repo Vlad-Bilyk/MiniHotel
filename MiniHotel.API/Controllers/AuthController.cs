@@ -21,6 +21,10 @@ namespace MiniHotel.API.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(AuthenticationResultDto), StatusCodes.Status200OK)]
         public async Task<AuthenticationResultDto> Login([FromBody] LoginRequestDto model)
         {
             return await _authService.LoginAsync(model);

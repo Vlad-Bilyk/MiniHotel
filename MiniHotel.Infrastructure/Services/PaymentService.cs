@@ -9,8 +9,6 @@ using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Enums;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace MiniHotel.Infrastructure.Services
