@@ -6,6 +6,9 @@ using System.Security.Claims;
 
 namespace MiniHotel.API.Controllers
 {
+    /// <summary>
+    /// Controller for managing bookings, including retrieving, creating, and updating booking statuses.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class BookingsController : ControllerBase
@@ -19,6 +22,10 @@ namespace MiniHotel.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all bookings.
+        /// </summary>
+        /// <returns>A collection of booking data transfer objects.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
@@ -27,7 +34,13 @@ namespace MiniHotel.API.Controllers
             return Ok(bookings);
         }
 
-
+        /// <summary>
+        /// Retrieves a booking by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking.</param>
+        /// <returns>A booking data transfer object.</returns>
+        /// <response code="200">If the booking is found.</response>
+        /// <response code="404">If the booking is not found.</response>
         [HttpGet("{id:int}", Name = "GetBookingById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,6 +62,13 @@ namespace MiniHotel.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new booking.
+        /// </summary>
+        /// <param name="createDto">The booking creation data transfer object.</param>
+        /// <returns>The newly created booking data transfer object.</returns>
+        /// <response code="201">Returns the created booking.</response>
+        /// <response code="400">If provided data is invalid.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -82,6 +102,11 @@ namespace MiniHotel.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Cancels an existing booking.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking to cancel.</param>
+        /// <returns>The updated booking data transfer object with status set to Cancelled.</returns>
         [HttpPatch("{id:int}/cancel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,6 +116,11 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.Cancelled);
         }
 
+        /// <summary>
+        /// Marks a booking as checked in.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking to check in.</param>
+        /// <returns>The updated booking data transfer object with status set to CheckedIn.</returns>
         [HttpPatch("{id:int}/checkin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,6 +130,11 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.CheckedIn);
         }
 
+        /// <summary>
+        /// Marks a booking as checked out.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking to check out.</param>
+        /// <returns>The updated booking data transfer object with status set to CheckedOut.</returns>
         [HttpPatch("{id:int}/checkout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -109,6 +144,11 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.CheckedOut);
         }
 
+        /// <summary>
+        /// Confirms an existing booking.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking to confirm.</param>
+        /// <returns>The updated booking data transfer object with status set to Confirmed.</returns>
         [HttpPatch("{id:int}/confirmed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -118,6 +158,11 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.Confirmed);
         }
 
+        /// <summary>
+        /// Marks an existing booking as completed.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking to complete.</param>
+        /// <returns>The updated booking data transfer object with status set to Completed.</returns>
         [HttpPatch("{id:int}/completed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -127,6 +172,12 @@ namespace MiniHotel.API.Controllers
             return UpdateStatusAsync(id, BookingStatus.Completed);
         }
 
+        /// <summary>
+        /// Updates the status of a booking.
+        /// </summary>
+        /// <param name="id">The unique identifier of the booking.</param>
+        /// <param name="newStatus">The new status to apply to the booking.</param>
+        /// <returns>The updated booking data transfer object.</returns>
         private async Task<ActionResult<BookingDto>> UpdateStatusAsync(int id, BookingStatus newStatus)
         {
             try
@@ -140,6 +191,11 @@ namespace MiniHotel.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Handles exceptions thrown during booking operations and returns appropriate HTTP responses.
+        /// </summary>
+        /// <param name="ex">The exception that was thrown.</param>
+        /// <returns>An <see cref="ActionResult"/> representing the HTTP response.</returns>
         private ActionResult HandleException(Exception ex)
         {
             switch (ex)

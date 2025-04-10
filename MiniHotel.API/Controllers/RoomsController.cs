@@ -7,6 +7,10 @@ using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.API.Controllers
 {
+    /// <summary>
+    /// Controller for managing hotel rooms. Provides endpoints to retrieve room information,
+    /// create new rooms, update existing rooms, delete rooms, and retrieve available rooms.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase
@@ -20,6 +24,10 @@ namespace MiniHotel.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Retrieves all hotel rooms.
+        /// </summary>
+        /// <returns>A collection of room DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
@@ -28,6 +36,14 @@ namespace MiniHotel.API.Controllers
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
         }
 
+        /// <summary>
+        /// Retrieves a room by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the room.</param>
+        /// <returns>The room DTO if found.</returns>
+        /// <response code="200">Returns the room DTO.</response>
+        /// <response code="400">If the request parameters are invalid.</response>
+        /// <response code="404">If the room is not found.</response>
         [HttpGet("{id:int}", Name = "GetRoomById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,15 +51,21 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetRoomById(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
-
             if (room == null)
             {
                 return NotFound();
             }
-
             return Ok(_mapper.Map<RoomDto>(room));
         }
 
+        /// <summary>
+        /// Creates a new room.
+        /// </summary>
+        /// <param name="createDto">The room creation data transfer object.</param>
+        /// <returns>The created room DTO.</returns>
+        /// <response code="201">Returns the newly created room.</response>
+        /// <response code="400">If the request data is invalid.</response>
+        /// <response code="500">If an internal server error occurs during creation.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,10 +78,20 @@ namespace MiniHotel.API.Controllers
             return CreatedAtRoute(nameof(GetRoomById), new { id = room.RoomId }, roomDto);
         }
 
+        /// <summary>
+        /// Updates an existing room.
+        /// </summary>
+        /// <param name="id">The unique identifier of the room to update.</param>
+        /// <param name="updateDto">The room update data transfer object.</param>
+        /// <returns>No content if the update is successful.</returns>
+        /// <response code="204">Room updated successfully.</response>
+        /// <response code="400">If the request data is invalid.</response>
+        /// <response code="404">If the room is not found.</response>
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateSubscriber(int id, [FromBody] RoomUpsertDto updateDto)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomUpsertDto updateDto)
         {
             if (updateDto == null)
             {
@@ -72,11 +104,19 @@ namespace MiniHotel.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a room by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the room to delete.</param>
+        /// <returns>No content if the deletion is successful.</returns>
+        /// <response code="204">Room deleted successfully.</response>
+        /// <response code="404">If the room is not found.</response>
+        /// <response code="400">If the request is invalid.</response>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteSubscriber(int id)
+        public async Task<IActionResult> DeleteRoom(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
             if (room == null)
@@ -87,21 +127,58 @@ namespace MiniHotel.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("{startDate:datetime}, {endDate:datetime}")]
+        /// <summary>
+        /// Retrieves available rooms for the specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the desired booking period.</param>
+        /// <param name="endDate">The end date of the desired booking period.</param>
+        /// <returns>A collection of available room DTOs.</returns>
+        /// <response code="200">Returns the list of available rooms.</response>
+        /// <response code="400">If the date range is invalid.</response>
+        /// <response code="404">If no available rooms are found.</response>
+        [HttpGet("available/{startDate:datetime}/{endDate:datetime}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate)
         {
+            if (endDate >= startDate)
+            {
+                return BadRequest("End date must be greater than start date.");
+            }
+
             IEnumerable<Room> rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
+            if (rooms == null || !rooms.Any())
+            {
+                return NotFound("No available rooms found.");
+            }
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
         }
 
+        /// <summary>
+        /// Updates the status of a room.
+        /// </summary>
+        /// <param name="id">The unique identifier of the room.</param>
+        /// <param name="newStatus">The new status for the room.</param>
+        /// <returns>The updated room DTO.</returns>
+        /// <response code="200">Returns the updated room.</response>
+        /// <response code="404">If the room is not found.</response>
+        /// <response code="500">If an internal server error occurs.</response>
         [HttpPatch("{id}/status")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RoomDto>> UpdateStatus(int id, RoomStatus newStatus)
         {
-            var roomDto = await _roomRepository.UpdateStatusAsync(id, newStatus);
-            return Ok(roomDto);
+            try
+            {
+                var roomDto = await _roomRepository.UpdateStatusAsync(id, newStatus);
+                return Ok(roomDto);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Room not found");
+            }
         }
     }
 }
