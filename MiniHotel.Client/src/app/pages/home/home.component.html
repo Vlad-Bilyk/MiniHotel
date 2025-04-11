@@ -1,0 +1,69 @@
+<!-- Home page header -->
+<div class="main-section mt-4 position-relative">
+    <div class="overlay text-white">
+        <h1>Ласкаво просимо до Mini Hotel</h1>
+        <p class="lead">Your one-stop solution for hotel bookings and services.</p>
+
+        <a routerLink="/" class="btn btn-outline-light btn-lg custom-rooms-btn">
+            НОМЕРИ
+        </a>
+    </div>
+</div>
+
+<!-- Search rooms -->
+<div class="search-panel bg-white py-3 mt-4 position-relative">
+    <div class="row g-3 align-items-center justify-content-center border-bottom pb-3 mx-1 mx-md-0">
+        <div class="col-auto">
+            <label class="form-label mb-1">Приїзд</label>
+            <input type="date" class="form-control" value="2025-04-11">
+        </div>
+        <div class="col-auto">
+            <label class="form-label mb-1">Виїзд</label>
+            <input type="date" class="form-control" value="2025-04-12">
+        </div>
+    </div>
+
+    <div class="position-relative text-center my-5 line-with-button">
+        <hr class="position-absolute top-50 start-0 w-100 translate-middle-y m-0">
+        <button class="btn btn-primary btn-lg px-5 search-btn">
+            <i class="bi bi-search me-2"></i>Шукати
+        </button>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://fakeimg.pl/600x400" class="d-block w-100" alt="placeholder">
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://fakeimg.pl/400x400" class="d-block w-100" alt="placeholder">
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://fakeimg.pl/800x400" class="d-block w-100" alt="placeholder">
+            </div>
+        </div>
+
+        <!-- Left and right controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
