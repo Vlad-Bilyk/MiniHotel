@@ -83,7 +83,8 @@ namespace MiniHotel.Infrastructure.Services
                 _context.HotelUsers.Add(domainUser);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return new AuthenticationResultDto { Success = true };
+                var token = await GenerateJwtToken(applicationUser);
+                return new AuthenticationResultDto { Success = true, Token = token };
             }
             catch (Exception ex)
             {

@@ -53,15 +53,16 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Add CORS policy
+var allowedOrigins = builder.Configuration.GetValue<string>("allowedOrigins")!.Split(",");
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
 });
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -96,6 +97,12 @@ builder.Services.Configure<LiqPayOptions>(builder.Configuration.GetSection("LiqP
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
+    {
+        Description = "Development server",
+        Url = "https://localhost:7252"
+    });
+
     options.CustomOperationIds(apiDesc => $"{apiDesc.ActionDescriptor.RouteValues["controller"]
          + apiDesc.ActionDescriptor.RouteValues["action"]}");
 
@@ -105,7 +112,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAllOrigins");
+app.UseCors();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -126,6 +133,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHsts();
 }
 
 // TODO: Remove this middleware in production

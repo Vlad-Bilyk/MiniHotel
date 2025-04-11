@@ -2,6 +2,5 @@
   "input": "http://localhost:5138/swagger/v1/swagger.json",
   "output": "src/app/api",
   "skipJsonSuffix": true,
-  "removeStaleFiles": true,
-  "useLegacyHttpClientModule": false
+  "removeStaleFiles": true
 }
