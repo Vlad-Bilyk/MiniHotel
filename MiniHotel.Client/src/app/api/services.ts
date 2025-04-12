@@ -7,5 +7,6 @@ export { BookingsService } from './services/bookings.service';
 export { InvoicesService } from './services/invoices.service';
 export { PaymentsService } from './services/payments.service';
 export { RoomsService } from './services/rooms.service';
+export { RoomTypesService } from './services/room-types.service';
 export { ServicesService } from './services/services.service';
 export { UsersService } from './services/users.service';

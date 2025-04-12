@@ -11,29 +11,29 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { addInvoiceItem } from '../fn/invoices/add-invoice-item';
+import { AddInvoiceItem$Params } from '../fn/invoices/add-invoice-item';
+import { addInvoiceItem$Plain } from '../fn/invoices/add-invoice-item-plain';
+import { AddInvoiceItem$Plain$Params } from '../fn/invoices/add-invoice-item-plain';
+import { createInvoice } from '../fn/invoices/create-invoice';
+import { CreateInvoice$Params } from '../fn/invoices/create-invoice';
+import { createInvoice$Plain } from '../fn/invoices/create-invoice-plain';
+import { CreateInvoice$Plain$Params } from '../fn/invoices/create-invoice-plain';
+import { getInvoice } from '../fn/invoices/get-invoice';
+import { GetInvoice$Params } from '../fn/invoices/get-invoice';
+import { getInvoice$Plain } from '../fn/invoices/get-invoice-plain';
+import { GetInvoice$Plain$Params } from '../fn/invoices/get-invoice-plain';
+import { getInvoices } from '../fn/invoices/get-invoices';
+import { GetInvoices$Params } from '../fn/invoices/get-invoices';
+import { getInvoices$Plain } from '../fn/invoices/get-invoices-plain';
+import { GetInvoices$Plain$Params } from '../fn/invoices/get-invoices-plain';
 import { InvoiceDto } from '../models/invoice-dto';
-import { invoicesAddInvoiceItem } from '../fn/invoices/invoices-add-invoice-item';
-import { InvoicesAddInvoiceItem$Params } from '../fn/invoices/invoices-add-invoice-item';
-import { invoicesAddInvoiceItem$Plain } from '../fn/invoices/invoices-add-invoice-item-plain';
-import { InvoicesAddInvoiceItem$Plain$Params } from '../fn/invoices/invoices-add-invoice-item-plain';
-import { invoicesCreateInvoice } from '../fn/invoices/invoices-create-invoice';
-import { InvoicesCreateInvoice$Params } from '../fn/invoices/invoices-create-invoice';
-import { invoicesCreateInvoice$Plain } from '../fn/invoices/invoices-create-invoice-plain';
-import { InvoicesCreateInvoice$Plain$Params } from '../fn/invoices/invoices-create-invoice-plain';
-import { invoicesGetInvoice } from '../fn/invoices/invoices-get-invoice';
-import { InvoicesGetInvoice$Params } from '../fn/invoices/invoices-get-invoice';
-import { invoicesGetInvoice$Plain } from '../fn/invoices/invoices-get-invoice-plain';
-import { InvoicesGetInvoice$Plain$Params } from '../fn/invoices/invoices-get-invoice-plain';
-import { invoicesGetInvoices } from '../fn/invoices/invoices-get-invoices';
-import { InvoicesGetInvoices$Params } from '../fn/invoices/invoices-get-invoices';
-import { invoicesGetInvoices$Plain } from '../fn/invoices/invoices-get-invoices-plain';
-import { InvoicesGetInvoices$Plain$Params } from '../fn/invoices/invoices-get-invoices-plain';
-import { invoicesRemoveInvoiceItem } from '../fn/invoices/invoices-remove-invoice-item';
-import { InvoicesRemoveInvoiceItem$Params } from '../fn/invoices/invoices-remove-invoice-item';
-import { invoicesUpdateStatus } from '../fn/invoices/invoices-update-status';
-import { InvoicesUpdateStatus$Params } from '../fn/invoices/invoices-update-status';
-import { invoicesUpdateStatus$Plain } from '../fn/invoices/invoices-update-status-plain';
-import { InvoicesUpdateStatus$Plain$Params } from '../fn/invoices/invoices-update-status-plain';
+import { removeInvoiceItem } from '../fn/invoices/remove-invoice-item';
+import { RemoveInvoiceItem$Params } from '../fn/invoices/remove-invoice-item';
+import { updateStatus } from '../fn/invoices/update-status';
+import { UpdateStatus$Params } from '../fn/invoices/update-status';
+import { updateStatus$Plain } from '../fn/invoices/update-status-plain';
+import { UpdateStatus$Plain$Params } from '../fn/invoices/update-status-plain';
 
 @Injectable({ providedIn: 'root' })
 export class InvoicesService extends BaseService {
@@ -41,8 +41,8 @@ export class InvoicesService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `invoicesGetInvoices()` */
-  static readonly InvoicesGetInvoicesPath = '/api/Invoices';
+  /** Path part for operation `getInvoices()` */
+  static readonly GetInvoicesPath = '/api/Invoices';
 
   /**
    * Retrieves all invoices.
@@ -50,12 +50,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesGetInvoices$Plain()` instead.
+   * To access only the response body, use `getInvoices$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoices$Plain$Response(params?: InvoicesGetInvoices$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InvoiceDto>>> {
-    return invoicesGetInvoices$Plain(this.http, this.rootUrl, params, context);
+  getInvoices$Plain$Response(params?: GetInvoices$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InvoiceDto>>> {
+    return getInvoices$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -64,12 +64,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesGetInvoices$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getInvoices$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoices$Plain(params?: InvoicesGetInvoices$Plain$Params, context?: HttpContext): Observable<Array<InvoiceDto>> {
-    return this.invoicesGetInvoices$Plain$Response(params, context).pipe(
+  getInvoices$Plain(params?: GetInvoices$Plain$Params, context?: HttpContext): Observable<Array<InvoiceDto>> {
+    return this.getInvoices$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<InvoiceDto>>): Array<InvoiceDto> => r.body)
     );
   }
@@ -80,12 +80,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesGetInvoices()` instead.
+   * To access only the response body, use `getInvoices()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoices$Response(params?: InvoicesGetInvoices$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InvoiceDto>>> {
-    return invoicesGetInvoices(this.http, this.rootUrl, params, context);
+  getInvoices$Response(params?: GetInvoices$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InvoiceDto>>> {
+    return getInvoices(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -94,18 +94,18 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesGetInvoices$Response()` instead.
+   * To access the full response (for headers, for example), `getInvoices$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoices(params?: InvoicesGetInvoices$Params, context?: HttpContext): Observable<Array<InvoiceDto>> {
-    return this.invoicesGetInvoices$Response(params, context).pipe(
+  getInvoices(params?: GetInvoices$Params, context?: HttpContext): Observable<Array<InvoiceDto>> {
+    return this.getInvoices$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<InvoiceDto>>): Array<InvoiceDto> => r.body)
     );
   }
 
-  /** Path part for operation `invoicesGetInvoice()` */
-  static readonly InvoicesGetInvoicePath = '/api/Invoices/{id}';
+  /** Path part for operation `getInvoice()` */
+  static readonly GetInvoicePath = '/api/Invoices/{id}';
 
   /**
    * Retrieves an invoice by its unique identifier.
@@ -113,42 +113,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesGetInvoice$Plain()` instead.
+   * To access only the response body, use `getInvoice$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoice$Plain$Response(params: InvoicesGetInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesGetInvoice$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Retrieves an invoice by its unique identifier.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesGetInvoice$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  invoicesGetInvoice$Plain(params: InvoicesGetInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesGetInvoice$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
-    );
-  }
-
-  /**
-   * Retrieves an invoice by its unique identifier.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesGetInvoice()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  invoicesGetInvoice$Response(params: InvoicesGetInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesGetInvoice(this.http, this.rootUrl, params, context);
+  getInvoice$Plain$Response(params: GetInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return getInvoice$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -157,18 +127,48 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesGetInvoice$Response()` instead.
+   * To access the full response (for headers, for example), `getInvoice$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesGetInvoice(params: InvoicesGetInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesGetInvoice$Response(params, context).pipe(
+  getInvoice$Plain(params: GetInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.getInvoice$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 
-  /** Path part for operation `invoicesCreateInvoice()` */
-  static readonly InvoicesCreateInvoicePath = '/api/Invoices/{bookingId}';
+  /**
+   * Retrieves an invoice by its unique identifier.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getInvoice()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getInvoice$Response(params: GetInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return getInvoice(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Retrieves an invoice by its unique identifier.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getInvoice$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getInvoice(params: GetInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.getInvoice$Response(params, context).pipe(
+      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
+    );
+  }
+
+  /** Path part for operation `createInvoice()` */
+  static readonly CreateInvoicePath = '/api/Invoices/{bookingId}';
 
   /**
    * Creates an invoice for a specific booking.
@@ -176,12 +176,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesCreateInvoice$Plain()` instead.
+   * To access only the response body, use `createInvoice$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesCreateInvoice$Plain$Response(params: InvoicesCreateInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesCreateInvoice$Plain(this.http, this.rootUrl, params, context);
+  createInvoice$Plain$Response(params: CreateInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return createInvoice$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -190,12 +190,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesCreateInvoice$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `createInvoice$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesCreateInvoice$Plain(params: InvoicesCreateInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesCreateInvoice$Plain$Response(params, context).pipe(
+  createInvoice$Plain(params: CreateInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.createInvoice$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -206,12 +206,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesCreateInvoice()` instead.
+   * To access only the response body, use `createInvoice()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesCreateInvoice$Response(params: InvoicesCreateInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesCreateInvoice(this.http, this.rootUrl, params, context);
+  createInvoice$Response(params: CreateInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return createInvoice(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -220,18 +220,18 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesCreateInvoice$Response()` instead.
+   * To access the full response (for headers, for example), `createInvoice$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesCreateInvoice(params: InvoicesCreateInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesCreateInvoice$Response(params, context).pipe(
+  createInvoice(params: CreateInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.createInvoice$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 
-  /** Path part for operation `invoicesAddInvoiceItem()` */
-  static readonly InvoicesAddInvoiceItemPath = '/api/Invoices/{bookingId}/items';
+  /** Path part for operation `addInvoiceItem()` */
+  static readonly AddInvoiceItemPath = '/api/Invoices/{bookingId}/items';
 
   /**
    * Adds an invoice item to a specific booking's invoice.
@@ -239,12 +239,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesAddInvoiceItem$Plain()` instead.
+   * To access only the response body, use `addInvoiceItem$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invoicesAddInvoiceItem$Plain$Response(params: InvoicesAddInvoiceItem$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesAddInvoiceItem$Plain(this.http, this.rootUrl, params, context);
+  addInvoiceItem$Plain$Response(params: AddInvoiceItem$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return addInvoiceItem$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -253,12 +253,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesAddInvoiceItem$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `addInvoiceItem$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invoicesAddInvoiceItem$Plain(params: InvoicesAddInvoiceItem$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesAddInvoiceItem$Plain$Response(params, context).pipe(
+  addInvoiceItem$Plain(params: AddInvoiceItem$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.addInvoiceItem$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -269,12 +269,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesAddInvoiceItem()` instead.
+   * To access only the response body, use `addInvoiceItem()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invoicesAddInvoiceItem$Response(params: InvoicesAddInvoiceItem$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesAddInvoiceItem(this.http, this.rootUrl, params, context);
+  addInvoiceItem$Response(params: AddInvoiceItem$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return addInvoiceItem(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -283,18 +283,18 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesAddInvoiceItem$Response()` instead.
+   * To access the full response (for headers, for example), `addInvoiceItem$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invoicesAddInvoiceItem(params: InvoicesAddInvoiceItem$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesAddInvoiceItem$Response(params, context).pipe(
+  addInvoiceItem(params: AddInvoiceItem$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.addInvoiceItem$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 
-  /** Path part for operation `invoicesRemoveInvoiceItem()` */
-  static readonly InvoicesRemoveInvoiceItemPath = '/api/Invoices/items/{id}';
+  /** Path part for operation `removeInvoiceItem()` */
+  static readonly RemoveInvoiceItemPath = '/api/Invoices/items/{id}';
 
   /**
    * Removes an invoice item by its unique identifier.
@@ -302,12 +302,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesRemoveInvoiceItem()` instead.
+   * To access only the response body, use `removeInvoiceItem()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesRemoveInvoiceItem$Response(params: InvoicesRemoveInvoiceItem$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return invoicesRemoveInvoiceItem(this.http, this.rootUrl, params, context);
+  removeInvoiceItem$Response(params: RemoveInvoiceItem$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return removeInvoiceItem(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -316,18 +316,18 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesRemoveInvoiceItem$Response()` instead.
+   * To access the full response (for headers, for example), `removeInvoiceItem$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesRemoveInvoiceItem(params: InvoicesRemoveInvoiceItem$Params, context?: HttpContext): Observable<void> {
-    return this.invoicesRemoveInvoiceItem$Response(params, context).pipe(
+  removeInvoiceItem(params: RemoveInvoiceItem$Params, context?: HttpContext): Observable<void> {
+    return this.removeInvoiceItem$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `invoicesUpdateStatus()` */
-  static readonly InvoicesUpdateStatusPath = '/api/Invoices/{id}/status';
+  /** Path part for operation `updateStatus()` */
+  static readonly UpdateStatusPath = '/api/Invoices/{id}/status';
 
   /**
    * Updates the status of an invoice.
@@ -335,12 +335,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesUpdateStatus$Plain()` instead.
+   * To access only the response body, use `updateStatus$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesUpdateStatus$Plain$Response(params: InvoicesUpdateStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesUpdateStatus$Plain(this.http, this.rootUrl, params, context);
+  updateStatus$Plain$Response(params: UpdateStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return updateStatus$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -349,12 +349,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesUpdateStatus$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `updateStatus$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesUpdateStatus$Plain(params: InvoicesUpdateStatus$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesUpdateStatus$Plain$Response(params, context).pipe(
+  updateStatus$Plain(params: UpdateStatus$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.updateStatus$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -365,12 +365,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invoicesUpdateStatus()` instead.
+   * To access only the response body, use `updateStatus()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesUpdateStatus$Response(params: InvoicesUpdateStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return invoicesUpdateStatus(this.http, this.rootUrl, params, context);
+  updateStatus$Response(params: UpdateStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return updateStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -379,12 +379,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invoicesUpdateStatus$Response()` instead.
+   * To access the full response (for headers, for example), `updateStatus$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  invoicesUpdateStatus(params: InvoicesUpdateStatus$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.invoicesUpdateStatus$Response(params, context).pipe(
+  updateStatus(params: UpdateStatus$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.updateStatus$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }

@@ -5,7 +5,6 @@
 import { RoomCategory } from '../models/room-category';
 import { RoomStatus } from '../models/room-status';
 export interface RoomUpsertDto {
-  pricePerDay?: number;
   roomNumber: string;
   roomStatus: RoomStatus;
   roomType: RoomCategory;

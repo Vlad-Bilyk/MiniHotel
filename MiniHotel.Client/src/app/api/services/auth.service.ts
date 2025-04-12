@@ -12,14 +12,14 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AuthenticationResultDto } from '../models/authentication-result-dto';
-import { authLogin } from '../fn/auth/auth-login';
-import { AuthLogin$Params } from '../fn/auth/auth-login';
-import { authLogin$Plain } from '../fn/auth/auth-login-plain';
-import { AuthLogin$Plain$Params } from '../fn/auth/auth-login-plain';
-import { authRegister } from '../fn/auth/auth-register';
-import { AuthRegister$Params } from '../fn/auth/auth-register';
-import { authRegister$Plain } from '../fn/auth/auth-register-plain';
-import { AuthRegister$Plain$Params } from '../fn/auth/auth-register-plain';
+import { login } from '../fn/auth/login';
+import { Login$Params } from '../fn/auth/login';
+import { login$Plain } from '../fn/auth/login-plain';
+import { Login$Plain$Params } from '../fn/auth/login-plain';
+import { register } from '../fn/auth/register';
+import { Register$Params } from '../fn/auth/register';
+import { register$Plain } from '../fn/auth/register-plain';
+import { Register$Plain$Params } from '../fn/auth/register-plain';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BaseService {
@@ -27,8 +27,8 @@ export class AuthService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `authRegister()` */
-  static readonly AuthRegisterPath = '/api/Auth/register';
+  /** Path part for operation `register()` */
+  static readonly RegisterPath = '/api/Auth/register';
 
   /**
    * Registers a new user based on provided registration details.
@@ -36,12 +36,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authRegister$Plain()` instead.
+   * To access only the response body, use `register$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authRegister$Plain$Response(params?: AuthRegister$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
-    return authRegister$Plain(this.http, this.rootUrl, params, context);
+  register$Plain$Response(params?: Register$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
+    return register$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -50,12 +50,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authRegister$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `register$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authRegister$Plain(params?: AuthRegister$Plain$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
-    return this.authRegister$Plain$Response(params, context).pipe(
+  register$Plain(params?: Register$Plain$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
+    return this.register$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResultDto>): AuthenticationResultDto => r.body)
     );
   }
@@ -66,12 +66,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authRegister()` instead.
+   * To access only the response body, use `register()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authRegister$Response(params?: AuthRegister$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
-    return authRegister(this.http, this.rootUrl, params, context);
+  register$Response(params?: Register$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
+    return register(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -80,18 +80,18 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authRegister$Response()` instead.
+   * To access the full response (for headers, for example), `register$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authRegister(params?: AuthRegister$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
-    return this.authRegister$Response(params, context).pipe(
+  register(params?: Register$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
+    return this.register$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResultDto>): AuthenticationResultDto => r.body)
     );
   }
 
-  /** Path part for operation `authLogin()` */
-  static readonly AuthLoginPath = '/api/Auth/login';
+  /** Path part for operation `login()` */
+  static readonly LoginPath = '/api/Auth/login';
 
   /**
    * Authenticates an existing user using email and password.
@@ -99,12 +99,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authLogin$Plain()` instead.
+   * To access only the response body, use `login$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authLogin$Plain$Response(params?: AuthLogin$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
-    return authLogin$Plain(this.http, this.rootUrl, params, context);
+  login$Plain$Response(params?: Login$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
+    return login$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -113,12 +113,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authLogin$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `login$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authLogin$Plain(params?: AuthLogin$Plain$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
-    return this.authLogin$Plain$Response(params, context).pipe(
+  login$Plain(params?: Login$Plain$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
+    return this.login$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResultDto>): AuthenticationResultDto => r.body)
     );
   }
@@ -129,12 +129,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authLogin()` instead.
+   * To access only the response body, use `login()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authLogin$Response(params?: AuthLogin$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
-    return authLogin(this.http, this.rootUrl, params, context);
+  login$Response(params?: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResultDto>> {
+    return login(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -143,12 +143,12 @@ export class AuthService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authLogin$Response()` instead.
+   * To access the full response (for headers, for example), `login$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  authLogin(params?: AuthLogin$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
-    return this.authLogin$Response(params, context).pipe(
+  login(params?: Login$Params, context?: HttpContext): Observable<AuthenticationResultDto> {
+    return this.login$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResultDto>): AuthenticationResultDto => r.body)
     );
   }

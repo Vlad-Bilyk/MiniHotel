@@ -11,21 +11,21 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { createService } from '../fn/services/create-service';
+import { CreateService$Params } from '../fn/services/create-service';
+import { createService$Plain } from '../fn/services/create-service-plain';
+import { CreateService$Plain$Params } from '../fn/services/create-service-plain';
+import { deleteService } from '../fn/services/delete-service';
+import { DeleteService$Params } from '../fn/services/delete-service';
+import { getServiceById } from '../fn/services/get-service-by-id';
+import { GetServiceById$Params } from '../fn/services/get-service-by-id';
+import { getServices } from '../fn/services/get-services';
+import { GetServices$Params } from '../fn/services/get-services';
+import { getServices$Plain } from '../fn/services/get-services-plain';
+import { GetServices$Plain$Params } from '../fn/services/get-services-plain';
 import { ServiceDto } from '../models/service-dto';
-import { servicesCreateService } from '../fn/services/services-create-service';
-import { ServicesCreateService$Params } from '../fn/services/services-create-service';
-import { servicesCreateService$Plain } from '../fn/services/services-create-service-plain';
-import { ServicesCreateService$Plain$Params } from '../fn/services/services-create-service-plain';
-import { servicesDeleteService } from '../fn/services/services-delete-service';
-import { ServicesDeleteService$Params } from '../fn/services/services-delete-service';
-import { servicesGetServiceById } from '../fn/services/services-get-service-by-id';
-import { ServicesGetServiceById$Params } from '../fn/services/services-get-service-by-id';
-import { servicesGetServices } from '../fn/services/services-get-services';
-import { ServicesGetServices$Params } from '../fn/services/services-get-services';
-import { servicesGetServices$Plain } from '../fn/services/services-get-services-plain';
-import { ServicesGetServices$Plain$Params } from '../fn/services/services-get-services-plain';
-import { servicesUpdateService } from '../fn/services/services-update-service';
-import { ServicesUpdateService$Params } from '../fn/services/services-update-service';
+import { updateService } from '../fn/services/update-service';
+import { UpdateService$Params } from '../fn/services/update-service';
 
 @Injectable({ providedIn: 'root' })
 export class ServicesService extends BaseService {
@@ -33,8 +33,8 @@ export class ServicesService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `servicesGetServices()` */
-  static readonly ServicesGetServicesPath = '/api/Services';
+  /** Path part for operation `getServices()` */
+  static readonly GetServicesPath = '/api/Services';
 
   /**
    * Retrieves all additional services.
@@ -42,12 +42,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesGetServices$Plain()` instead.
+   * To access only the response body, use `getServices$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServices$Plain$Response(params?: ServicesGetServices$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ServiceDto>>> {
-    return servicesGetServices$Plain(this.http, this.rootUrl, params, context);
+  getServices$Plain$Response(params?: GetServices$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ServiceDto>>> {
+    return getServices$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -56,12 +56,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesGetServices$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getServices$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServices$Plain(params?: ServicesGetServices$Plain$Params, context?: HttpContext): Observable<Array<ServiceDto>> {
-    return this.servicesGetServices$Plain$Response(params, context).pipe(
+  getServices$Plain(params?: GetServices$Plain$Params, context?: HttpContext): Observable<Array<ServiceDto>> {
+    return this.getServices$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<ServiceDto>>): Array<ServiceDto> => r.body)
     );
   }
@@ -72,12 +72,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesGetServices()` instead.
+   * To access only the response body, use `getServices()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServices$Response(params?: ServicesGetServices$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ServiceDto>>> {
-    return servicesGetServices(this.http, this.rootUrl, params, context);
+  getServices$Response(params?: GetServices$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ServiceDto>>> {
+    return getServices(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -86,18 +86,18 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesGetServices$Response()` instead.
+   * To access the full response (for headers, for example), `getServices$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServices(params?: ServicesGetServices$Params, context?: HttpContext): Observable<Array<ServiceDto>> {
-    return this.servicesGetServices$Response(params, context).pipe(
+  getServices(params?: GetServices$Params, context?: HttpContext): Observable<Array<ServiceDto>> {
+    return this.getServices$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<ServiceDto>>): Array<ServiceDto> => r.body)
     );
   }
 
-  /** Path part for operation `servicesCreateService()` */
-  static readonly ServicesCreateServicePath = '/api/Services';
+  /** Path part for operation `createService()` */
+  static readonly CreateServicePath = '/api/Services';
 
   /**
    * Creates a new additional service.
@@ -105,12 +105,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesCreateService$Plain()` instead.
+   * To access only the response body, use `createService$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesCreateService$Plain$Response(params?: ServicesCreateService$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<ServiceDto>> {
-    return servicesCreateService$Plain(this.http, this.rootUrl, params, context);
+  createService$Plain$Response(params?: CreateService$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<ServiceDto>> {
+    return createService$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -119,12 +119,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesCreateService$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `createService$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesCreateService$Plain(params?: ServicesCreateService$Plain$Params, context?: HttpContext): Observable<ServiceDto> {
-    return this.servicesCreateService$Plain$Response(params, context).pipe(
+  createService$Plain(params?: CreateService$Plain$Params, context?: HttpContext): Observable<ServiceDto> {
+    return this.createService$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<ServiceDto>): ServiceDto => r.body)
     );
   }
@@ -135,12 +135,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesCreateService()` instead.
+   * To access only the response body, use `createService()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesCreateService$Response(params?: ServicesCreateService$Params, context?: HttpContext): Observable<StrictHttpResponse<ServiceDto>> {
-    return servicesCreateService(this.http, this.rootUrl, params, context);
+  createService$Response(params?: CreateService$Params, context?: HttpContext): Observable<StrictHttpResponse<ServiceDto>> {
+    return createService(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -149,18 +149,18 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesCreateService$Response()` instead.
+   * To access the full response (for headers, for example), `createService$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesCreateService(params?: ServicesCreateService$Params, context?: HttpContext): Observable<ServiceDto> {
-    return this.servicesCreateService$Response(params, context).pipe(
+  createService(params?: CreateService$Params, context?: HttpContext): Observable<ServiceDto> {
+    return this.createService$Response(params, context).pipe(
       map((r: StrictHttpResponse<ServiceDto>): ServiceDto => r.body)
     );
   }
 
-  /** Path part for operation `servicesGetServiceById()` */
-  static readonly ServicesGetServiceByIdPath = '/api/Services/{id}';
+  /** Path part for operation `getServiceById()` */
+  static readonly GetServiceByIdPath = '/api/Services/{id}';
 
   /**
    * Retrieves a specific service by its unique identifier.
@@ -168,12 +168,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesGetServiceById()` instead.
+   * To access only the response body, use `getServiceById()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServiceById$Response(params: ServicesGetServiceById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return servicesGetServiceById(this.http, this.rootUrl, params, context);
+  getServiceById$Response(params: GetServiceById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return getServiceById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -182,18 +182,18 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesGetServiceById$Response()` instead.
+   * To access the full response (for headers, for example), `getServiceById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesGetServiceById(params: ServicesGetServiceById$Params, context?: HttpContext): Observable<void> {
-    return this.servicesGetServiceById$Response(params, context).pipe(
+  getServiceById(params: GetServiceById$Params, context?: HttpContext): Observable<void> {
+    return this.getServiceById$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `servicesUpdateService()` */
-  static readonly ServicesUpdateServicePath = '/api/Services/{id}';
+  /** Path part for operation `updateService()` */
+  static readonly UpdateServicePath = '/api/Services/{id}';
 
   /**
    * Updates an existing service.
@@ -201,12 +201,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesUpdateService()` instead.
+   * To access only the response body, use `updateService()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesUpdateService$Response(params: ServicesUpdateService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return servicesUpdateService(this.http, this.rootUrl, params, context);
+  updateService$Response(params: UpdateService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateService(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -215,18 +215,18 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesUpdateService$Response()` instead.
+   * To access the full response (for headers, for example), `updateService$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  servicesUpdateService(params: ServicesUpdateService$Params, context?: HttpContext): Observable<void> {
-    return this.servicesUpdateService$Response(params, context).pipe(
+  updateService(params: UpdateService$Params, context?: HttpContext): Observable<void> {
+    return this.updateService$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `servicesDeleteService()` */
-  static readonly ServicesDeleteServicePath = '/api/Services/{id}';
+  /** Path part for operation `deleteService()` */
+  static readonly DeleteServicePath = '/api/Services/{id}';
 
   /**
    * Deletes a service by its unique identifier.
@@ -234,12 +234,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `servicesDeleteService()` instead.
+   * To access only the response body, use `deleteService()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesDeleteService$Response(params: ServicesDeleteService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return servicesDeleteService(this.http, this.rootUrl, params, context);
+  deleteService$Response(params: DeleteService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteService(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -248,12 +248,12 @@ export class ServicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `servicesDeleteService$Response()` instead.
+   * To access the full response (for headers, for example), `deleteService$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  servicesDeleteService(params: ServicesDeleteService$Params, context?: HttpContext): Observable<void> {
-    return this.servicesDeleteService$Response(params, context).pipe(
+  deleteService(params: DeleteService$Params, context?: HttpContext): Observable<void> {
+    return this.deleteService$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

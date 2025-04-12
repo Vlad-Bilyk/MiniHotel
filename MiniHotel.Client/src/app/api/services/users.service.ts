@@ -11,17 +11,17 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { deleteUser } from '../fn/users/delete-user';
+import { DeleteUser$Params } from '../fn/users/delete-user';
+import { getUserById } from '../fn/users/get-user-by-id';
+import { GetUserById$Params } from '../fn/users/get-user-by-id';
+import { getUsers } from '../fn/users/get-users';
+import { GetUsers$Params } from '../fn/users/get-users';
+import { getUsers$Plain } from '../fn/users/get-users-plain';
+import { GetUsers$Plain$Params } from '../fn/users/get-users-plain';
+import { updateUser } from '../fn/users/update-user';
+import { UpdateUser$Params } from '../fn/users/update-user';
 import { UserDto } from '../models/user-dto';
-import { usersDeleteUser } from '../fn/users/users-delete-user';
-import { UsersDeleteUser$Params } from '../fn/users/users-delete-user';
-import { usersGetUserById } from '../fn/users/users-get-user-by-id';
-import { UsersGetUserById$Params } from '../fn/users/users-get-user-by-id';
-import { usersGetUsers } from '../fn/users/users-get-users';
-import { UsersGetUsers$Params } from '../fn/users/users-get-users';
-import { usersGetUsers$Plain } from '../fn/users/users-get-users-plain';
-import { UsersGetUsers$Plain$Params } from '../fn/users/users-get-users-plain';
-import { usersUpdateUser } from '../fn/users/users-update-user';
-import { UsersUpdateUser$Params } from '../fn/users/users-update-user';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService extends BaseService {
@@ -29,8 +29,8 @@ export class UsersService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `usersGetUsers()` */
-  static readonly UsersGetUsersPath = '/api/Users';
+  /** Path part for operation `getUsers()` */
+  static readonly GetUsersPath = '/api/Users';
 
   /**
    * Retrieves all users.
@@ -38,12 +38,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `usersGetUsers$Plain()` instead.
+   * To access only the response body, use `getUsers$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUsers$Plain$Response(params?: UsersGetUsers$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDto>>> {
-    return usersGetUsers$Plain(this.http, this.rootUrl, params, context);
+  getUsers$Plain$Response(params?: GetUsers$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDto>>> {
+    return getUsers$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -52,12 +52,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `usersGetUsers$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getUsers$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUsers$Plain(params?: UsersGetUsers$Plain$Params, context?: HttpContext): Observable<Array<UserDto>> {
-    return this.usersGetUsers$Plain$Response(params, context).pipe(
+  getUsers$Plain(params?: GetUsers$Plain$Params, context?: HttpContext): Observable<Array<UserDto>> {
+    return this.getUsers$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserDto>>): Array<UserDto> => r.body)
     );
   }
@@ -68,12 +68,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `usersGetUsers()` instead.
+   * To access only the response body, use `getUsers()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUsers$Response(params?: UsersGetUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDto>>> {
-    return usersGetUsers(this.http, this.rootUrl, params, context);
+  getUsers$Response(params?: GetUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDto>>> {
+    return getUsers(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -82,18 +82,18 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `usersGetUsers$Response()` instead.
+   * To access the full response (for headers, for example), `getUsers$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUsers(params?: UsersGetUsers$Params, context?: HttpContext): Observable<Array<UserDto>> {
-    return this.usersGetUsers$Response(params, context).pipe(
+  getUsers(params?: GetUsers$Params, context?: HttpContext): Observable<Array<UserDto>> {
+    return this.getUsers$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserDto>>): Array<UserDto> => r.body)
     );
   }
 
-  /** Path part for operation `usersGetUserById()` */
-  static readonly UsersGetUserByIdPath = '/api/Users/{id}';
+  /** Path part for operation `getUserById()` */
+  static readonly GetUserByIdPath = '/api/Users/{id}';
 
   /**
    * Retrieves a user by their unique identifier.
@@ -101,12 +101,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `usersGetUserById()` instead.
+   * To access only the response body, use `getUserById()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUserById$Response(params: UsersGetUserById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return usersGetUserById(this.http, this.rootUrl, params, context);
+  getUserById$Response(params: GetUserById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return getUserById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -115,18 +115,18 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `usersGetUserById$Response()` instead.
+   * To access the full response (for headers, for example), `getUserById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersGetUserById(params: UsersGetUserById$Params, context?: HttpContext): Observable<void> {
-    return this.usersGetUserById$Response(params, context).pipe(
+  getUserById(params: GetUserById$Params, context?: HttpContext): Observable<void> {
+    return this.getUserById$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `usersUpdateUser()` */
-  static readonly UsersUpdateUserPath = '/api/Users/{id}';
+  /** Path part for operation `updateUser()` */
+  static readonly UpdateUserPath = '/api/Users/{id}';
 
   /**
    * Updates a user's information.
@@ -134,12 +134,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `usersUpdateUser()` instead.
+   * To access only the response body, use `updateUser()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  usersUpdateUser$Response(params: UsersUpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return usersUpdateUser(this.http, this.rootUrl, params, context);
+  updateUser$Response(params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateUser(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -148,18 +148,18 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `usersUpdateUser$Response()` instead.
+   * To access the full response (for headers, for example), `updateUser$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  usersUpdateUser(params: UsersUpdateUser$Params, context?: HttpContext): Observable<void> {
-    return this.usersUpdateUser$Response(params, context).pipe(
+  updateUser(params: UpdateUser$Params, context?: HttpContext): Observable<void> {
+    return this.updateUser$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `usersDeleteUser()` */
-  static readonly UsersDeleteUserPath = '/api/Users/{id}';
+  /** Path part for operation `deleteUser()` */
+  static readonly DeleteUserPath = '/api/Users/{id}';
 
   /**
    * Deletes a user by their unique identifier.
@@ -167,12 +167,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `usersDeleteUser()` instead.
+   * To access only the response body, use `deleteUser()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersDeleteUser$Response(params: UsersDeleteUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return usersDeleteUser(this.http, this.rootUrl, params, context);
+  deleteUser$Response(params: DeleteUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteUser(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -181,12 +181,12 @@ export class UsersService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `usersDeleteUser$Response()` instead.
+   * To access the full response (for headers, for example), `deleteUser$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  usersDeleteUser(params: UsersDeleteUser$Params, context?: HttpContext): Observable<void> {
-    return this.usersDeleteUser$Response(params, context).pipe(
+  deleteUser(params: DeleteUser$Params, context?: HttpContext): Observable<void> {
+    return this.deleteUser$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

@@ -12,38 +12,38 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { BookingDto } from '../models/booking-dto';
-import { bookingsCancelBooking } from '../fn/bookings/bookings-cancel-booking';
-import { BookingsCancelBooking$Params } from '../fn/bookings/bookings-cancel-booking';
-import { bookingsCancelBooking$Plain } from '../fn/bookings/bookings-cancel-booking-plain';
-import { BookingsCancelBooking$Plain$Params } from '../fn/bookings/bookings-cancel-booking-plain';
-import { bookingsCheckInBooking } from '../fn/bookings/bookings-check-in-booking';
-import { BookingsCheckInBooking$Params } from '../fn/bookings/bookings-check-in-booking';
-import { bookingsCheckInBooking$Plain } from '../fn/bookings/bookings-check-in-booking-plain';
-import { BookingsCheckInBooking$Plain$Params } from '../fn/bookings/bookings-check-in-booking-plain';
-import { bookingsCheckOutBooking } from '../fn/bookings/bookings-check-out-booking';
-import { BookingsCheckOutBooking$Params } from '../fn/bookings/bookings-check-out-booking';
-import { bookingsCheckOutBooking$Plain } from '../fn/bookings/bookings-check-out-booking-plain';
-import { BookingsCheckOutBooking$Plain$Params } from '../fn/bookings/bookings-check-out-booking-plain';
-import { bookingsCompletedBooking } from '../fn/bookings/bookings-completed-booking';
-import { BookingsCompletedBooking$Params } from '../fn/bookings/bookings-completed-booking';
-import { bookingsCompletedBooking$Plain } from '../fn/bookings/bookings-completed-booking-plain';
-import { BookingsCompletedBooking$Plain$Params } from '../fn/bookings/bookings-completed-booking-plain';
-import { bookingsConfirmedBooking } from '../fn/bookings/bookings-confirmed-booking';
-import { BookingsConfirmedBooking$Params } from '../fn/bookings/bookings-confirmed-booking';
-import { bookingsConfirmedBooking$Plain } from '../fn/bookings/bookings-confirmed-booking-plain';
-import { BookingsConfirmedBooking$Plain$Params } from '../fn/bookings/bookings-confirmed-booking-plain';
-import { bookingsCreateBooking } from '../fn/bookings/bookings-create-booking';
-import { BookingsCreateBooking$Params } from '../fn/bookings/bookings-create-booking';
-import { bookingsCreateBooking$Plain } from '../fn/bookings/bookings-create-booking-plain';
-import { BookingsCreateBooking$Plain$Params } from '../fn/bookings/bookings-create-booking-plain';
-import { bookingsGetBookingById } from '../fn/bookings/bookings-get-booking-by-id';
-import { BookingsGetBookingById$Params } from '../fn/bookings/bookings-get-booking-by-id';
-import { bookingsGetBookingById$Plain } from '../fn/bookings/bookings-get-booking-by-id-plain';
-import { BookingsGetBookingById$Plain$Params } from '../fn/bookings/bookings-get-booking-by-id-plain';
-import { bookingsGetBookings } from '../fn/bookings/bookings-get-bookings';
-import { BookingsGetBookings$Params } from '../fn/bookings/bookings-get-bookings';
-import { bookingsGetBookings$Plain } from '../fn/bookings/bookings-get-bookings-plain';
-import { BookingsGetBookings$Plain$Params } from '../fn/bookings/bookings-get-bookings-plain';
+import { cancelBooking } from '../fn/bookings/cancel-booking';
+import { CancelBooking$Params } from '../fn/bookings/cancel-booking';
+import { cancelBooking$Plain } from '../fn/bookings/cancel-booking-plain';
+import { CancelBooking$Plain$Params } from '../fn/bookings/cancel-booking-plain';
+import { checkInBooking } from '../fn/bookings/check-in-booking';
+import { CheckInBooking$Params } from '../fn/bookings/check-in-booking';
+import { checkInBooking$Plain } from '../fn/bookings/check-in-booking-plain';
+import { CheckInBooking$Plain$Params } from '../fn/bookings/check-in-booking-plain';
+import { checkOutBooking } from '../fn/bookings/check-out-booking';
+import { CheckOutBooking$Params } from '../fn/bookings/check-out-booking';
+import { checkOutBooking$Plain } from '../fn/bookings/check-out-booking-plain';
+import { CheckOutBooking$Plain$Params } from '../fn/bookings/check-out-booking-plain';
+import { completedBooking } from '../fn/bookings/completed-booking';
+import { CompletedBooking$Params } from '../fn/bookings/completed-booking';
+import { completedBooking$Plain } from '../fn/bookings/completed-booking-plain';
+import { CompletedBooking$Plain$Params } from '../fn/bookings/completed-booking-plain';
+import { confirmedBooking } from '../fn/bookings/confirmed-booking';
+import { ConfirmedBooking$Params } from '../fn/bookings/confirmed-booking';
+import { confirmedBooking$Plain } from '../fn/bookings/confirmed-booking-plain';
+import { ConfirmedBooking$Plain$Params } from '../fn/bookings/confirmed-booking-plain';
+import { createBooking } from '../fn/bookings/create-booking';
+import { CreateBooking$Params } from '../fn/bookings/create-booking';
+import { createBooking$Plain } from '../fn/bookings/create-booking-plain';
+import { CreateBooking$Plain$Params } from '../fn/bookings/create-booking-plain';
+import { getBookingById } from '../fn/bookings/get-booking-by-id';
+import { GetBookingById$Params } from '../fn/bookings/get-booking-by-id';
+import { getBookingById$Plain } from '../fn/bookings/get-booking-by-id-plain';
+import { GetBookingById$Plain$Params } from '../fn/bookings/get-booking-by-id-plain';
+import { getBookings } from '../fn/bookings/get-bookings';
+import { GetBookings$Params } from '../fn/bookings/get-bookings';
+import { getBookings$Plain } from '../fn/bookings/get-bookings-plain';
+import { GetBookings$Plain$Params } from '../fn/bookings/get-bookings-plain';
 
 @Injectable({ providedIn: 'root' })
 export class BookingsService extends BaseService {
@@ -51,8 +51,8 @@ export class BookingsService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `bookingsGetBookings()` */
-  static readonly BookingsGetBookingsPath = '/api/Bookings';
+  /** Path part for operation `getBookings()` */
+  static readonly GetBookingsPath = '/api/Bookings';
 
   /**
    * Retrieves all bookings.
@@ -60,12 +60,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsGetBookings$Plain()` instead.
+   * To access only the response body, use `getBookings$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookings$Plain$Response(params?: BookingsGetBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
-    return bookingsGetBookings$Plain(this.http, this.rootUrl, params, context);
+  getBookings$Plain$Response(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
+    return getBookings$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -74,12 +74,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsGetBookings$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getBookings$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookings$Plain(params?: BookingsGetBookings$Plain$Params, context?: HttpContext): Observable<Array<BookingDto>> {
-    return this.bookingsGetBookings$Plain$Response(params, context).pipe(
+  getBookings$Plain(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<Array<BookingDto>> {
+    return this.getBookings$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<BookingDto>>): Array<BookingDto> => r.body)
     );
   }
@@ -90,12 +90,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsGetBookings()` instead.
+   * To access only the response body, use `getBookings()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookings$Response(params?: BookingsGetBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
-    return bookingsGetBookings(this.http, this.rootUrl, params, context);
+  getBookings$Response(params?: GetBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
+    return getBookings(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -104,18 +104,18 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsGetBookings$Response()` instead.
+   * To access the full response (for headers, for example), `getBookings$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookings(params?: BookingsGetBookings$Params, context?: HttpContext): Observable<Array<BookingDto>> {
-    return this.bookingsGetBookings$Response(params, context).pipe(
+  getBookings(params?: GetBookings$Params, context?: HttpContext): Observable<Array<BookingDto>> {
+    return this.getBookings$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<BookingDto>>): Array<BookingDto> => r.body)
     );
   }
 
-  /** Path part for operation `bookingsCreateBooking()` */
-  static readonly BookingsCreateBookingPath = '/api/Bookings';
+  /** Path part for operation `createBooking()` */
+  static readonly CreateBookingPath = '/api/Bookings';
 
   /**
    * Creates a new booking.
@@ -123,42 +123,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCreateBooking$Plain()` instead.
+   * To access only the response body, use `createBooking$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  bookingsCreateBooking$Plain$Response(params?: BookingsCreateBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCreateBooking$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Creates a new booking.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCreateBooking$Plain$Response()` instead.
-   *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
-   */
-  bookingsCreateBooking$Plain(params?: BookingsCreateBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCreateBooking$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
-    );
-  }
-
-  /**
-   * Creates a new booking.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCreateBooking()` instead.
-   *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
-   */
-  bookingsCreateBooking$Response(params?: BookingsCreateBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCreateBooking(this.http, this.rootUrl, params, context);
+  createBooking$Plain$Response(params?: CreateBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return createBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -167,18 +137,48 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCreateBooking$Response()` instead.
+   * To access the full response (for headers, for example), `createBooking$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  bookingsCreateBooking(params?: BookingsCreateBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCreateBooking$Response(params, context).pipe(
+  createBooking$Plain(params?: CreateBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.createBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsGetBookingById()` */
-  static readonly BookingsGetBookingByIdPath = '/api/Bookings/{id}';
+  /**
+   * Creates a new booking.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `createBooking()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  createBooking$Response(params?: CreateBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return createBooking(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Creates a new booking.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `createBooking$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  createBooking(params?: CreateBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.createBooking$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getBookingById()` */
+  static readonly GetBookingByIdPath = '/api/Bookings/{id}';
 
   /**
    * Retrieves a booking by its unique identifier.
@@ -186,12 +186,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsGetBookingById$Plain()` instead.
+   * To access only the response body, use `getBookingById$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookingById$Plain$Response(params: BookingsGetBookingById$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsGetBookingById$Plain(this.http, this.rootUrl, params, context);
+  getBookingById$Plain$Response(params: GetBookingById$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return getBookingById$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -200,12 +200,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsGetBookingById$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getBookingById$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookingById$Plain(params: BookingsGetBookingById$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsGetBookingById$Plain$Response(params, context).pipe(
+  getBookingById$Plain(params: GetBookingById$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.getBookingById$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
@@ -216,12 +216,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsGetBookingById()` instead.
+   * To access only the response body, use `getBookingById()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookingById$Response(params: BookingsGetBookingById$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsGetBookingById(this.http, this.rootUrl, params, context);
+  getBookingById$Response(params: GetBookingById$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return getBookingById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -230,18 +230,18 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsGetBookingById$Response()` instead.
+   * To access the full response (for headers, for example), `getBookingById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsGetBookingById(params: BookingsGetBookingById$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsGetBookingById$Response(params, context).pipe(
+  getBookingById(params: GetBookingById$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.getBookingById$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsCancelBooking()` */
-  static readonly BookingsCancelBookingPath = '/api/Bookings/{id}/cancel';
+  /** Path part for operation `cancelBooking()` */
+  static readonly CancelBookingPath = '/api/Bookings/{id}/cancel';
 
   /**
    * Cancels an existing booking.
@@ -249,42 +249,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCancelBooking$Plain()` instead.
+   * To access only the response body, use `cancelBooking$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCancelBooking$Plain$Response(params: BookingsCancelBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCancelBooking$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Cancels an existing booking.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCancelBooking$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  bookingsCancelBooking$Plain(params: BookingsCancelBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCancelBooking$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
-    );
-  }
-
-  /**
-   * Cancels an existing booking.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCancelBooking()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  bookingsCancelBooking$Response(params: BookingsCancelBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCancelBooking(this.http, this.rootUrl, params, context);
+  cancelBooking$Plain$Response(params: CancelBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return cancelBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -293,18 +263,48 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCancelBooking$Response()` instead.
+   * To access the full response (for headers, for example), `cancelBooking$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCancelBooking(params: BookingsCancelBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCancelBooking$Response(params, context).pipe(
+  cancelBooking$Plain(params: CancelBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.cancelBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsCheckInBooking()` */
-  static readonly BookingsCheckInBookingPath = '/api/Bookings/{id}/checkin';
+  /**
+   * Cancels an existing booking.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `cancelBooking()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  cancelBooking$Response(params: CancelBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return cancelBooking(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Cancels an existing booking.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `cancelBooking$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  cancelBooking(params: CancelBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.cancelBooking$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
+    );
+  }
+
+  /** Path part for operation `checkInBooking()` */
+  static readonly CheckInBookingPath = '/api/Bookings/{id}/checkin';
 
   /**
    * Marks a booking as checked in.
@@ -312,12 +312,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCheckInBooking$Plain()` instead.
+   * To access only the response body, use `checkInBooking$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckInBooking$Plain$Response(params: BookingsCheckInBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCheckInBooking$Plain(this.http, this.rootUrl, params, context);
+  checkInBooking$Plain$Response(params: CheckInBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return checkInBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -326,12 +326,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCheckInBooking$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `checkInBooking$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckInBooking$Plain(params: BookingsCheckInBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCheckInBooking$Plain$Response(params, context).pipe(
+  checkInBooking$Plain(params: CheckInBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.checkInBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
@@ -342,12 +342,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCheckInBooking()` instead.
+   * To access only the response body, use `checkInBooking()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckInBooking$Response(params: BookingsCheckInBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCheckInBooking(this.http, this.rootUrl, params, context);
+  checkInBooking$Response(params: CheckInBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return checkInBooking(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -356,18 +356,18 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCheckInBooking$Response()` instead.
+   * To access the full response (for headers, for example), `checkInBooking$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckInBooking(params: BookingsCheckInBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCheckInBooking$Response(params, context).pipe(
+  checkInBooking(params: CheckInBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.checkInBooking$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsCheckOutBooking()` */
-  static readonly BookingsCheckOutBookingPath = '/api/Bookings/{id}/checkout';
+  /** Path part for operation `checkOutBooking()` */
+  static readonly CheckOutBookingPath = '/api/Bookings/{id}/checkout';
 
   /**
    * Marks a booking as checked out.
@@ -375,42 +375,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCheckOutBooking$Plain()` instead.
+   * To access only the response body, use `checkOutBooking$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckOutBooking$Plain$Response(params: BookingsCheckOutBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCheckOutBooking$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Marks a booking as checked out.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCheckOutBooking$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  bookingsCheckOutBooking$Plain(params: BookingsCheckOutBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCheckOutBooking$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
-    );
-  }
-
-  /**
-   * Marks a booking as checked out.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCheckOutBooking()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  bookingsCheckOutBooking$Response(params: BookingsCheckOutBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCheckOutBooking(this.http, this.rootUrl, params, context);
+  checkOutBooking$Plain$Response(params: CheckOutBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return checkOutBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -419,18 +389,48 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCheckOutBooking$Response()` instead.
+   * To access the full response (for headers, for example), `checkOutBooking$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCheckOutBooking(params: BookingsCheckOutBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCheckOutBooking$Response(params, context).pipe(
+  checkOutBooking$Plain(params: CheckOutBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.checkOutBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsConfirmedBooking()` */
-  static readonly BookingsConfirmedBookingPath = '/api/Bookings/{id}/confirmed';
+  /**
+   * Marks a booking as checked out.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `checkOutBooking()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkOutBooking$Response(params: CheckOutBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return checkOutBooking(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Marks a booking as checked out.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `checkOutBooking$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkOutBooking(params: CheckOutBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.checkOutBooking$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
+    );
+  }
+
+  /** Path part for operation `confirmedBooking()` */
+  static readonly ConfirmedBookingPath = '/api/Bookings/{id}/confirmed';
 
   /**
    * Confirms an existing booking.
@@ -438,12 +438,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsConfirmedBooking$Plain()` instead.
+   * To access only the response body, use `confirmedBooking$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsConfirmedBooking$Plain$Response(params: BookingsConfirmedBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsConfirmedBooking$Plain(this.http, this.rootUrl, params, context);
+  confirmedBooking$Plain$Response(params: ConfirmedBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return confirmedBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -452,12 +452,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsConfirmedBooking$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `confirmedBooking$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsConfirmedBooking$Plain(params: BookingsConfirmedBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsConfirmedBooking$Plain$Response(params, context).pipe(
+  confirmedBooking$Plain(params: ConfirmedBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.confirmedBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
@@ -468,12 +468,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsConfirmedBooking()` instead.
+   * To access only the response body, use `confirmedBooking()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsConfirmedBooking$Response(params: BookingsConfirmedBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsConfirmedBooking(this.http, this.rootUrl, params, context);
+  confirmedBooking$Response(params: ConfirmedBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return confirmedBooking(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -482,18 +482,18 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsConfirmedBooking$Response()` instead.
+   * To access the full response (for headers, for example), `confirmedBooking$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsConfirmedBooking(params: BookingsConfirmedBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsConfirmedBooking$Response(params, context).pipe(
+  confirmedBooking(params: ConfirmedBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.confirmedBooking$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
-  /** Path part for operation `bookingsCompletedBooking()` */
-  static readonly BookingsCompletedBookingPath = '/api/Bookings/{id}/completed';
+  /** Path part for operation `completedBooking()` */
+  static readonly CompletedBookingPath = '/api/Bookings/{id}/completed';
 
   /**
    * Marks an existing booking as completed.
@@ -501,12 +501,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCompletedBooking$Plain()` instead.
+   * To access only the response body, use `completedBooking$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCompletedBooking$Plain$Response(params: BookingsCompletedBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCompletedBooking$Plain(this.http, this.rootUrl, params, context);
+  completedBooking$Plain$Response(params: CompletedBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return completedBooking$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -515,12 +515,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCompletedBooking$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `completedBooking$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCompletedBooking$Plain(params: BookingsCompletedBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCompletedBooking$Plain$Response(params, context).pipe(
+  completedBooking$Plain(params: CompletedBooking$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.completedBooking$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
@@ -531,12 +531,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `bookingsCompletedBooking()` instead.
+   * To access only the response body, use `completedBooking()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCompletedBooking$Response(params: BookingsCompletedBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return bookingsCompletedBooking(this.http, this.rootUrl, params, context);
+  completedBooking$Response(params: CompletedBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return completedBooking(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -545,12 +545,12 @@ export class BookingsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `bookingsCompletedBooking$Response()` instead.
+   * To access the full response (for headers, for example), `completedBooking$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  bookingsCompletedBooking(params: BookingsCompletedBooking$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.bookingsCompletedBooking$Response(params, context).pipe(
+  completedBooking(params: CompletedBooking$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.completedBooking$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }

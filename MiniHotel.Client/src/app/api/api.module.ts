@@ -11,6 +11,7 @@ import { BookingsService } from './services/bookings.service';
 import { InvoicesService } from './services/invoices.service';
 import { PaymentsService } from './services/payments.service';
 import { RoomsService } from './services/rooms.service';
+import { RoomTypesService } from './services/room-types.service';
 import { ServicesService } from './services/services.service';
 import { UsersService } from './services/users.service';
 
@@ -27,6 +28,7 @@ import { UsersService } from './services/users.service';
     InvoicesService,
     PaymentsService,
     RoomsService,
+    RoomTypesService,
     ServicesService,
     UsersService,
     ApiConfiguration

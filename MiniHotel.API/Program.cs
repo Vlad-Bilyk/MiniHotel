@@ -104,8 +104,7 @@ builder.Services.AddSwaggerGen(options =>
         Url = "https://localhost:7252"
     });
 
-    options.CustomOperationIds(apiDesc => $"{apiDesc.ActionDescriptor.RouteValues["controller"]
-         + apiDesc.ActionDescriptor.RouteValues["action"]}");
+    options.CustomOperationIds(apiDesc => $"{apiDesc.ActionDescriptor.RouteValues["action"]}");
 
     var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));

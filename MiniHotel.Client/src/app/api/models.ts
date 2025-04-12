@@ -18,6 +18,8 @@ export type { RegisterRequestDto } from './models/register-request-dto';
 export { RoomCategory } from './models/room-category';
 export type { RoomDto } from './models/room-dto';
 export { RoomStatus } from './models/room-status';
+export type { RoomTypeDto } from './models/room-type-dto';
+export type { RoomTypeUpsertDto } from './models/room-type-upsert-dto';
 export type { RoomUpsertDto } from './models/room-upsert-dto';
 export type { ServiceDto } from './models/service-dto';
 export type { ServiceUpsertDto } from './models/service-upsert-dto';

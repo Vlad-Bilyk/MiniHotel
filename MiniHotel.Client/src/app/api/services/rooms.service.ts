@@ -11,29 +11,29 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { createRoom } from '../fn/rooms/create-room';
+import { CreateRoom$Params } from '../fn/rooms/create-room';
+import { createRoom$Plain } from '../fn/rooms/create-room-plain';
+import { CreateRoom$Plain$Params } from '../fn/rooms/create-room-plain';
+import { deleteRoom } from '../fn/rooms/delete-room';
+import { DeleteRoom$Params } from '../fn/rooms/delete-room';
+import { getAvailableRooms } from '../fn/rooms/get-available-rooms';
+import { GetAvailableRooms$Params } from '../fn/rooms/get-available-rooms';
+import { getAvailableRooms$Plain } from '../fn/rooms/get-available-rooms-plain';
+import { GetAvailableRooms$Plain$Params } from '../fn/rooms/get-available-rooms-plain';
+import { getRoomById } from '../fn/rooms/get-room-by-id';
+import { GetRoomById$Params } from '../fn/rooms/get-room-by-id';
+import { getRooms } from '../fn/rooms/get-rooms';
+import { GetRooms$Params } from '../fn/rooms/get-rooms';
+import { getRooms$Plain } from '../fn/rooms/get-rooms-plain';
+import { GetRooms$Plain$Params } from '../fn/rooms/get-rooms-plain';
 import { RoomDto } from '../models/room-dto';
-import { roomsCreateRoom } from '../fn/rooms/rooms-create-room';
-import { RoomsCreateRoom$Params } from '../fn/rooms/rooms-create-room';
-import { roomsCreateRoom$Plain } from '../fn/rooms/rooms-create-room-plain';
-import { RoomsCreateRoom$Plain$Params } from '../fn/rooms/rooms-create-room-plain';
-import { roomsDeleteRoom } from '../fn/rooms/rooms-delete-room';
-import { RoomsDeleteRoom$Params } from '../fn/rooms/rooms-delete-room';
-import { roomsGetAvailableRooms } from '../fn/rooms/rooms-get-available-rooms';
-import { RoomsGetAvailableRooms$Params } from '../fn/rooms/rooms-get-available-rooms';
-import { roomsGetAvailableRooms$Plain } from '../fn/rooms/rooms-get-available-rooms-plain';
-import { RoomsGetAvailableRooms$Plain$Params } from '../fn/rooms/rooms-get-available-rooms-plain';
-import { roomsGetRoomById } from '../fn/rooms/rooms-get-room-by-id';
-import { RoomsGetRoomById$Params } from '../fn/rooms/rooms-get-room-by-id';
-import { roomsGetRooms } from '../fn/rooms/rooms-get-rooms';
-import { RoomsGetRooms$Params } from '../fn/rooms/rooms-get-rooms';
-import { roomsGetRooms$Plain } from '../fn/rooms/rooms-get-rooms-plain';
-import { RoomsGetRooms$Plain$Params } from '../fn/rooms/rooms-get-rooms-plain';
-import { roomsUpdateRoom } from '../fn/rooms/rooms-update-room';
-import { RoomsUpdateRoom$Params } from '../fn/rooms/rooms-update-room';
-import { roomsUpdateStatus } from '../fn/rooms/rooms-update-status';
-import { RoomsUpdateStatus$Params } from '../fn/rooms/rooms-update-status';
-import { roomsUpdateStatus$Plain } from '../fn/rooms/rooms-update-status-plain';
-import { RoomsUpdateStatus$Plain$Params } from '../fn/rooms/rooms-update-status-plain';
+import { updateRoom } from '../fn/rooms/update-room';
+import { UpdateRoom$Params } from '../fn/rooms/update-room';
+import { updateStatus_1 } from '../fn/rooms/update-status-1';
+import { UpdateStatus_1$Params } from '../fn/rooms/update-status-1';
+import { updateStatus_1$Plain } from '../fn/rooms/update-status-1-plain';
+import { UpdateStatus_1$Plain$Params } from '../fn/rooms/update-status-1-plain';
 
 @Injectable({ providedIn: 'root' })
 export class RoomsService extends BaseService {
@@ -41,8 +41,8 @@ export class RoomsService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `roomsGetRooms()` */
-  static readonly RoomsGetRoomsPath = '/api/Rooms';
+  /** Path part for operation `getRooms()` */
+  static readonly GetRoomsPath = '/api/Rooms';
 
   /**
    * Retrieves all hotel rooms.
@@ -50,12 +50,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsGetRooms$Plain()` instead.
+   * To access only the response body, use `getRooms$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRooms$Plain$Response(params?: RoomsGetRooms$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
-    return roomsGetRooms$Plain(this.http, this.rootUrl, params, context);
+  getRooms$Plain$Response(params?: GetRooms$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
+    return getRooms$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -64,12 +64,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsGetRooms$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getRooms$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRooms$Plain(params?: RoomsGetRooms$Plain$Params, context?: HttpContext): Observable<Array<RoomDto>> {
-    return this.roomsGetRooms$Plain$Response(params, context).pipe(
+  getRooms$Plain(params?: GetRooms$Plain$Params, context?: HttpContext): Observable<Array<RoomDto>> {
+    return this.getRooms$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<RoomDto>>): Array<RoomDto> => r.body)
     );
   }
@@ -80,12 +80,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsGetRooms()` instead.
+   * To access only the response body, use `getRooms()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRooms$Response(params?: RoomsGetRooms$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
-    return roomsGetRooms(this.http, this.rootUrl, params, context);
+  getRooms$Response(params?: GetRooms$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
+    return getRooms(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -94,18 +94,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsGetRooms$Response()` instead.
+   * To access the full response (for headers, for example), `getRooms$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRooms(params?: RoomsGetRooms$Params, context?: HttpContext): Observable<Array<RoomDto>> {
-    return this.roomsGetRooms$Response(params, context).pipe(
+  getRooms(params?: GetRooms$Params, context?: HttpContext): Observable<Array<RoomDto>> {
+    return this.getRooms$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<RoomDto>>): Array<RoomDto> => r.body)
     );
   }
 
-  /** Path part for operation `roomsCreateRoom()` */
-  static readonly RoomsCreateRoomPath = '/api/Rooms';
+  /** Path part for operation `createRoom()` */
+  static readonly CreateRoomPath = '/api/Rooms';
 
   /**
    * Creates a new room.
@@ -113,12 +113,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsCreateRoom$Plain()` instead.
+   * To access only the response body, use `createRoom$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsCreateRoom$Plain$Response(params?: RoomsCreateRoom$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return roomsCreateRoom$Plain(this.http, this.rootUrl, params, context);
+  createRoom$Plain$Response(params?: CreateRoom$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return createRoom$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -127,12 +127,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsCreateRoom$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `createRoom$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsCreateRoom$Plain(params?: RoomsCreateRoom$Plain$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.roomsCreateRoom$Plain$Response(params, context).pipe(
+  createRoom$Plain(params?: CreateRoom$Plain$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.createRoom$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }
@@ -143,12 +143,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsCreateRoom()` instead.
+   * To access only the response body, use `createRoom()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsCreateRoom$Response(params?: RoomsCreateRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return roomsCreateRoom(this.http, this.rootUrl, params, context);
+  createRoom$Response(params?: CreateRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return createRoom(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -157,18 +157,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsCreateRoom$Response()` instead.
+   * To access the full response (for headers, for example), `createRoom$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsCreateRoom(params?: RoomsCreateRoom$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.roomsCreateRoom$Response(params, context).pipe(
+  createRoom(params?: CreateRoom$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.createRoom$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }
 
-  /** Path part for operation `roomsGetRoomById()` */
-  static readonly RoomsGetRoomByIdPath = '/api/Rooms/{id}';
+  /** Path part for operation `getRoomById()` */
+  static readonly GetRoomByIdPath = '/api/Rooms/{id}';
 
   /**
    * Retrieves a room by its unique identifier.
@@ -176,12 +176,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsGetRoomById()` instead.
+   * To access only the response body, use `getRoomById()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRoomById$Response(params: RoomsGetRoomById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return roomsGetRoomById(this.http, this.rootUrl, params, context);
+  getRoomById$Response(params: GetRoomById$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return getRoomById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -190,18 +190,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsGetRoomById$Response()` instead.
+   * To access the full response (for headers, for example), `getRoomById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetRoomById(params: RoomsGetRoomById$Params, context?: HttpContext): Observable<void> {
-    return this.roomsGetRoomById$Response(params, context).pipe(
+  getRoomById(params: GetRoomById$Params, context?: HttpContext): Observable<void> {
+    return this.getRoomById$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `roomsUpdateRoom()` */
-  static readonly RoomsUpdateRoomPath = '/api/Rooms/{id}';
+  /** Path part for operation `updateRoom()` */
+  static readonly UpdateRoomPath = '/api/Rooms/{id}';
 
   /**
    * Updates an existing room.
@@ -209,12 +209,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsUpdateRoom()` instead.
+   * To access only the response body, use `updateRoom()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsUpdateRoom$Response(params: RoomsUpdateRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return roomsUpdateRoom(this.http, this.rootUrl, params, context);
+  updateRoom$Response(params: UpdateRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateRoom(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -223,18 +223,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsUpdateRoom$Response()` instead.
+   * To access the full response (for headers, for example), `updateRoom$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  roomsUpdateRoom(params: RoomsUpdateRoom$Params, context?: HttpContext): Observable<void> {
-    return this.roomsUpdateRoom$Response(params, context).pipe(
+  updateRoom(params: UpdateRoom$Params, context?: HttpContext): Observable<void> {
+    return this.updateRoom$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `roomsDeleteRoom()` */
-  static readonly RoomsDeleteRoomPath = '/api/Rooms/{id}';
+  /** Path part for operation `deleteRoom()` */
+  static readonly DeleteRoomPath = '/api/Rooms/{id}';
 
   /**
    * Deletes a room by its unique identifier.
@@ -242,12 +242,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsDeleteRoom()` instead.
+   * To access only the response body, use `deleteRoom()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsDeleteRoom$Response(params: RoomsDeleteRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return roomsDeleteRoom(this.http, this.rootUrl, params, context);
+  deleteRoom$Response(params: DeleteRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteRoom(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -256,18 +256,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsDeleteRoom$Response()` instead.
+   * To access the full response (for headers, for example), `deleteRoom$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsDeleteRoom(params: RoomsDeleteRoom$Params, context?: HttpContext): Observable<void> {
-    return this.roomsDeleteRoom$Response(params, context).pipe(
+  deleteRoom(params: DeleteRoom$Params, context?: HttpContext): Observable<void> {
+    return this.deleteRoom$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `roomsGetAvailableRooms()` */
-  static readonly RoomsGetAvailableRoomsPath = '/api/Rooms/available/{startDate}/{endDate}';
+  /** Path part for operation `getAvailableRooms()` */
+  static readonly GetAvailableRoomsPath = '/api/Rooms/available/{startDate}/{endDate}';
 
   /**
    * Retrieves available rooms for the specified date range.
@@ -275,12 +275,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsGetAvailableRooms$Plain()` instead.
+   * To access only the response body, use `getAvailableRooms$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetAvailableRooms$Plain$Response(params: RoomsGetAvailableRooms$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
-    return roomsGetAvailableRooms$Plain(this.http, this.rootUrl, params, context);
+  getAvailableRooms$Plain$Response(params: GetAvailableRooms$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
+    return getAvailableRooms$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -289,12 +289,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsGetAvailableRooms$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getAvailableRooms$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetAvailableRooms$Plain(params: RoomsGetAvailableRooms$Plain$Params, context?: HttpContext): Observable<Array<RoomDto>> {
-    return this.roomsGetAvailableRooms$Plain$Response(params, context).pipe(
+  getAvailableRooms$Plain(params: GetAvailableRooms$Plain$Params, context?: HttpContext): Observable<Array<RoomDto>> {
+    return this.getAvailableRooms$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<RoomDto>>): Array<RoomDto> => r.body)
     );
   }
@@ -305,12 +305,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsGetAvailableRooms()` instead.
+   * To access only the response body, use `getAvailableRooms()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetAvailableRooms$Response(params: RoomsGetAvailableRooms$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
-    return roomsGetAvailableRooms(this.http, this.rootUrl, params, context);
+  getAvailableRooms$Response(params: GetAvailableRooms$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
+    return getAvailableRooms(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -319,18 +319,18 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsGetAvailableRooms$Response()` instead.
+   * To access the full response (for headers, for example), `getAvailableRooms$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsGetAvailableRooms(params: RoomsGetAvailableRooms$Params, context?: HttpContext): Observable<Array<RoomDto>> {
-    return this.roomsGetAvailableRooms$Response(params, context).pipe(
+  getAvailableRooms(params: GetAvailableRooms$Params, context?: HttpContext): Observable<Array<RoomDto>> {
+    return this.getAvailableRooms$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<RoomDto>>): Array<RoomDto> => r.body)
     );
   }
 
-  /** Path part for operation `roomsUpdateStatus()` */
-  static readonly RoomsUpdateStatusPath = '/api/Rooms/{id}/status';
+  /** Path part for operation `updateStatus_1()` */
+  static readonly UpdateStatus_1Path = '/api/Rooms/{id}/status';
 
   /**
    * Updates the status of a room.
@@ -338,12 +338,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsUpdateStatus$Plain()` instead.
+   * To access only the response body, use `updateStatus_1$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsUpdateStatus$Plain$Response(params: RoomsUpdateStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return roomsUpdateStatus$Plain(this.http, this.rootUrl, params, context);
+  updateStatus_1$Plain$Response(params: UpdateStatus_1$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return updateStatus_1$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -352,12 +352,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsUpdateStatus$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `updateStatus_1$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsUpdateStatus$Plain(params: RoomsUpdateStatus$Plain$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.roomsUpdateStatus$Plain$Response(params, context).pipe(
+  updateStatus_1$Plain(params: UpdateStatus_1$Plain$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.updateStatus_1$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }
@@ -368,12 +368,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `roomsUpdateStatus()` instead.
+   * To access only the response body, use `updateStatus_1()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsUpdateStatus$Response(params: RoomsUpdateStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return roomsUpdateStatus(this.http, this.rootUrl, params, context);
+  updateStatus_1$Response(params: UpdateStatus_1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return updateStatus_1(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -382,12 +382,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `roomsUpdateStatus$Response()` instead.
+   * To access the full response (for headers, for example), `updateStatus_1$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  roomsUpdateStatus(params: RoomsUpdateStatus$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.roomsUpdateStatus$Response(params, context).pipe(
+  updateStatus_1(params: UpdateStatus_1$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.updateStatus_1$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }

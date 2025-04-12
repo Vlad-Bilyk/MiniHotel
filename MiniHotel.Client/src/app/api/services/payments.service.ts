@@ -11,19 +11,19 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { callback } from '../fn/payments/callback';
+import { Callback$Params } from '../fn/payments/callback';
 import { InvoiceDto } from '../models/invoice-dto';
-import { paymentsCallback } from '../fn/payments/payments-callback';
-import { PaymentsCallback$Params } from '../fn/payments/payments-callback';
-import { paymentsPayOffline } from '../fn/payments/payments-pay-offline';
-import { PaymentsPayOffline$Params } from '../fn/payments/payments-pay-offline';
-import { paymentsPayOffline$Plain } from '../fn/payments/payments-pay-offline-plain';
-import { PaymentsPayOffline$Plain$Params } from '../fn/payments/payments-pay-offline-plain';
-import { paymentsPayOnline } from '../fn/payments/payments-pay-online';
-import { PaymentsPayOnline$Params } from '../fn/payments/payments-pay-online';
-import { paymentsRefund } from '../fn/payments/payments-refund';
-import { PaymentsRefund$Params } from '../fn/payments/payments-refund';
-import { paymentsRefund$Plain } from '../fn/payments/payments-refund-plain';
-import { PaymentsRefund$Plain$Params } from '../fn/payments/payments-refund-plain';
+import { payOffline } from '../fn/payments/pay-offline';
+import { PayOffline$Params } from '../fn/payments/pay-offline';
+import { payOffline$Plain } from '../fn/payments/pay-offline-plain';
+import { PayOffline$Plain$Params } from '../fn/payments/pay-offline-plain';
+import { payOnline } from '../fn/payments/pay-online';
+import { PayOnline$Params } from '../fn/payments/pay-online';
+import { refund } from '../fn/payments/refund';
+import { Refund$Params } from '../fn/payments/refund';
+import { refund$Plain } from '../fn/payments/refund-plain';
+import { Refund$Plain$Params } from '../fn/payments/refund-plain';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsService extends BaseService {
@@ -31,8 +31,8 @@ export class PaymentsService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `paymentsPayOnline()` */
-  static readonly PaymentsPayOnlinePath = '/api/Payments/{invoiceId}/online';
+  /** Path part for operation `payOnline()` */
+  static readonly PayOnlinePath = '/api/Payments/{invoiceId}/online';
 
   /**
    * Initiates an online payment by generating a payment URL.
@@ -40,12 +40,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsPayOnline()` instead.
+   * To access only the response body, use `payOnline()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOnline$Response(params: PaymentsPayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return paymentsPayOnline(this.http, this.rootUrl, params, context);
+  payOnline$Response(params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return payOnline(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -54,18 +54,18 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsPayOnline$Response()` instead.
+   * To access the full response (for headers, for example), `payOnline$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOnline(params: PaymentsPayOnline$Params, context?: HttpContext): Observable<void> {
-    return this.paymentsPayOnline$Response(params, context).pipe(
+  payOnline(params: PayOnline$Params, context?: HttpContext): Observable<void> {
+    return this.payOnline$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `paymentsPayOffline()` */
-  static readonly PaymentsPayOfflinePath = '/api/Payments/{invoiceId}/offline';
+  /** Path part for operation `payOffline()` */
+  static readonly PayOfflinePath = '/api/Payments/{invoiceId}/offline';
 
   /**
    * Processes an offline payment, marking the invoice as paid offline.
@@ -73,12 +73,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsPayOffline$Plain()` instead.
+   * To access only the response body, use `payOffline$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOffline$Plain$Response(params: PaymentsPayOffline$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return paymentsPayOffline$Plain(this.http, this.rootUrl, params, context);
+  payOffline$Plain$Response(params: PayOffline$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return payOffline$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -87,12 +87,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsPayOffline$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `payOffline$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOffline$Plain(params: PaymentsPayOffline$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.paymentsPayOffline$Plain$Response(params, context).pipe(
+  payOffline$Plain(params: PayOffline$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.payOffline$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -103,12 +103,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsPayOffline()` instead.
+   * To access only the response body, use `payOffline()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOffline$Response(params: PaymentsPayOffline$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return paymentsPayOffline(this.http, this.rootUrl, params, context);
+  payOffline$Response(params: PayOffline$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return payOffline(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -117,18 +117,18 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsPayOffline$Response()` instead.
+   * To access the full response (for headers, for example), `payOffline$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsPayOffline(params: PaymentsPayOffline$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.paymentsPayOffline$Response(params, context).pipe(
+  payOffline(params: PayOffline$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.payOffline$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 
-  /** Path part for operation `paymentsCallback()` */
-  static readonly PaymentsCallbackPath = '/api/Payments/callback';
+  /** Path part for operation `callback()` */
+  static readonly CallbackPath = '/api/Payments/callback';
 
   /**
    * Receives and processes LiqPay callback data.
@@ -136,12 +136,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsCallback()` instead.
+   * To access only the response body, use `callback()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  paymentsCallback$Response(params?: PaymentsCallback$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return paymentsCallback(this.http, this.rootUrl, params, context);
+  callback$Response(params?: Callback$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return callback(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -150,18 +150,18 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsCallback$Response()` instead.
+   * To access the full response (for headers, for example), `callback$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  paymentsCallback(params?: PaymentsCallback$Params, context?: HttpContext): Observable<void> {
-    return this.paymentsCallback$Response(params, context).pipe(
+  callback(params?: Callback$Params, context?: HttpContext): Observable<void> {
+    return this.callback$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /** Path part for operation `paymentsRefund()` */
-  static readonly PaymentsRefundPath = '/api/Payments/{invoiceId}/refund';
+  /** Path part for operation `refund()` */
+  static readonly RefundPath = '/api/Payments/{invoiceId}/refund';
 
   /**
    * Processes a refund request for a specific invoice.
@@ -169,12 +169,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsRefund$Plain()` instead.
+   * To access only the response body, use `refund$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsRefund$Plain$Response(params: PaymentsRefund$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return paymentsRefund$Plain(this.http, this.rootUrl, params, context);
+  refund$Plain$Response(params: Refund$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return refund$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -183,12 +183,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsRefund$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `refund$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsRefund$Plain(params: PaymentsRefund$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.paymentsRefund$Plain$Response(params, context).pipe(
+  refund$Plain(params: Refund$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.refund$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -199,12 +199,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `paymentsRefund()` instead.
+   * To access only the response body, use `refund()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsRefund$Response(params: PaymentsRefund$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return paymentsRefund(this.http, this.rootUrl, params, context);
+  refund$Response(params: Refund$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return refund(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -213,12 +213,12 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `paymentsRefund$Response()` instead.
+   * To access the full response (for headers, for example), `refund$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  paymentsRefund(params: PaymentsRefund$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.paymentsRefund$Response(params, context).pipe(
+  refund(params: Refund$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.refund$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
