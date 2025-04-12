@@ -32,7 +32,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
         {
-            IEnumerable<Room> rooms = await _roomRepository.GetAllAsync();
+            IEnumerable<Room> rooms = await _roomRepository.GetAllAsync(includeProperties: "RoomType");
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
         }
 
