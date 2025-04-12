@@ -16,6 +16,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { RoomsComponent } from './pages/rooms/rooms.component';
+import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
+import { RoomCardComponent } from './shared/room-card/room-card.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { RoomsComponent } from './pages/rooms/rooms.component';
     LoginComponent,
     RegisterComponent,
     RoomsComponent,
+    BookingSearchComponent,
+    RoomCardComponent,
   ],
   imports: [
     BrowserModule,

@@ -30,10 +30,10 @@ import { GetRooms$Plain$Params } from '../fn/rooms/get-rooms-plain';
 import { RoomDto } from '../models/room-dto';
 import { updateRoom } from '../fn/rooms/update-room';
 import { UpdateRoom$Params } from '../fn/rooms/update-room';
-import { updateStatus_1 } from '../fn/rooms/update-status-1';
-import { UpdateStatus_1$Params } from '../fn/rooms/update-status-1';
-import { updateStatus_1$Plain } from '../fn/rooms/update-status-1-plain';
-import { UpdateStatus_1$Plain$Params } from '../fn/rooms/update-status-1-plain';
+import { updateRoomStatus } from '../fn/rooms/update-room-status';
+import { UpdateRoomStatus$Params } from '../fn/rooms/update-room-status';
+import { updateRoomStatus$Plain } from '../fn/rooms/update-room-status-plain';
+import { UpdateRoomStatus$Plain$Params } from '../fn/rooms/update-room-status-plain';
 
 @Injectable({ providedIn: 'root' })
 export class RoomsService extends BaseService {
@@ -329,8 +329,8 @@ export class RoomsService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateStatus_1()` */
-  static readonly UpdateStatus_1Path = '/api/Rooms/{id}/status';
+  /** Path part for operation `updateRoomStatus()` */
+  static readonly UpdateRoomStatusPath = '/api/Rooms/{id}/status';
 
   /**
    * Updates the status of a room.
@@ -338,12 +338,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateStatus_1$Plain()` instead.
+   * To access only the response body, use `updateRoomStatus$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus_1$Plain$Response(params: UpdateStatus_1$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return updateStatus_1$Plain(this.http, this.rootUrl, params, context);
+  updateRoomStatus$Plain$Response(params: UpdateRoomStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return updateRoomStatus$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -352,12 +352,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateStatus_1$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `updateRoomStatus$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus_1$Plain(params: UpdateStatus_1$Plain$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.updateStatus_1$Plain$Response(params, context).pipe(
+  updateRoomStatus$Plain(params: UpdateRoomStatus$Plain$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.updateRoomStatus$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }
@@ -368,12 +368,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateStatus_1()` instead.
+   * To access only the response body, use `updateRoomStatus()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus_1$Response(params: UpdateStatus_1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-    return updateStatus_1(this.http, this.rootUrl, params, context);
+  updateRoomStatus$Response(params: UpdateRoomStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+    return updateRoomStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -382,12 +382,12 @@ export class RoomsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateStatus_1$Response()` instead.
+   * To access the full response (for headers, for example), `updateRoomStatus$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus_1(params: UpdateStatus_1$Params, context?: HttpContext): Observable<RoomDto> {
-    return this.updateStatus_1$Response(params, context).pipe(
+  updateRoomStatus(params: UpdateRoomStatus$Params, context?: HttpContext): Observable<RoomDto> {
+    return this.updateRoomStatus$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoomDto>): RoomDto => r.body)
     );
   }

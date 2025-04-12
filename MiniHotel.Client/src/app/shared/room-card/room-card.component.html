@@ -1,0 +1,17 @@
+<div class="card h-100 shadow-sm">
+    <!-- Place for image -->
+    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+        <span class="text-muted">[Фото номера]</span>
+    </div>
+
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ room.roomType }}</h5>
+        <p class="card-text text-muted small">Доступно номерів: {{ totalAvailable }}</p>
+        <p class="card-text">{{ room.description || 'Опис відсутній.' }}</p>
+
+        <div class="mt-auto">
+            <p class="fw-bold text-end">{{ room.pricePerDay | currency: 'UAH ':'symbol':'1.0-0' }}</p>
+            <button class="btn btn-primary w-100" (click)="bookRoom()">Забронювати</button>
+        </div>
+    </div>
+</div>

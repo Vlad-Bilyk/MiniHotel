@@ -30,10 +30,10 @@ import { GetInvoices$Plain$Params } from '../fn/invoices/get-invoices-plain';
 import { InvoiceDto } from '../models/invoice-dto';
 import { removeInvoiceItem } from '../fn/invoices/remove-invoice-item';
 import { RemoveInvoiceItem$Params } from '../fn/invoices/remove-invoice-item';
-import { updateStatus } from '../fn/invoices/update-status';
-import { UpdateStatus$Params } from '../fn/invoices/update-status';
-import { updateStatus$Plain } from '../fn/invoices/update-status-plain';
-import { UpdateStatus$Plain$Params } from '../fn/invoices/update-status-plain';
+import { updateInvoiceStatus } from '../fn/invoices/update-invoice-status';
+import { UpdateInvoiceStatus$Params } from '../fn/invoices/update-invoice-status';
+import { updateInvoiceStatus$Plain } from '../fn/invoices/update-invoice-status-plain';
+import { UpdateInvoiceStatus$Plain$Params } from '../fn/invoices/update-invoice-status-plain';
 
 @Injectable({ providedIn: 'root' })
 export class InvoicesService extends BaseService {
@@ -326,8 +326,8 @@ export class InvoicesService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateStatus()` */
-  static readonly UpdateStatusPath = '/api/Invoices/{id}/status';
+  /** Path part for operation `updateInvoiceStatus()` */
+  static readonly UpdateInvoiceStatusPath = '/api/Invoices/{id}/status';
 
   /**
    * Updates the status of an invoice.
@@ -335,12 +335,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateStatus$Plain()` instead.
+   * To access only the response body, use `updateInvoiceStatus$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus$Plain$Response(params: UpdateStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return updateStatus$Plain(this.http, this.rootUrl, params, context);
+  updateInvoiceStatus$Plain$Response(params: UpdateInvoiceStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return updateInvoiceStatus$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -349,12 +349,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateStatus$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `updateInvoiceStatus$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus$Plain(params: UpdateStatus$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.updateStatus$Plain$Response(params, context).pipe(
+  updateInvoiceStatus$Plain(params: UpdateInvoiceStatus$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.updateInvoiceStatus$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
@@ -365,12 +365,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateStatus()` instead.
+   * To access only the response body, use `updateInvoiceStatus()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus$Response(params: UpdateStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return updateStatus(this.http, this.rootUrl, params, context);
+  updateInvoiceStatus$Response(params: UpdateInvoiceStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return updateInvoiceStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -379,12 +379,12 @@ export class InvoicesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateStatus$Response()` instead.
+   * To access the full response (for headers, for example), `updateInvoiceStatus$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateStatus(params: UpdateStatus$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.updateStatus$Response(params, context).pipe(
+  updateInvoiceStatus(params: UpdateInvoiceStatus$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.updateInvoiceStatus$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }

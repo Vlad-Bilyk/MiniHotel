@@ -50,7 +50,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetRoomById(int id)
         {
-            Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
+            Room room = await _roomRepository.GetAsync(r => r.RoomId == id, includeProperties: "RoomType");
             if (room == null)
             {
                 return NotFound();
@@ -142,10 +142,13 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate)
         {
-            if (endDate >= startDate)
+            if (endDate < startDate)
             {
                 return BadRequest("End date must be greater than start date.");
             }
+
+            startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+            endDate = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
 
             IEnumerable<Room> rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
             if (rooms == null || !rooms.Any())
@@ -168,7 +171,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<RoomDto>> UpdateStatus(int id, RoomStatus newStatus)
+        public async Task<ActionResult<RoomDto>> UpdateRoomStatus(int id, RoomStatus newStatus)
         {
             try
             {

@@ -103,7 +103,7 @@ namespace MiniHotel.API.Controllers
         /// <response code="200">Returns the updated invoice.</response>
         [HttpPatch("{id}/status")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<InvoiceDto>> UpdateStatus(int id, InvoiceStatus status)
+        public async Task<ActionResult<InvoiceDto>> UpdateInvoiceStatus(int id, InvoiceStatus status)
         {
             var invoiceDto = await _invoiceService.UpdateStatusAsync(id, status);
             return Ok(invoiceDto);

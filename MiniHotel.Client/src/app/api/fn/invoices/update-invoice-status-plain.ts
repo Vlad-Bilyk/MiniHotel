@@ -11,7 +11,7 @@ import { RequestBuilder } from '../../request-builder';
 import { InvoiceDto } from '../../models/invoice-dto';
 import { InvoiceStatus } from '../../models/invoice-status';
 
-export interface UpdateStatus$Params {
+export interface UpdateInvoiceStatus$Plain$Params {
 
 /**
  * The unique identifier of the invoice.
@@ -24,15 +24,15 @@ export interface UpdateStatus$Params {
   status?: InvoiceStatus;
 }
 
-export function updateStatus(http: HttpClient, rootUrl: string, params: UpdateStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-  const rb = new RequestBuilder(rootUrl, updateStatus.PATH, 'patch');
+export function updateInvoiceStatus$Plain(http: HttpClient, rootUrl: string, params: UpdateInvoiceStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+  const rb = new RequestBuilder(rootUrl, updateInvoiceStatus$Plain.PATH, 'patch');
   if (params) {
     rb.path('id', params.id, {});
     rb.query('status', params.status, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'text/json', context })
+    rb.build({ responseType: 'text', accept: 'text/plain', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -41,4 +41,4 @@ export function updateStatus(http: HttpClient, rootUrl: string, params: UpdateSt
   );
 }
 
-updateStatus.PATH = '/api/Invoices/{id}/status';
+updateInvoiceStatus$Plain.PATH = '/api/Invoices/{id}/status';

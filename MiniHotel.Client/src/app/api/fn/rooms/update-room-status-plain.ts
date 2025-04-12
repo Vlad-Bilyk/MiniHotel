@@ -11,7 +11,7 @@ import { RequestBuilder } from '../../request-builder';
 import { RoomDto } from '../../models/room-dto';
 import { RoomStatus } from '../../models/room-status';
 
-export interface UpdateStatus_1$Plain$Params {
+export interface UpdateRoomStatus$Plain$Params {
 
 /**
  * The unique identifier of the room.
@@ -24,8 +24,8 @@ export interface UpdateStatus_1$Plain$Params {
   newStatus?: RoomStatus;
 }
 
-export function updateStatus_1$Plain(http: HttpClient, rootUrl: string, params: UpdateStatus_1$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
-  const rb = new RequestBuilder(rootUrl, updateStatus_1$Plain.PATH, 'patch');
+export function updateRoomStatus$Plain(http: HttpClient, rootUrl: string, params: UpdateRoomStatus$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<RoomDto>> {
+  const rb = new RequestBuilder(rootUrl, updateRoomStatus$Plain.PATH, 'patch');
   if (params) {
     rb.path('id', params.id, {});
     rb.query('newStatus', params.newStatus, {});
@@ -41,4 +41,4 @@ export function updateStatus_1$Plain(http: HttpClient, rootUrl: string, params: 
   );
 }
 
-updateStatus_1$Plain.PATH = '/api/Rooms/{id}/status';
+updateRoomStatus$Plain.PATH = '/api/Rooms/{id}/status';

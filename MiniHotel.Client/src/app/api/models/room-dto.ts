@@ -5,6 +5,8 @@
 import { RoomCategory } from '../models/room-category';
 import { RoomStatus } from '../models/room-status';
 export interface RoomDto {
+  description?: string | null;
+  imageUrl?: string | null;
   pricePerDay?: number;
   roomId?: number;
   roomNumber?: string | null;
