@@ -1,36 +1,40 @@
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header text-center">
-                    <h3>Login</h3>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                        <!-- Email field -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" id="email" class="form-control" formControlName="email"
-                                placeholder="Email" />
-                            <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
-                                class="text-danger">
-                                Введіть email
-                            </div>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="container" style="max-width: 500px;">
+        <div class="card shadow">
+            <div class="card-header text-center">
+                <h3>Вхід</h3>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <!-- Email field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Електронна пошта</label>
+                        <input type="email" id="email" class="form-control" formControlName="email"
+                            placeholder="Введіть email" />
+                        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                            class="text-danger">
+                            Введіть email
                         </div>
-                        <!-- Password field -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" id="password" class="form-control" formControlName="password"
-                                placeholder="Пароль" />
-                            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
-                                class="text-danger">
-                                Пароль обов'язковий.
-                            </div>
+                    </div>
+
+                    <!-- Password field -->
+                    <div class="mb-3 position-relative">
+                        <label for="password" class="form-label">Пароль</label>
+                        <input [type]="showPassword ? 'text' : 'password'" id="password" class="form-control pe-5"
+                            formControlName="password" placeholder="Введіть пароль" />
+                        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                            class="text-danger">
+                            Пароль обов'язковий.
                         </div>
-                        <!-- Submit button -->
-                        <button type="submit" class="btn btn-primary w-100">Вхід</button>
-                    </form>
-                </div>
+
+                        <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
+                            (click)="showPassword = !showPassword"
+                            style="position: absolute; top: 38px; right: 12px; cursor: pointer; font-size: 1.2rem;"></i>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary w-100">Увійти</button>
+                </form>
             </div>
         </div>
     </div>

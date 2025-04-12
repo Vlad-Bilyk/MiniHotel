@@ -13,10 +13,10 @@ import { Observable, tap } from 'rxjs';
 export class AuthServiceWrapper {
   private readonly tokenKey = 'jwtToken';
 
-  constructor(private apiAuthService: AuthService) {}
+  constructor(private apiAuthService: AuthService) { }
 
   login(loginData: LoginRequestDto): Observable<AuthenticationResultDto> {
-    return this.apiAuthService.authLogin({ body: loginData }).pipe(
+    return this.apiAuthService.login({ body: loginData }).pipe(
       tap((result) => {
         if (result.success && result.token) {
           localStorage.setItem(this.tokenKey, result.token);
@@ -28,7 +28,7 @@ export class AuthServiceWrapper {
   register(
     registerData: RegisterRequestDto
   ): Observable<AuthenticationResultDto> {
-    return this.apiAuthService.authRegister({ body: registerData }).pipe(
+    return this.apiAuthService.register({ body: registerData }).pipe(
       tap((result) => {
         if (result.success && result.token) {
           localStorage.setItem(this.tokenKey, result.token);
@@ -47,5 +47,22 @@ export class AuthServiceWrapper {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+  }
+
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null;
+  }
+
+  hasRole(role: string): boolean {
+    return this.getUserRole() === role;
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const userRole = this.getUserRole();
+    return !!userRole && roles.includes(userRole);
   }
 }

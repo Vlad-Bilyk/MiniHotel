@@ -1,42 +1,49 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
     <!-- Application logo or name -->
-    <a class="navbar-brand" routerLink="/">Mini Hotel</a>
+    <a class="navbar-brand" [routerLink]="['/']">Mini Hotel</a>
 
-    <!-- Button for toggling the navigation on mobile devices -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <!-- Navigation links -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
             Home
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Bookings</a>
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Бронювання</a>
+        </li>
+        <li class="nav-item" *ngIf="authService.hasRole('Manager')">
+          <a class="nav-link" [routerLink]="['/rooms']" routerLinkActive="active">Номери</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Rooms</a>
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Послуги</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Users</a>
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Користувачі</a>
         </li>
       </ul>
-      <!-- Account controls: login and register links -->
+      <!-- Account controls -->
       <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
-        </li>
+        <!-- If user is not logged in: show login/register -->
+        <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Вхід</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/register']" routerLinkActive="active">Реєстрація</a>
+          </li>
+        </ng-container>
+
+        <!-- If logged in: show logout button -->
+        <ng-template #loggedInBlock>
+          <li class="nav-item d-flex align-items-center">
+            <i class="bi bi-person-circle fs-5 me-2"></i>
+            <button class="btn btn-outline-danger btn-sm" (click)="logout()">Вихід</button>
+          </li>
+        </ng-template>
       </ul>
     </div>
   </div>

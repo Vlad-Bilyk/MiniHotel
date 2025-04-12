@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthServiceWrapper } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,10 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  returnUrl: string = '/';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthServiceWrapper,
+    private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService
   ) { }
@@ -25,11 +28,11 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
+
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
   }
 
   onSubmit(): void {
-    console.log("onSubmit active")
-
     if (this.loginForm.invalid) {
       return;
     }
@@ -39,7 +42,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginData).subscribe({
       next: (result) => {
         if (result.success) {
-          this.router.navigate(['/']);
+          this.router.navigateByUrl(this.returnUrl);
         } else {
           this.toastr.error(result.errors?.[0] ?? 'Помилка входу');
         }
@@ -47,7 +50,6 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.toastr.error('Сталася помилка при вході');
         console.error(err);
-        console.log("log error")
       },
     });
   }
