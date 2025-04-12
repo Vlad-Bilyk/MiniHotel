@@ -1,0 +1,39 @@
+<div class="container mt-5 pt-5">
+    <!-- Search panel -->
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="row g-3 align-items-center justify-content-center border-bottom pb-3 mx-1 mx-md-0">
+            <div class="col-auto">
+                <label class="form-label mb-1">Приїзд</label>
+                <input type="date" class="form-control" formControlName="startDate" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label mb-1">Виїзд</label>
+                <input type="date" class="form-control" formControlName="endDate" />
+            </div>
+        </div>
+
+        <div class="position-relative text-center my-5 line-with-button">
+            <hr class="position-absolute top-50 start-0 w-100 translate-middle-y m-0">
+            <button class="btn btn-primary btn-lg px-5 search-btn" type="submit">
+                <i class="bi bi-search me-2"></i>Шукати
+            </button>
+        </div>
+    </form>
+
+
+    <!-- Not found rooms for chosen dates -->
+    <div *ngIf="searchPerformed && groupedRooms.size === 0" class="text-center text-muted mt-5">
+        Номери за вибраними датами не знайдені.
+    </div>
+
+    <!-- Show result -->
+    <div class="row" *ngIf="groupedRooms.size > 0">
+        <div class="col-md-6 col-lg-4 mb-4" *ngFor="let entry of roomCategoriesData">
+            <!-- get first available room -->
+            <app-room-card [room]="entry[1].rooms[0]" [categoryName]="entry[0]" [totalAvailable]="entry[1].total"
+                (book)="onBook($event)">
+            </app-room-card>
+        </div>
+    </div>
+
+</div>

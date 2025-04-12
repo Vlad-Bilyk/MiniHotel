@@ -1,0 +1,65 @@
+<div class="container d-flex justify-content-center align-items-center mt-5 pt-5 pb-5">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 500px;">
+        <h3 class="text-center mb-4">Створити акаунт</h3>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ім’я</label>
+                    <input formControlName="firstName" type="text" class="form-control"
+                        [class.is-invalid]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
+                    <div class="invalid-feedback">Обов’язкове поле</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Прізвище</label>
+                    <input formControlName="lastName" type="text" class="form-control"
+                        [class.is-invalid]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
+                    <div class="invalid-feedback">Обов’язкове поле</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input formControlName="email" type="email" class="form-control" autocomplete="email"
+                    [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+                <div class="invalid-feedback">Введіть правильний email</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Телефон</label>
+                <input formControlName="phoneNumber" type="tel" class="form-control" autocomplete="tel"
+                    [class.is-invalid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.invalid">
+                <div class="invalid-feedback">Невірний номер телефону</div>
+            </div>
+
+            <div class="mb-3" *ngIf="isManager">
+                <label class="form-label">Роль</label>
+                <select formControlName="role" class="form-select">
+                    <option value="Customer">Клієнт</option>
+                    <option value="Manager">Менеджер</option>
+                    <option value="Admin">Адміністратор</option>
+                </select>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label class="form-label">Пароль</label>
+                <input type="password" formControlName="password" class="form-control"
+                    [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" />
+                <div class="invalid-feedback">Пароль повинен містити мінімум 8 символів, включаючи великі та малі
+                    літери, цифру та спеціальний символ.</div>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label class="form-label">Підтвердження паролю</label>
+                <input type="password" formControlName="confirmPassword" class="form-control"
+                    [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.errors?.['mismatch']" />
+                <div class="invalid-feedback">Паролі не співпадають</div>
+            </div>
+
+            <button class="btn btn-primary w-100 mt-2" [disabled]="isSubmitting || registerForm.invalid">
+                {{ isSubmitting ? 'Реєстрація...' : 'Зареєструватися' }}
+            </button>
+        </form>
+    </div>
+</div>

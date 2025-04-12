@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 using MiniHotel.Infrastructure.Data;
 using MiniHotel.Infrastructure.Identity;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MiniHotel.Infrastructure.Services
 {
@@ -15,16 +20,19 @@ namespace MiniHotel.Infrastructure.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly MiniHotelDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public AuthService(UserManager<ApplicationUser> userManager,
                            SignInManager<ApplicationUser> signInManager,
                            MiniHotelDbContext context,
-                           IMapper mapper)
+                           IMapper mapper,
+                           IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public async Task<AuthenticationResultDto> RegisterAsync(RegisterRequestDto request)
@@ -72,10 +80,11 @@ namespace MiniHotel.Infrastructure.Services
 
             try
             {
-                _context.HotelUsers.Add(domainUser); // TODO: change to repository
+                _context.HotelUsers.Add(domainUser);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return new AuthenticationResultDto { Success = true };
+                var token = await GenerateJwtToken(applicationUser);
+                return new AuthenticationResultDto { Success = true, Token = token };
             }
             catch (Exception ex)
             {
@@ -111,11 +120,47 @@ namespace MiniHotel.Infrastructure.Services
                 };
             }
 
+            var token = await GenerateJwtToken(user);
             return new AuthenticationResultDto
             {
                 Success = true,
-                Token = null // TODO: implement JWT token generation
+                Token = token
             };
+        }
+
+        private async Task<string> GenerateJwtToken(ApplicationUser user)
+        {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user), "User cannot be null when generating JWT token.");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpireMinutes"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: expires,
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

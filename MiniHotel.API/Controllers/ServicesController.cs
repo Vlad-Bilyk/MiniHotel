@@ -6,6 +6,10 @@ using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.API.Controllers
 {
+    /// <summary>
+    /// Controller for managing additional services provided by the hotel.
+    /// Provides endpoints to retrieve, create, update, and delete services.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ServicesController : ControllerBase
@@ -19,6 +23,10 @@ namespace MiniHotel.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Retrieves all additional services.
+        /// </summary>
+        /// <returns>A collection of service DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetServices()
@@ -27,6 +35,14 @@ namespace MiniHotel.API.Controllers
             return Ok(_mapper.Map<List<ServiceDto>>(services));
         }
 
+        /// <summary>
+        /// Retrieves a specific service by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the service.</param>
+        /// <returns>The service DTO if found.</returns>
+        /// <response code="200">Returns the service.</response>
+        /// <response code="400">If the request parameters are invalid.</response>
+        /// <response code="404">If the service is not found.</response>
         [HttpGet("{id:int}", Name = "GetServiceById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,15 +50,21 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetServiceById(int id)
         {
             Service service = await _serviceRepository.GetAsync(r => r.ServiceId == id);
-
             if (service == null)
             {
                 return NotFound();
             }
-
             return Ok(_mapper.Map<ServiceDto>(service));
         }
 
+        /// <summary>
+        /// Creates a new additional service.
+        /// </summary>
+        /// <param name="createDto">The service creation data transfer object.</param>
+        /// <returns>The created service DTO.</returns>
+        /// <response code="201">Returns the newly created service.</response>
+        /// <response code="400">If the request data is invalid.</response>
+        /// <response code="500">If an internal server error occurs during creation.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,6 +77,14 @@ namespace MiniHotel.API.Controllers
             return CreatedAtRoute(nameof(GetServiceById), new { id = service.ServiceId }, serviceDto);
         }
 
+        /// <summary>
+        /// Updates an existing service.
+        /// </summary>
+        /// <param name="id">The unique identifier of the service to update.</param>
+        /// <param name="updateDto">The service update data transfer object.</param>
+        /// <returns>No content if the update is successful.</returns>
+        /// <response code="204">Service updated successfully.</response>
+        /// <response code="400">If the request data is invalid.</response>
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,6 +101,14 @@ namespace MiniHotel.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a service by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the service to delete.</param>
+        /// <returns>No content if the deletion is successful.</returns>
+        /// <response code="204">Service deleted successfully.</response>
+        /// <response code="404">If the service is not found.</response>
+        /// <response code="400">If the request is invalid.</response>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
