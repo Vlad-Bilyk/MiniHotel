@@ -44,6 +44,11 @@ import { getBookings } from '../fn/bookings/get-bookings';
 import { GetBookings$Params } from '../fn/bookings/get-bookings';
 import { getBookings$Plain } from '../fn/bookings/get-bookings-plain';
 import { GetBookings$Plain$Params } from '../fn/bookings/get-bookings-plain';
+import { getUserBookings } from '../fn/bookings/get-user-bookings';
+import { GetUserBookings$Params } from '../fn/bookings/get-user-bookings';
+import { getUserBookings$Plain } from '../fn/bookings/get-user-bookings-plain';
+import { GetUserBookings$Plain$Params } from '../fn/bookings/get-user-bookings-plain';
+import { UserBookingsDto } from '../models/user-bookings-dto';
 
 @Injectable({ providedIn: 'root' })
 export class BookingsService extends BaseService {
@@ -174,6 +179,69 @@ export class BookingsService extends BaseService {
   createBooking(params?: CreateBooking$Params, context?: HttpContext): Observable<BookingDto> {
     return this.createBooking$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getUserBookings()` */
+  static readonly GetUserBookingsPath = '/api/Bookings/user';
+
+  /**
+   * Gets all bookings made by the currently authenticated user.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUserBookings$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserBookings$Plain$Response(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserBookingsDto>>> {
+    return getUserBookings$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets all bookings made by the currently authenticated user.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUserBookings$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserBookings$Plain(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<Array<UserBookingsDto>> {
+    return this.getUserBookings$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserBookingsDto>>): Array<UserBookingsDto> => r.body)
+    );
+  }
+
+  /**
+   * Gets all bookings made by the currently authenticated user.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUserBookings()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserBookings$Response(params?: GetUserBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserBookingsDto>>> {
+    return getUserBookings(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets all bookings made by the currently authenticated user.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUserBookings$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUserBookings(params?: GetUserBookings$Params, context?: HttpContext): Observable<Array<UserBookingsDto>> {
+    return this.getUserBookings$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserBookingsDto>>): Array<UserBookingsDto> => r.body)
     );
   }
 

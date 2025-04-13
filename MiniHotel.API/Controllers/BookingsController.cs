@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Enums;
@@ -31,6 +32,36 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
         {
             var bookings = await _bookingService.GetBookingsAsync();
+            return Ok(bookings);
+        }
+
+        /// <summary>
+        /// Gets all bookings made by the currently authenticated user.
+        /// </summary>
+        /// <returns>A list of <see cref="UserBookingsDto"/> representing the user's bookings.</returns>
+        /// <response code="200">Returns the list of bookings.</response>
+        /// <response code="400">If the user ID is not found in the token claims.</response>
+        /// <response code="500">If an unexpected server error occurs.</response>
+        [HttpGet("user")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<UserBookingsDto>>> GetUserBookings()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User not found");
+            }
+            var bookings = await _bookingService.GetUserBookingsAsync(userId);
+            foreach (var booking in bookings)
+            {
+                Console.WriteLine(booking.RoomNumber);
+                Console.WriteLine(booking.RoomCategory);
+                Console.WriteLine(booking.Amount);
+            }
+
             return Ok(bookings);
         }
 

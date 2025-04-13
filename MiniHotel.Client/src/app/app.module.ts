@@ -21,6 +21,7 @@ import { RoomCardComponent } from './shared/room-card/room-card.component';
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
 import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
+import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
     BookingConfirmationComponent,
     NightsLabelPipe,
     RoomLabelPipe,
+    MyBookingsComponent,
   ],
   imports: [
     BrowserModule,

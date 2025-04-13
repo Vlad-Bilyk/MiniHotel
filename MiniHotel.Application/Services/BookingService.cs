@@ -16,6 +16,8 @@ namespace MiniHotel.Application.Services
         private readonly IInvoiceService _invoiceService;
         private readonly IMapper _mapper;
 
+        private const string IncludeProperties = "Room,Room.RoomType,User,Invoice,Invoice.InvoiceItems";
+
         public BookingService(IBookingRepository bookingRepository, IRoomRepository roomRepository,
                               IInvoiceService invoiceService, IMapper mapper)
         {
@@ -84,16 +86,21 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)
         {
-            var includeProps = "Room,User";
-            var booking = await _bookingRepository.GetAsync(filter, includeProps);
+            var booking = await _bookingRepository.GetAsync(filter, IncludeProperties);
             return _mapper.Map<BookingDto>(booking);
         }
 
         public async Task<IEnumerable<BookingDto>> GetBookingsAsync(Expression<Func<Booking, bool>>? filter = null)
         {
-            var includeProps = "Room,User";
-            var bookings = await _bookingRepository.GetAllAsync(filter, includeProps);
+            var bookings = await _bookingRepository.GetAllAsync(filter, IncludeProperties);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
+        }
+
+        public async Task<IEnumerable<UserBookingsDto>> GetUserBookingsAsync(string userId)
+        {
+            var bookings = await _bookingRepository.GetAllAsync(b => b.UserId == userId, IncludeProperties);
+
+            return _mapper.Map<IEnumerable<UserBookingsDto>>(bookings);
         }
     }
 }

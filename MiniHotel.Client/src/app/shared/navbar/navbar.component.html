@@ -13,7 +13,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Бронювання</a>
+          <a class="nav-link" [routerLink]="['/my-bookings']" routerLinkActive="active">Мої Бронювання</a>
         </li>
         <li class="nav-item" *ngIf="authService.hasRole('Manager')">
           <a class="nav-link" [routerLink]="['/rooms']" routerLinkActive="active">Номери</a>

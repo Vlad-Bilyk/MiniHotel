@@ -23,6 +23,7 @@ export type { RoomTypeUpsertDto } from './models/room-type-upsert-dto';
 export type { RoomUpsertDto } from './models/room-upsert-dto';
 export type { ServiceDto } from './models/service-dto';
 export type { ServiceUpsertDto } from './models/service-upsert-dto';
+export type { UserBookingsDto } from './models/user-bookings-dto';
 export type { UserDto } from './models/user-dto';
 export { UserRole } from './models/user-role';
 export type { UserUpdateDto } from './models/user-update-dto';

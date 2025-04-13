@@ -9,7 +9,7 @@ namespace MiniHotel.Domain.Entities
         [Key]
         public int BookingId { get; set; }
 
-        public string? UserId { get; set; }
+        public required string UserId { get; set; }
 
         public int RoomId { get; set; }
 
@@ -28,6 +28,6 @@ namespace MiniHotel.Domain.Entities
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; } = null!;
 
-        public Invoice? Invoice { get; set; }
+        public Invoice Invoice { get; set; } = null!;
     }
 }
