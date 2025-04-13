@@ -86,10 +86,12 @@ namespace MiniHotel.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
+            if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User not found");
             }
+
+            Console.WriteLine(userId);
 
             try
             {
@@ -198,6 +200,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>An <see cref="ActionResult"/> representing the HTTP response.</returns>
         private ActionResult HandleException(Exception ex)
         {
+            _logger.LogError(ex.Message);
             switch (ex)
             {
                 case KeyNotFoundException:

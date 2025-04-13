@@ -9,6 +9,7 @@ import {
 import { RoomDto } from '../../api/models';
 import { RoomsService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking-search',
@@ -25,14 +26,15 @@ export class BookingSearchComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private roomService: RoomsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.searchForm = this.fb.group(
       {
-        startDate: [this.defaultStartDate, Validators.required],
-        endDate: [this.defaultEndDate, Validators.required],
+        startDate: [this.defaultStartDate(), Validators.required],
+        endDate: [this.defaultEndDate(), Validators.required],
       },
       { validators: this.dateRangeValidator }
     );
@@ -67,8 +69,18 @@ export class BookingSearchComponent implements OnInit {
   }
 
   onBook(room: RoomDto): void {
-    // TODO: go to booking component
-    console.log('Booked room:', room);
+    const { startDate, endDate } = this.searchForm.value;
+
+    const stateStore = {
+      roomType: room.roomType,
+      roomNumber: room.roomNumber,
+      pricePerDay: room.pricePerDay,
+      startDate,
+      endDate,
+    };
+
+    localStorage.setItem('bookingData', JSON.stringify(stateStore));
+    this.router.navigate(['/booking-confirmation']);
   }
 
   private groupByCategory(

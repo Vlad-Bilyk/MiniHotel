@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
@@ -11,16 +12,14 @@ namespace MiniHotel.Application.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IInvoiceService _invoiceService;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingRepository, IServiceRepository serviceRepository,
-                              IRoomRepository roomRepository, IInvoiceService invoiceService, IMapper mapper)
+        public BookingService(IBookingRepository bookingRepository, IRoomRepository roomRepository,
+                              IInvoiceService invoiceService, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
-            _serviceRepository = serviceRepository;
             _roomRepository = roomRepository;
             _invoiceService = invoiceService;
             _mapper = mapper;
@@ -28,30 +27,43 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> CreateBookingAsync(BookingCreateDto bookingcreateDto, string userId)
         {
-            var room = await _roomRepository.GetAsync(r => r.RoomNumber == bookingcreateDto.RoomNumber);
-            if (room == null)
+            await using var transaction = await _bookingRepository.BeginTransactionAsync();
+
+            try
             {
-                throw new ArgumentException("Room number not found");
+                var room = await _roomRepository
+                    .GetAsync(r => r.RoomNumber == bookingcreateDto.RoomNumber)
+                    ?? throw new ArgumentException("Room number not found");
+                var availableRooms = await _roomRepository.GetAvailableRoomsAsync(bookingcreateDto.StartDate, bookingcreateDto.EndDate);
+
+                if (!availableRooms.Any(r => r.RoomId == room.RoomId))
+                {
+                    throw new ArgumentException("Room is not available for the selected dates");
+                }
+
+                var booking = new Booking
+                {
+                    UserId = userId,
+                    RoomId = room.RoomId,
+                    StartDate = bookingcreateDto.StartDate,
+                    EndDate = bookingcreateDto.EndDate,
+                    BookingStatus = BookingStatus.Pending,
+                };
+
+                await _bookingRepository.CreateAsync(booking);
+                await _invoiceService.CreateInvoiceForBookingAsync(booking.BookingId);
+
+                await transaction.CommitAsync();
+
+                var bookingDto = _mapper.Map<BookingDto>(booking);
+                return bookingDto;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new BookingCreationException("Failed to create booking and invoice." + ex.Message, ex);
             }
 
-            var availableRooms = await _roomRepository.GetAvailableRoomsAsync(bookingcreateDto.StartDate, bookingcreateDto.EndDate);
-            if (!availableRooms.Any(r => r.RoomId == room.RoomId))
-            {
-                throw new ArgumentException("Room is not available for the selected dates");
-            }
-
-            var booking = new Booking
-            {
-                UserId = userId,
-                RoomId = room.RoomId,
-                StartDate = bookingcreateDto.StartDate,
-                EndDate = bookingcreateDto.EndDate,
-                BookingStatus = BookingStatus.Pending,
-            };
-
-            await _bookingRepository.CreateAsync(booking);
-            var bookingDto = _mapper.Map<BookingDto>(booking);
-            return bookingDto;
         }
 
         public async Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)

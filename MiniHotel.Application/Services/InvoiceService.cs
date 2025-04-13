@@ -63,7 +63,7 @@ namespace MiniHotel.Application.Services
                         Description = $"Бронюванян номеру {booking.Room.RoomNumber} - {nights} ночей",
                         Quantity = nights,
                         UnitPrice = booking.Room.RoomType.PricePerNight,
-                        ServiceId = 1
+                        ServiceId = _serviceRepository.GetAsync(s => s.Name == "Бронювання").Result.ServiceId
                     }
                 }
             };

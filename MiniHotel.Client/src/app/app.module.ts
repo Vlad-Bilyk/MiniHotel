@@ -18,6 +18,9 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { RoomsComponent } from './pages/rooms/rooms.component';
 import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
 import { RoomCardComponent } from './shared/room-card/room-card.component';
+import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
+import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
+import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { RoomCardComponent } from './shared/room-card/room-card.component';
     RoomsComponent,
     BookingSearchComponent,
     RoomCardComponent,
+    BookingConfirmationComponent,
+    NightsLabelPipe,
+    RoomLabelPipe,
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ using System.Text.Json;
 
 namespace MiniHotel.API
 {
+    // TODO: add handling custom errors
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
