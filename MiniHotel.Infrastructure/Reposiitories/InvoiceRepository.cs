@@ -29,13 +29,6 @@ namespace MiniHotel.Infrastructure.Reposiitories
             await SaveAsync();
         }
 
-        public async Task<Invoice?> GetByBookingIdAsync(int bookingId)
-        {
-            return await _context.Invoices
-                .Include(i => i.InvoiceItems)
-                .FirstOrDefaultAsync(i => i.BookingId == bookingId);
-        }
-
         public async Task RemoveItemAsync(int invoiceItemId)
         {
             var item = await _context.InvoiceItems.FindAsync(invoiceItemId);

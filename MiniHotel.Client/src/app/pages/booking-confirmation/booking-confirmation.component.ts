@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BookingsService } from '../../api/services';
+import { BookingsService, PaymentsService } from '../../api/services';
 import { BookingCreateDto, BookingDto } from '../../api/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -26,6 +26,7 @@ export class BookingConfirmationComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private bookingsService: BookingsService,
+    private paymentsService: PaymentsService,
     private fb: FormBuilder
   ) { }
 
@@ -77,7 +78,7 @@ export class BookingConfirmationComponent implements OnInit {
       next: (booking: BookingDto) => {
         this.toastr.success('Бронювання успішно створено!');
         if (paymentMethod === 'online' || paymentMethod === 'partial') {
-          this.router.navigate(['/payments', booking.bookingId]);
+          this.onlinePayment(booking);
         } else {
           this.router.navigate(['/']);
           this.toastr.info('Очікуємо оплату на місці. Дякуємо за бронювання!');
@@ -85,10 +86,27 @@ export class BookingConfirmationComponent implements OnInit {
 
         console.log('User comment:', comment);
       },
-      error: () => {
+      error: (err) => {
         this.toastr.error('Не вдалося створити бронювання.');
+        console.error(err);
       },
       complete: () => (this.isLoading = false),
     });
+  }
+
+  private onlinePayment(booking: BookingDto): void {
+    localStorage.setItem('lastInvoiceId', booking.invoiceId?.toString()!);
+
+    this.paymentsService.payOnline$Plain({ invoiceId: booking.invoiceId! }).subscribe({
+      next: (htmlForm) => {
+        document.body.innerHTML = htmlForm;
+        const form = document.querySelector('form') as HTMLFormElement;
+        form.submit();
+      },
+      error: (err) => {
+        this.toastr.error('Не вдалося розпочати оплату онлайн.')
+        console.error(err);
+      }
+    })
   }
 }

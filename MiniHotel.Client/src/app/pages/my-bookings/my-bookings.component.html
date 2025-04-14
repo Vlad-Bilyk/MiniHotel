@@ -6,7 +6,8 @@
             <thead class="table-primary text-uppercase small">
                 <tr>
                     <th>Категорія кімнати</th>
-                    <th>Дати</th>
+                    <th>Заселення</th>
+                    <th>Виселення</th>
                     <th>Сума</th>
                     <th>Статус</th>
                     <th>Дії</th>
@@ -17,8 +18,11 @@
                     <td class="fw-medium">{{ booking.roomCategory }}</td>
 
                     <td>
-                        <i class="bi bi-calendar-event me-1 text-primary"></i>
-                        {{ booking.startDate | date:'dd.MM.yyyy' }} —
+                        <i class="bi bi-calendar-event me-1 text-success"></i>
+                        {{ booking.startDate | date:'dd.MM.yyyy' }}
+                    </td>
+                    <td>
+                        <i class="bi bi-calendar-check me-1 text-danger"></i>
                         {{ booking.endDate | date:'dd.MM.yyyy' }}
                     </td>
 
@@ -29,7 +33,7 @@
                             <span *ngSwitchCase="bookingStatusEnum.Cancelled" class="text-muted small">Скасовано</span>
                             <span *ngSwitchDefault class="text-muted small">До сплати</span>
                         </ng-container><br />
-                        {{ booking.amount | currency:'UAH ':'symbol':'1.0-0' }}
+                        {{ booking.amount | currency:'UAH ':'symbol-narrow':'1.0-0' }}
                     </td>
 
                     <td>

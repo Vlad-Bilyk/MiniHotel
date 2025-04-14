@@ -8,6 +8,7 @@ export interface BookingDto {
   bookingId?: number;
   bookingStatus?: BookingStatus;
   endDate?: DateOnly;
+  invoiceId?: number;
   roomNumber?: string | null;
   startDate?: DateOnly;
   userId?: string | null;

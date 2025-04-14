@@ -9,7 +9,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface PayOnline$Params {
+export interface PayOnline$Plain$Params {
 
 /**
  * The unique identifier of the invoice to be paid.
@@ -17,14 +17,14 @@ export interface PayOnline$Params {
   invoiceId: number;
 }
 
-export function payOnline(http: HttpClient, rootUrl: string, params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, payOnline.PATH, 'post');
+export function payOnline$Plain(http: HttpClient, rootUrl: string, params: PayOnline$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, payOnline$Plain.PATH, 'post');
   if (params) {
     rb.path('invoiceId', params.invoiceId, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'text/json', context })
+    rb.build({ responseType: 'text', accept: 'text/plain', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -33,4 +33,4 @@ export function payOnline(http: HttpClient, rootUrl: string, params: PayOnline$P
   );
 }
 
-payOnline.PATH = '/api/Payments/{invoiceId}/online';
+payOnline$Plain.PATH = '/api/Payments/{invoiceId}/online';
