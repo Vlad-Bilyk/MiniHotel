@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RoomTypeDto, RoomTypeUpsertDto } from '../../../api/models';
 import { RoomTypesService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialog } from '@angular/material/dialog';
 import {
   RoomTypeDialogComponent,
   RoomTypeFormData,
 } from './room-type-dialog/room-type-dialog.component';
-import { Observable } from 'rxjs';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-room-types',
@@ -21,8 +20,8 @@ export class RoomTypesComponent implements OnInit {
 
   constructor(
     private roomTypesService: RoomTypesService,
-    private toastr: ToastrService,
-    private dialog: MatDialog
+    private dialogService: DialogService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -60,70 +59,46 @@ export class RoomTypesComponent implements OnInit {
   }
 
   editRoomType(rt: RoomTypeDto): void {
-    console.log("EditRoomType method call: ",)
-    this.openRoomTypeDialog(
-      {
-        isEdit: true,
-        formData: {
-          roomCategory: rt.roomCategory!,
-          pricePerNight: rt.pricePerNight,
-          description: rt.description,
-        },
+    const dialogData: RoomTypeFormData = {
+      isEdit: true,
+      formData: {
+        roomCategory: rt.roomCategory!,
+        pricePerNight: rt.pricePerNight,
+        description: rt.description,
       },
-      (data) =>
-        this.roomTypesService.updateRoomType({
-          id: rt.roomTypeId!,
-          body: data,
-        }),
-      'Запис оновлено успішно'
-    );
+    };
+
+    this.dialogService
+      .openEntityDialog<RoomTypeFormData, RoomTypeUpsertDto>(
+        RoomTypeDialogComponent,
+        dialogData,
+        (data) =>
+          this.roomTypesService.updateRoomType({
+            id: rt.roomTypeId!,
+            body: data,
+          }),
+        'Запис успішно оновлено'
+      )
+      .subscribe(() => {
+        this.fetchRoomTypes();
+      });
   }
 
   createRoomType(): void {
-    this.openRoomTypeDialog(
-      {
-        isEdit: false,
-        formData: undefined,
-      },
-      (data) => this.roomTypesService.createRoomType({ body: data }),
-      'Додано новий тип кімнати'
-    );
-  }
+    const dialogData: RoomTypeFormData = {
+      isEdit: false,
+      formData: undefined,
+    };
 
-  /**
-   * Opens the dialog for both creating and editing a room type.
-   * @param dialogData - Data to configure the dialog (edit flag and form data).
-   * @param submitFn - The function to call when form is submitted.
-   * @param successMessage - Message to display on successful operation.
-   */
-  private openRoomTypeDialog(
-    dialogData: RoomTypeFormData,
-    submitFn: (data: RoomTypeUpsertDto) => Observable<any>,
-    successMeassage: string
-  ): void {
-    console.log("In openRoomTypeDialog")
-    console.log(dialogData);
-
-    const dialogRef = this.dialog.open(RoomTypeDialogComponent, {
-      width: '400px',
-      data: dialogData,
-    });
-
-    dialogRef
-      .afterClosed()
-      .subscribe((result: RoomTypeUpsertDto | undefined) => {
-        if (result) {
-          submitFn(result).subscribe({
-            next: () => {
-              this.toastr.success(successMeassage);
-              this.fetchRoomTypes();
-            },
-            error: (err) => {
-              this.toastr.error('Щось пішло не так');
-              console.error(err);
-            },
-          });
-        }
+    this.dialogService
+      .openEntityDialog<RoomTypeFormData, RoomTypeUpsertDto>(
+        RoomTypeDialogComponent,
+        dialogData,
+        (data) => this.roomTypesService.createRoomType({ body: data }),
+        'Додано новий тип кімнати'
+      )
+      .subscribe(() => {
+        this.fetchRoomTypes();
       });
   }
 }

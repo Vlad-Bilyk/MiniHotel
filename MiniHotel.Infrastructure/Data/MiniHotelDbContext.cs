@@ -54,6 +54,10 @@ namespace MiniHotel.Infrastructure.Data
                 .HasIndex(i => i.BookingId)
                 .IsUnique();
 
+            builder.Entity<RoomType>()
+                .HasIndex(rt => rt.RoomCategory)
+                .IsUnique();
+
             // Global convention: for all enum properties, use EnumToStringConverter
             foreach (var entityType in builder.Model.GetEntityTypes())
             {

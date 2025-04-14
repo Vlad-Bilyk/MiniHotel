@@ -72,7 +72,19 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
-            Room room = _mapper.Map<Room>(createDto);
+            var roomType = await _roomRepository.GetAsync(rt => rt.RoomType.RoomCategory == createDto.RoomCategory, "RoomType");
+            if (roomType is null)
+            {
+                return BadRequest("Room type not found.");
+            }
+
+            var room = new Room
+            {
+                RoomNumber = createDto.RoomNumber,
+                RoomTypeId = roomType.RoomTypeId,
+                RoomStatus = createDto.RoomStatus
+            };
+
             await _roomRepository.CreateAsync(room);
             RoomDto roomDto = _mapper.Map<RoomDto>(room);
             return CreatedAtRoute(nameof(GetRoomById), new { id = room.RoomId }, roomDto);

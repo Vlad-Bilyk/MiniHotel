@@ -10,6 +10,5 @@ namespace MiniHotel.Application.DTOs
         public decimal PricePerDay { get; set; }
         public RoomStatus RoomStatus { get; set; }
         public string? Description { get; set; }
-        public string? ImageUrl { get; set; }
     }
 }

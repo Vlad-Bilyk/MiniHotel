@@ -7,15 +7,12 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import {
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
-import { RoomsComponent } from './pages/rooms/rooms.component';
+import { RoomsComponent } from './pages/admin/rooms/rooms.component';
 import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
 import { RoomCardComponent } from './shared/room-card/room-card.component';
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
@@ -28,6 +25,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { RoomFormDialogComponent } from './pages/admin/rooms/room-form-dialog/room-form-dialog.component';
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   declarations: [
@@ -45,6 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
     MyBookingsComponent,
     RoomTypesComponent,
     RoomTypeDialogComponent,
+    RoomFormDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +56,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSelectModule,
   ],
   providers: [provideHttpClient(withInterceptors([jwtInterceptor]))],
   bootstrap: [AppComponent],
