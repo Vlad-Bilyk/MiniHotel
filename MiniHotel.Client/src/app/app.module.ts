@@ -22,6 +22,12 @@ import { BookingConfirmationComponent } from './pages/booking-confirmation/booki
 import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
 import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
+import { RoomTypesComponent } from './pages/admin/room-types/room-types.component';
+import { RoomTypeDialogComponent } from './pages/admin/room-types/room-type-dialog/room-type-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -37,6 +43,8 @@ import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
     NightsLabelPipe,
     RoomLabelPipe,
     MyBookingsComponent,
+    RoomTypesComponent,
+    RoomTypeDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +52,10 @@ import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
   ],
   providers: [provideHttpClient(withInterceptors([jwtInterceptor]))],
   bootstrap: [AppComponent],

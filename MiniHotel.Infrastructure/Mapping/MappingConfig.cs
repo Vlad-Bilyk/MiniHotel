@@ -16,7 +16,7 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<HotelUser, UserDto>().ReverseMap();
 
             CreateMap<Room, RoomDto>()
-                .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.RoomType.Category))
+                .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.RoomType.RoomCategory))
                 .ForMember(dest => dest.PricePerDay, opt => opt.MapFrom(src => src.RoomType.PricePerNight))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.RoomType.Description));
             CreateMap<Room, RoomUpsertDto>().ReverseMap();
@@ -29,7 +29,7 @@ namespace MiniHotel.Infrastructure.Mapping
                 .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(src => src.Invoice.InvoiceId));
             CreateMap<Booking, UserBookingsDto>()
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room.RoomNumber))
-                .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.Category))
+                .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.RoomCategory))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Invoice.TotalAmount));
             CreateMap<Booking, BookingCreateDto>().ReverseMap();
             CreateMap<Booking, BookingUpdateDto>().ReverseMap();

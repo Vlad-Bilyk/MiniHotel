@@ -15,7 +15,6 @@ export { InvoiceStatus } from './models/invoice-status';
 export type { LoginRequestDto } from './models/login-request-dto';
 export type { ProblemDetails } from './models/problem-details';
 export type { RegisterRequestDto } from './models/register-request-dto';
-export { RoomCategory } from './models/room-category';
 export type { RoomDto } from './models/room-dto';
 export { RoomStatus } from './models/room-status';
 export type { RoomTypeDto } from './models/room-type-dto';

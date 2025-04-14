@@ -72,7 +72,7 @@ export class BookingSearchComponent implements OnInit {
     const { startDate, endDate } = this.searchForm.value;
 
     const stateStore = {
-      roomType: room.roomType,
+      roomType: room.roomCategory,
       roomNumber: room.roomNumber,
       pricePerDay: room.pricePerDay,
       startDate,
@@ -88,7 +88,7 @@ export class BookingSearchComponent implements OnInit {
   ): Map<string, { rooms: RoomDto[]; total: number }> {
     const map = new Map<string, { rooms: RoomDto[]; total: number }>();
     for (const room of rooms) {
-      const key = room.roomType;
+      const key = room.roomCategory!;
       if (key === undefined) {
         this.toastr.error('Room type is undefined. Please contact support.');
         console.error(

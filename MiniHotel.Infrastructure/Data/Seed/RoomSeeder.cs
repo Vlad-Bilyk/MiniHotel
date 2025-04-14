@@ -18,10 +18,10 @@ namespace MiniHotel.Infrastructure.Data.Seed
         {
             if (await _db.Rooms.AnyAsync()) return;
 
-            var single = await _db.RoomTypes.SingleAsync(rt => rt.Category == RoomCategory.Single);
-            var dbl = await _db.RoomTypes.SingleAsync(rt => rt.Category == RoomCategory.Double);
-            var family = await _db.RoomTypes.SingleAsync(rt => rt.Category == RoomCategory.Family);
-            var suite = await _db.RoomTypes.SingleAsync(rt => rt.Category == RoomCategory.Suite);
+            var single = await _db.RoomTypes.SingleAsync(rt => rt.RoomCategory == "Single");
+            var dbl = await _db.RoomTypes.SingleAsync(rt => rt.RoomCategory == "Double");
+            var family = await _db.RoomTypes.SingleAsync(rt => rt.RoomCategory == "Family");
+            var suite = await _db.RoomTypes.SingleAsync(rt => rt.RoomCategory == "Suite");
 
             var rooms = new[]
             {
