@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniHotel.Infrastructure.Migrations
 {
     [DbContext(typeof(MiniHotelDbContext))]
-    [Migration("20250416125733_InitialCreate")]
+    [Migration("20250416154912_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -277,6 +277,10 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");

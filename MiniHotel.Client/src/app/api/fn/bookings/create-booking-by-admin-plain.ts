@@ -8,24 +8,21 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { BookingCreateByAdminDto } from '../../models/booking-create-by-admin-dto';
 import { BookingDto } from '../../models/booking-dto';
 
-export interface CompletedBooking$Params {
-
-/**
- * The unique identifier of the booking to complete.
- */
-  id: number;
+export interface CreateBookingByAdmin$Plain$Params {
+      body?: BookingCreateByAdminDto
 }
 
-export function completedBooking(http: HttpClient, rootUrl: string, params: CompletedBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-  const rb = new RequestBuilder(rootUrl, completedBooking.PATH, 'patch');
+export function createBookingByAdmin$Plain(http: HttpClient, rootUrl: string, params?: CreateBookingByAdmin$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+  const rb = new RequestBuilder(rootUrl, createBookingByAdmin$Plain.PATH, 'post');
   if (params) {
-    rb.path('id', params.id, {});
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'text/json', context })
+    rb.build({ responseType: 'text', accept: 'text/plain', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -34,4 +31,4 @@ export function completedBooking(http: HttpClient, rootUrl: string, params: Comp
   );
 }
 
-completedBooking.PATH = '/api/Bookings/{id}/completed';
+createBookingByAdmin$Plain.PATH = '/api/Bookings/admin';

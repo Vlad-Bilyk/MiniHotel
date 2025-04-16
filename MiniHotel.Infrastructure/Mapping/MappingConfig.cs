@@ -29,11 +29,13 @@ namespace MiniHotel.Infrastructure.Mapping
                 .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(src => src.Invoice.InvoiceId))
                 .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.RoomCategory))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Invoice.TotalAmount))
-                .ForMember(dest => dest.ClientFullName, opt => opt.MapFrom(src => src.FullName)); // TODO: thos is for offline need for online also
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => GetFullName(src)));
+
             CreateMap<Booking, UserBookingsDto>()
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room.RoomNumber))
                 .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.RoomCategory))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Invoice.TotalAmount));
+
             CreateMap<Booking, BookingCreateDto>().ReverseMap();
             CreateMap<Booking, BookingCreateByAdminDto>().ReverseMap();
             CreateMap<Booking, BookingUpdateDto>().ReverseMap();
@@ -47,6 +49,16 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<RoomType, RoomTypeUpsertDto>().ReverseMap();
 
             CreateMap<DateTime, DateOnly>().ConvertUsing(dateTime => DateOnly.FromDateTime(dateTime));
+        }
+
+        private static string? GetFullName(Booking booking)
+        {
+            if (!string.IsNullOrWhiteSpace(booking.FullName))
+                return booking.FullName;
+
+            return booking.User != null
+                ? $"{booking.User.FirstName} {booking.User.LastName}"
+                : null;
         }
     }
 }

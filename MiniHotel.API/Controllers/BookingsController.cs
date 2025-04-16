@@ -209,20 +209,6 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Marks an existing booking as completed.
-        /// </summary>
-        /// <param name="id">The unique identifier of the booking to complete.</param>
-        /// <returns>The updated booking data transfer object with status set to Completed.</returns>
-        [HttpPatch("{id:int}/completed")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Task<ActionResult<BookingDto>> CompletedBooking(int id)
-        {
-            return UpdateStatusAsync(id, BookingStatus.Completed);
-        }
-
-        /// <summary>
         /// Updates the status of a booking.
         /// </summary>
         /// <param name="id">The unique identifier of the booking.</param>

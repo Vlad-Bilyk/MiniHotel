@@ -16,9 +16,9 @@ namespace MiniHotel.Infrastructure.Data.Seed
         {
             if (await _db.Invoices.AnyAsync()) return;
 
-            var roomService = await _db.Services.SingleAsync(s => s.Name == "Бронювання");
             var bookings = await _db.Bookings
                 .Include(b => b.Room).ThenInclude(r => r.RoomType)
+                .Include(b => b.Invoice).ThenInclude(i => i.InvoiceItems)
                 .ToListAsync();
 
             var invoices = bookings.Select(b => new Invoice
@@ -30,7 +30,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
                 {
                     new InvoiceItem
                     {
-                        ServiceId = roomService.ServiceId,
+                        ItemType = InvoiceItemType.RoomBooking,
                         Description = $"Бронювання номеру {b.Room.RoomNumber} - { (b.EndDate - b.StartDate).Days } ночей",
                         Quantity = (b.EndDate - b.StartDate).Days,
                         UnitPrice = b.Room.RoomType.PricePerNight,

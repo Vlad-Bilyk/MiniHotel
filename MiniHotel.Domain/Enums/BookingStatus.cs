@@ -7,6 +7,5 @@
         CheckedIn,
         CheckedOut,
         Cancelled,
-        Completed
     }
 }

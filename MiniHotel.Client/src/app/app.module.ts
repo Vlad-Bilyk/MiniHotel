@@ -10,7 +10,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { RoomsComponent } from './pages/admin/rooms/rooms.component';
 import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
@@ -30,6 +30,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { ServicesComponent } from './pages/admin/services/services.component';
 import { ServicesFormDialogComponent } from './pages/admin/services/services-form-dialog/services-form-dialog.component'
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BookingsComponent } from './pages/admin/bookings/bookings.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -50,6 +55,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RoomFormDialogComponent,
     ServicesComponent,
     ServicesFormDialogComponent,
+    BookingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +69,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatSelectModule,
     MatTooltipModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    FormsModule,
+    MatChipsModule,
   ],
   providers: [provideHttpClient(withInterceptors([jwtInterceptor]))],
   bootstrap: [AppComponent],

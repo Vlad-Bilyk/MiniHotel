@@ -9,6 +9,7 @@ import { BookingConfirmationComponent } from './pages/booking-confirmation/booki
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { RoomTypesComponent } from './pages/admin/room-types/room-types.component';
 import { ServicesComponent } from './pages/admin/services/services.component';
+import { BookingsComponent } from './pages/admin/bookings/bookings.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'room-types', component: RoomTypesComponent, canActivate: [authGuard] },
   { path: 'rooms', component: RoomsComponent, canActivate: [authGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
+  { path: 'bookings', component: BookingsComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

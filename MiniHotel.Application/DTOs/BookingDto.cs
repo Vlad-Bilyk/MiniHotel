@@ -6,7 +6,7 @@ namespace MiniHotel.Application.DTOs
     {
         public int BookingId { get; set; }
         public int InvoiceId { get; set; }
-        public string ClientFullName { get; set; } = default!;
+        public string FullName { get; set; } = default!;
         public string RoomNumber { get; set; } = default!;
         public string RoomCategory { get; set; } = default!;
         public DateOnly StartDate { get; set; }

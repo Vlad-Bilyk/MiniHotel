@@ -78,9 +78,9 @@ namespace MiniHotel.Application.Services
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId)
                 ?? throw new KeyNotFoundException("Booking not found");
 
-            if (booking.BookingStatus == BookingStatus.Completed || booking.BookingStatus == BookingStatus.Cancelled)
+            if (booking.BookingStatus == BookingStatus.Cancelled || booking.BookingStatus == BookingStatus.CheckedOut)
             {
-                throw new InvalidOperationException("Cannot update status of completed or cancelled booking.");
+                throw new InvalidOperationException("Cannot update status of cancelled or checkedOut booking.");
             }
 
             booking.BookingStatus = newStatus;

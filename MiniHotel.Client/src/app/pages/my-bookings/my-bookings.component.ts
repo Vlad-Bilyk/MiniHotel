@@ -71,8 +71,6 @@ export class MyBookingsComponent implements OnInit {
         return 'text-success';
       case this.bookingStatusEnum.Cancelled:
         return 'text-danger';
-      case this.bookingStatusEnum.Completed:
-        return 'text-muted';
       default:
         return 'badge bg-light text-muted';
     }

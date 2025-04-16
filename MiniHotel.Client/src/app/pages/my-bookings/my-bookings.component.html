@@ -28,7 +28,6 @@
 
                     <td>
                         <ng-container [ngSwitch]="booking.bookingStatus">
-                            <span *ngSwitchCase="bookingStatusEnum.Completed" class="text-muted small">Сплачено</span>
                             <span *ngSwitchCase="bookingStatusEnum.CheckedOut" class="text-muted small">Сплачено</span>
                             <span *ngSwitchCase="bookingStatusEnum.Cancelled" class="text-muted small">Скасовано</span>
                             <span *ngSwitchDefault class="text-muted small">До сплати</span>

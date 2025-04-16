@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MiniHotel.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniHotel.Domain.Entities
@@ -16,6 +17,8 @@ namespace MiniHotel.Domain.Entities
         public string? Description { get; set; }
 
         public int Quantity { get; set; }
+
+        public InvoiceItemType ItemType { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal UnitPrice { get; set; }
