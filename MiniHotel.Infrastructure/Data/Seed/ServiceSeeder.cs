@@ -18,7 +18,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
 
             var services = new[]
             {
-                new Service { Name = "Бронювання", Description = "Бронювання номеру", Price = 0, IsAvailable = true },
+                new Service { Name = "Бронювання", Description = "Бронювання номеру", Price = 0, IsAvailable = true }, // default service dont delete it
                 new Service { Name = "Сніданок", Description = "Континентальний сніданок: кава або чай, свіжі булочки з маслом та джемом, натуральний йогурт, сезонні фрукти.", Price = 100, IsAvailable = true },
                 new Service { Name = "Доступ в спа", Description = "Повний спа-центр", Price = 300, IsAvailable = false },
                 new Service { Name = "Трансфер до аеропорту", Description = "Таксі до аеропорту", Price = 200, IsAvailable = true },

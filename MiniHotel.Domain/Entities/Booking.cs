@@ -19,6 +19,14 @@ namespace MiniHotel.Domain.Entities
         [Required]
         public DateTime EndDate { get; set; }
 
+        [StringLength(100)]
+        public string? FullName { get; set; }
+
+        [Phone]
+        public string? PhoneNumber { get; set; }
+
+        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.OnSite;
+
         [Required]
         public BookingStatus BookingStatus { get; set; }
 

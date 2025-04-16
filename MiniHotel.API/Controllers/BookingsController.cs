@@ -135,6 +135,23 @@ namespace MiniHotel.API.Controllers
             }
         }
 
+        [HttpPost("admin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<BookingDto>> CreateBookingByAdmin([FromBody] BookingCreateByAdminDto createDto)
+        {
+            try
+            {
+                var result = await _bookingService.CreateOfflineBookingAsync(createDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         /// <summary>
         /// Cancels an existing booking.
         /// </summary>

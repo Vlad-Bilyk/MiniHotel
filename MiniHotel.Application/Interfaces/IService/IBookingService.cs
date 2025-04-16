@@ -12,5 +12,6 @@ namespace MiniHotel.Application.Interfaces.IService
         Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter);
         Task<IEnumerable<BookingDto>> GetBookingsAsync(Expression<Func<Booking, bool>>? filter = null);
         Task<IEnumerable<UserBookingsDto>> GetUserBookingsAsync(string userId);
+        Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByAdminDto createDto);
     }
 }
