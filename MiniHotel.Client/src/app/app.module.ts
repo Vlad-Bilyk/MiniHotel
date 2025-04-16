@@ -26,7 +26,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RoomFormDialogComponent } from './pages/admin/rooms/room-form-dialog/room-form-dialog.component';
-import { MatSelectModule } from '@angular/material/select'
+import { MatSelectModule } from '@angular/material/select';
+import { ServicesComponent } from './pages/admin/services/services.component';
+import { ServicesFormDialogComponent } from './pages/admin/services/services-form-dialog/services-form-dialog.component'
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,8 @@ import { MatSelectModule } from '@angular/material/select'
     RoomTypesComponent,
     RoomTypeDialogComponent,
     RoomFormDialogComponent,
+    ServicesComponent,
+    ServicesFormDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +62,7 @@ import { MatSelectModule } from '@angular/material/select'
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   providers: [provideHttpClient(withInterceptors([jwtInterceptor]))],
   bootstrap: [AppComponent],

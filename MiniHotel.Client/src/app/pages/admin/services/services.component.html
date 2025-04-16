@@ -1,0 +1,43 @@
+<div class="container mt-5 py-4">
+    <h2 class="mb-3">Services Management</h2>
+
+    <button class="btn btn-primary mb-3" (click)="createService()">Add New Service</button>
+
+    <table class="table table-bordered table-hover" *ngIf="!isLoading; else loading">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let service of services">
+                <td>{{ service.name }}</td>
+                <td class="description-col" matTooltip="{{ service.description }}">
+                    {{ service.description }}
+                </td>
+                <td>{{ service.price | currency }}</td>
+                <td>
+                    <span class="badge" [ngClass]="service.isAvailable ? 'bg-success' : 'bg-secondary'">
+                        {{ service.isAvailable ? 'Available' : 'Unavailable' }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-warning me-2" (click)="editService(service)">Edit</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteService(service.serviceId!)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #loading>
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </ng-template>
+</div>

@@ -15,14 +15,22 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/my-bookings']" routerLinkActive="active">Мої Бронювання</a>
         </li>
-        <li class="nav-item" *ngIf="authService.hasRole('Manager')">
-          <a class="nav-link" [routerLink]="['/rooms']" routerLinkActive="active">Номери</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/room-types']" routerLinkActive="active">Типи Номерів</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Користувачі</a>
+        <!-- TODO: Replace authService to RoleGuard -->
+        <li class="nav-item dropdown" *ngIf="authService.hasRole('Manager')">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Адміністрування
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/rooms']">Номери</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/room-types']">Типи номерів</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/services']">Сервіси</a>
+            </li>
+          </ul>
         </li>
       </ul>
       <!-- Account controls -->
