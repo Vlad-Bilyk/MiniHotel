@@ -1,0 +1,34 @@
+<div class="container mt-5 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Room Types</h2>
+        <button class="btn btn-primary" (click)="createRoomType()">Create New</button>
+    </div>
+
+    <table class="table table-bordered table-striped" *ngIf="!isLoading; else loading">
+        <thead>
+            <tr>
+                <th>Категорія</th>
+                <th>Ціна за ніч</th>
+                <th>Опис</th>
+                <th class="text-center">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let rt of roomTypes">
+                <td>{{ rt.roomCategory }}</td>
+                <td>{{ rt.pricePerNight | currency }}</td>
+                <td>{{ rt.description }}</td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-warning me-2" (click)="editRoomType(rt)">Edit</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteRoomType(rt.roomTypeId!)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #loading>
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </ng-template>
+</div>

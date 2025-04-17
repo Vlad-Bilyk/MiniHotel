@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniHotel.Infrastructure.Migrations
 {
     [DbContext(typeof(MiniHotelDbContext))]
-    [Migration("20250321164320_SeedDataAndRefactoreRoom")]
-    partial class SeedDataAndRefactoreRoom
+    [Migration("20250416154912_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,17 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FullName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
@@ -179,6 +190,7 @@ namespace MiniHotel.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("BookingId");
@@ -266,6 +278,10 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
@@ -322,10 +338,6 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoomTypeId"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -333,7 +345,14 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<string>("RoomCategory")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("RoomTypeId");
+
+                    b.HasIndex("RoomCategory")
+                        .IsUnique();
 
                     b.ToTable("RoomTypes");
                 });
@@ -499,7 +518,8 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.HasOne("MiniHotel.Domain.Entities.HotelUser", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Room");
 
@@ -556,7 +576,8 @@ namespace MiniHotel.Infrastructure.Migrations
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Booking", b =>
                 {
-                    b.Navigation("Invoice");
+                    b.Navigation("Invoice")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.HotelUser", b =>

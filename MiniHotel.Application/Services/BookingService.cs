@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
@@ -11,47 +12,65 @@ namespace MiniHotel.Application.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IInvoiceService _invoiceService;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingRepository, IServiceRepository serviceRepository,
-                              IRoomRepository roomRepository, IInvoiceService invoiceService, IMapper mapper)
+        private const string IncludeProperties = "Room,Room.RoomType,User,Invoice,Invoice.InvoiceItems";
+
+        public BookingService(IBookingRepository bookingRepository, IRoomRepository roomRepository,
+                              IInvoiceService invoiceService, IMapper mapper, IUserRepository userRepository)
         {
             _bookingRepository = bookingRepository;
-            _serviceRepository = serviceRepository;
             _roomRepository = roomRepository;
             _invoiceService = invoiceService;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
         public async Task<BookingDto> CreateBookingAsync(BookingCreateDto bookingcreateDto, string userId)
         {
-            var room = await _roomRepository.GetAsync(r => r.RoomNumber == bookingcreateDto.RoomNumber);
-            if (room == null)
+            return await CreateBookingInternal(async () =>
             {
-                throw new ArgumentException("Room number not found");
-            }
+                var room = await ValidateAndGetRoomAsync(bookingcreateDto.RoomNumber, bookingcreateDto.StartDate, bookingcreateDto.EndDate);
 
-            var availableRooms = await _roomRepository.GetAvailableRoomsAsync(bookingcreateDto.StartDate, bookingcreateDto.EndDate);
-            if (!availableRooms.Any(r => r.RoomId == room.RoomId))
+                var booking = new Booking
+                {
+                    UserId = userId,
+                    RoomId = room.RoomId,
+                    StartDate = bookingcreateDto.StartDate,
+                    EndDate = bookingcreateDto.EndDate,
+                    BookingStatus = BookingStatus.Pending,
+                };
+
+                return booking;
+            });
+        }
+
+        public async Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByAdminDto createDto)
+        {
+            return await CreateBookingInternal(async () =>
             {
-                throw new ArgumentException("Room is not available for the selected dates");
-            }
+                var room = await ValidateAndGetRoomAsync(createDto.RoomNumber, createDto.StartDate, createDto.EndDate);
 
-            var booking = new Booking
-            {
-                UserId = userId,
-                RoomId = room.RoomId,
-                StartDate = bookingcreateDto.StartDate,
-                EndDate = bookingcreateDto.EndDate,
-                BookingStatus = BookingStatus.Pending,
-            };
+                var offlineUser = await _userRepository.GetAsync(u => u.Email == "offline_client@hotel.local")
+                    ?? throw new ArgumentException("Offline user not found");
 
-            await _bookingRepository.CreateAsync(booking);
-            var bookingDto = _mapper.Map<BookingDto>(booking);
-            return bookingDto;
+                var booking = new Booking
+                {
+                    UserId = offlineUser.UserId,
+                    RoomId = room.RoomId,
+                    StartDate = createDto.StartDate,
+                    EndDate = createDto.EndDate,
+                    FullName = createDto.FullName,
+                    PhoneNumber = createDto.PhoneNumber,
+                    PaymentMethod = createDto.PaymentMethod,
+                    BookingStatus = BookingStatus.Confirmed,
+                };
+
+                return booking;
+            });
         }
 
         public async Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
@@ -59,9 +78,9 @@ namespace MiniHotel.Application.Services
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId)
                 ?? throw new KeyNotFoundException("Booking not found");
 
-            if (booking.BookingStatus == BookingStatus.Completed || booking.BookingStatus == BookingStatus.Cancelled)
+            if (booking.BookingStatus == BookingStatus.Cancelled || booking.BookingStatus == BookingStatus.CheckedOut)
             {
-                throw new InvalidOperationException("Cannot update status of completed or cancelled booking.");
+                throw new InvalidOperationException("Cannot update status of cancelled or checkedOut booking.");
             }
 
             booking.BookingStatus = newStatus;
@@ -72,16 +91,53 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)
         {
-            var includeProps = "Room,User";
-            var booking = await _bookingRepository.GetAsync(filter, includeProps);
+            var booking = await _bookingRepository.GetAsync(filter, IncludeProperties);
             return _mapper.Map<BookingDto>(booking);
         }
 
         public async Task<IEnumerable<BookingDto>> GetBookingsAsync(Expression<Func<Booking, bool>>? filter = null)
         {
-            var includeProps = "Room,User";
-            var bookings = await _bookingRepository.GetAllAsync(filter, includeProps);
+            var bookings = await _bookingRepository.GetAllAsync(filter, IncludeProperties);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
+        }
+
+        public async Task<IEnumerable<UserBookingsDto>> GetUserBookingsAsync(string userId)
+        {
+            var bookings = await _bookingRepository.GetAllAsync(b => b.UserId == userId, IncludeProperties);
+
+            return _mapper.Map<IEnumerable<UserBookingsDto>>(bookings);
+        }
+
+        private async Task<BookingDto> CreateBookingInternal(Func<Task<Booking>> createBookingFunc)
+        {
+            await using var transaction = await _bookingRepository.BeginTransactionAsync();
+
+            try
+            {
+                var booking = await createBookingFunc();
+                await _bookingRepository.CreateAsync(booking);
+                await _invoiceService.CreateInvoiceForBookingAsync(booking.BookingId);
+                await transaction.CommitAsync();
+                return _mapper.Map<BookingDto>(booking);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new BookingCreationException("Failed to create booking and invoice." + ex.Message, ex);
+            }
+        }
+
+        private async Task<Room> ValidateAndGetRoomAsync(string roomNumber, DateTime startDate, DateTime endDate)
+        {
+            var room = await _roomRepository
+                .GetAsync(r => r.RoomNumber == roomNumber)
+                ?? throw new ArgumentException("Room number not found");
+            var availableRooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
+            if (!availableRooms.Any(r => r.RoomId == room.RoomId))
+            {
+                throw new ArgumentException("Room is not available for the selected dates");
+            }
+            return room;
         }
     }
 }

@@ -23,9 +23,9 @@ namespace MiniHotel.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<InvoiceDto> AddItemAsync(int bookingId, InvoiceItemCreateDto createItem)
+        public async Task<InvoiceDto> AddItemAsync(int invoiceId, InvoiceItemCreateDto createItem)
         {
-            var invoice = await _invoiceRepository.GetByBookingIdAsync(bookingId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
                           ?? throw new KeyNotFoundException("Invoice not found");
 
             var service = await _serviceRepository.GetAsync(s => s.Name == createItem.ServiceName)
@@ -63,7 +63,7 @@ namespace MiniHotel.Application.Services
                         Description = $"Бронюванян номеру {booking.Room.RoomNumber} - {nights} ночей",
                         Quantity = nights,
                         UnitPrice = booking.Room.RoomType.PricePerNight,
-                        ServiceId = 1
+                        ItemType = InvoiceItemType.RoomBooking
                     }
                 }
             };
@@ -79,9 +79,9 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
         }
 
-        public async Task<InvoiceDto> GetInvoiceAsync(int bookingId)
+        public async Task<InvoiceDto> GetInvoiceAsync(int invoiceId)
         {
-            var invoice = await _invoiceRepository.GetByBookingIdAsync(bookingId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
                           ?? throw new KeyNotFoundException("Invoice not found");
             return _mapper.Map<InvoiceDto>(invoice);
         }

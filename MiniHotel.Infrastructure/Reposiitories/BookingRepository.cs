@@ -1,4 +1,5 @@
-﻿using MiniHotel.Application.Interfaces.IRepository;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Data;
 
@@ -11,6 +12,11 @@ namespace MiniHotel.Infrastructure.Reposiitories
         public BookingRepository(MiniHotelDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return _context.Database.BeginTransactionAsync();
         }
 
         public async Task CreateAsync(Booking entity)

@@ -4,11 +4,16 @@
 
 import { BookingStatus } from '../models/booking-status';
 import { DateOnly } from '../models/date-only';
+import { PaymentMethod } from '../models/payment-method';
 export interface BookingDto {
+  amount?: number;
   bookingId?: number;
   bookingStatus?: BookingStatus;
   endDate?: DateOnly;
+  fullName?: string | null;
+  invoiceId?: number;
+  paymentMethod?: PaymentMethod;
+  roomCategory?: string | null;
   roomNumber?: string | null;
   startDate?: DateOnly;
-  userId?: string | null;
 }

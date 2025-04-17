@@ -93,24 +93,6 @@ namespace MiniHotel.Tests.ControllersTest
         }
 
         [Fact]
-        public async Task CompletedBooking_ReturnsOkResult_WhenBookingStatusUpdatedSuccessfully()
-        {
-            // Arrange
-            int bookingId = 5;
-            var expectedBooking = new BookingDto { BookingId = bookingId, BookingStatus = BookingStatus.Completed };
-            _bookingServiceMock.Setup(s => s.UpdateBookingStatusAsync(bookingId, BookingStatus.Completed))
-                               .ReturnsAsync(expectedBooking);
-
-            // Act
-            var result = await _controller.CompletedBooking(bookingId);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnedBooking = Assert.IsType<BookingDto>(okResult.Value);
-            Assert.Equal(BookingStatus.Completed, returnedBooking.BookingStatus);
-        }
-
-        [Fact]
         public async Task CheckInBooking_ReturnsBadRequest_WhenInvalidOperationExceptionThrown()
         {
             // Arrange

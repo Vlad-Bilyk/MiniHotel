@@ -17,18 +17,18 @@ export interface PayOnline$Params {
   invoiceId: number;
 }
 
-export function payOnline(http: HttpClient, rootUrl: string, params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function payOnline(http: HttpClient, rootUrl: string, params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, payOnline.PATH, 'post');
   if (params) {
     rb.path('invoiceId', params.invoiceId, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'text/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<string>;
     })
   );
 }

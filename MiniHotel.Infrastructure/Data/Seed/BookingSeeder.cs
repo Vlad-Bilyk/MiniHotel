@@ -19,7 +19,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
             if (await _db.Bookings.AnyAsync()) return;
 
             var customers = await _db.HotelUsers
-                .Where(u => u.Role == UserRole.Customer)
+                .Where(u => u.Role == UserRole.Customer && u.Email != "offline_client@hotel.local")
                 .ToListAsync();
 
             var rooms = await _db.Rooms
@@ -45,6 +45,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
                         StartDate = baseDate.AddDays(i * 3),
                         EndDate = baseDate.AddDays(i * 3 + 2),
                         BookingStatus = BookingStatus.Confirmed,
+                        PaymentMethod = PaymentMethod.OnSite,
                     });
                 }
             }

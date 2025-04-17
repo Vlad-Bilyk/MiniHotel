@@ -8,20 +8,19 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { BookingDto } from '../../models/booking-dto';
 
-export interface CompletedBooking$Plain$Params {
+export interface PayOnline$Plain$Params {
 
 /**
- * The unique identifier of the booking to complete.
+ * The unique identifier of the invoice to be paid.
  */
-  id: number;
+  invoiceId: number;
 }
 
-export function completedBooking$Plain(http: HttpClient, rootUrl: string, params: CompletedBooking$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-  const rb = new RequestBuilder(rootUrl, completedBooking$Plain.PATH, 'patch');
+export function payOnline$Plain(http: HttpClient, rootUrl: string, params: PayOnline$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, payOnline$Plain.PATH, 'post');
   if (params) {
-    rb.path('id', params.id, {});
+    rb.path('invoiceId', params.invoiceId, {});
   }
 
   return http.request(
@@ -29,9 +28,9 @@ export function completedBooking$Plain(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<BookingDto>;
+      return r as StrictHttpResponse<string>;
     })
   );
 }
 
-completedBooking$Plain.PATH = '/api/Bookings/{id}/completed';
+payOnline$Plain.PATH = '/api/Payments/{invoiceId}/online';

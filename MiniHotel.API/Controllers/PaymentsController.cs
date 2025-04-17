@@ -30,7 +30,7 @@ namespace MiniHotel.API.Controllers
         /// <response code="400">If the request is invalid.</response>
         /// <response code="404">If the invoice is not found.</response>
         [HttpPost("{invoiceId:int}/online")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> PayOnline(int invoiceId)

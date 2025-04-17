@@ -20,6 +20,8 @@ import { payOffline$Plain } from '../fn/payments/pay-offline-plain';
 import { PayOffline$Plain$Params } from '../fn/payments/pay-offline-plain';
 import { payOnline } from '../fn/payments/pay-online';
 import { PayOnline$Params } from '../fn/payments/pay-online';
+import { payOnline$Plain } from '../fn/payments/pay-online-plain';
+import { PayOnline$Plain$Params } from '../fn/payments/pay-online-plain';
 import { refund } from '../fn/payments/refund';
 import { Refund$Params } from '../fn/payments/refund';
 import { refund$Plain } from '../fn/payments/refund-plain';
@@ -40,11 +42,41 @@ export class PaymentsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `payOnline$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  payOnline$Plain$Response(params: PayOnline$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return payOnline$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Initiates an online payment by generating a payment URL.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `payOnline$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  payOnline$Plain(params: PayOnline$Plain$Params, context?: HttpContext): Observable<string> {
+    return this.payOnline$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /**
+   * Initiates an online payment by generating a payment URL.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `payOnline()` instead.
    *
    * This method doesn't expect any request body.
    */
-  payOnline$Response(params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  payOnline$Response(params: PayOnline$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
     return payOnline(this.http, this.rootUrl, params, context);
   }
 
@@ -58,9 +90,9 @@ export class PaymentsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  payOnline(params: PayOnline$Params, context?: HttpContext): Observable<void> {
+  payOnline(params: PayOnline$Params, context?: HttpContext): Observable<string> {
     return this.payOnline$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

@@ -1,4 +1,5 @@
-﻿using MiniHotel.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.Application.Interfaces.IRepository
 {
@@ -6,5 +7,6 @@ namespace MiniHotel.Application.Interfaces.IRepository
     {
         Task CreateAsync(Booking entity);
         Task<Booking> UpdateAsync(Booking entity);
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

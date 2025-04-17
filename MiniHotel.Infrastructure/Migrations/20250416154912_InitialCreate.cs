@@ -53,19 +53,18 @@ namespace MiniHotel.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "RoomTypes",
                 columns: table => new
                 {
-                    RoomId = table.Column<int>(type: "integer", nullable: false)
+                    RoomTypeId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoomNumber = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
-                    RoomType = table.Column<string>(type: "text", nullable: false),
+                    RoomCategory = table.Column<string>(type: "text", nullable: false),
                     PricePerNight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    RoomStatus = table.Column<string>(type: "text", nullable: false)
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
+                    table.PrimaryKey("PK_RoomTypes", x => x.RoomTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,6 +212,27 @@ namespace MiniHotel.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    RoomId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoomNumber = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    RoomTypeId = table.Column<int>(type: "integer", nullable: false),
+                    RoomStatus = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
+                    table.ForeignKey(
+                        name: "FK_Rooms_RoomTypes_RoomTypeId",
+                        column: x => x.RoomTypeId,
+                        principalTable: "RoomTypes",
+                        principalColumn: "RoomTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
@@ -222,6 +242,9 @@ namespace MiniHotel.Infrastructure.Migrations
                     RoomId = table.Column<int>(type: "integer", nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PaymentMethod = table.Column<string>(type: "text", nullable: false),
                     BookingStatus = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -233,7 +256,7 @@ namespace MiniHotel.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "HotelUsers",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Bookings_Rooms_RoomId",
                         column: x => x.RoomId,
@@ -273,6 +296,7 @@ namespace MiniHotel.Infrastructure.Migrations
                     ServiceId = table.Column<int>(type: "integer", nullable: true),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
+                    ItemType = table.Column<string>(type: "text", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
                 },
                 constraints: table =>
@@ -359,6 +383,17 @@ namespace MiniHotel.Infrastructure.Migrations
                 table: "Rooms",
                 column: "RoomNumber",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rooms_RoomTypeId",
+                table: "Rooms",
+                column: "RoomTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomTypes_RoomCategory",
+                table: "RoomTypes",
+                column: "RoomCategory",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -402,6 +437,9 @@ namespace MiniHotel.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "RoomTypes");
         }
     }
 }

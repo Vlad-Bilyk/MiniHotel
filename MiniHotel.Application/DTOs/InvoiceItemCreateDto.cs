@@ -5,7 +5,7 @@ namespace MiniHotel.Application.DTOs
     public class InvoiceItemCreateDto
     {
         [Required]
-        public string ServiceName { get; set; } = string.Empty;
+        public string? ServiceName { get; set; } = string.Empty;
 
         [StringLength(200)]
         public string? Description { get; set; } = string.Empty;

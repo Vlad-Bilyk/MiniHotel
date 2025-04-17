@@ -1,0 +1,69 @@
+<div class="container mt-5 py-5">
+    <h2 class="mb-4 text-center fw-semibold">Мої бронювання</h2>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-primary text-uppercase small">
+                <tr>
+                    <th>Категорія кімнати</th>
+                    <th>Заселення</th>
+                    <th>Виселення</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr *ngFor="let booking of bookings">
+                    <td class="fw-medium">{{ booking.roomCategory }}</td>
+
+                    <td>
+                        <i class="bi bi-calendar-event me-1 text-success"></i>
+                        {{ booking.startDate | date:'dd.MM.yyyy' }}
+                    </td>
+                    <td>
+                        <i class="bi bi-calendar-check me-1 text-danger"></i>
+                        {{ booking.endDate | date:'dd.MM.yyyy' }}
+                    </td>
+
+                    <td>
+                        <ng-container [ngSwitch]="booking.bookingStatus">
+                            <span *ngSwitchCase="bookingStatusEnum.CheckedOut" class="text-muted small">Сплачено</span>
+                            <span *ngSwitchCase="bookingStatusEnum.Cancelled" class="text-muted small">Скасовано</span>
+                            <span *ngSwitchDefault class="text-muted small">До сплати</span>
+                        </ng-container><br />
+                        {{ booking.amount | currency:'UAH ':'symbol-narrow':'1.0-0' }}
+                    </td>
+
+                    <td>
+                        <ng-container *ngIf="booking.bookingStatus as status">
+                            <span [ngClass]="getStatusClass(status)" class="badge rounded-pill px-3 py-2">
+                                {{ status }}
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="!booking.bookingStatus">
+                            <span class="text-muted">Невідомо</span>
+                        </ng-container>
+                    </td>
+
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-2" *ngIf="booking.bookingId"
+                            (click)="viewInvoice(booking.bookingId)">
+                            <i class="bi bi-file-earmark-text"></i> Рахунок
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-danger" *ngIf="booking.bookingId !== undefined"
+                            (click)="cancelBooking(booking.bookingId!)" [disabled]="!canCancel(booking.bookingStatus)">
+                            <i class="bi bi-x-circle"></i> Скасувати
+                        </button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="bookings.length === 0" class="text-center text-muted mt-5 fs-5">
+        У вас поки немає бронювань.
+    </div>
+</div>

@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "API and Client",
+    "Projects": [
+      {
+        "Path": "MiniHotel.API\\MiniHotel.API.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "MiniHotel.Client\\MiniHotel.Client.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Chrome)"
+      }
+    ]
+  }
+]

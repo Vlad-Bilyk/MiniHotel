@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Enums;
@@ -31,6 +32,36 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
         {
             var bookings = await _bookingService.GetBookingsAsync();
+            return Ok(bookings);
+        }
+
+        /// <summary>
+        /// Gets all bookings made by the currently authenticated user.
+        /// </summary>
+        /// <returns>A list of <see cref="UserBookingsDto"/> representing the user's bookings.</returns>
+        /// <response code="200">Returns the list of bookings.</response>
+        /// <response code="400">If the user ID is not found in the token claims.</response>
+        /// <response code="500">If an unexpected server error occurs.</response>
+        [HttpGet("user")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<UserBookingsDto>>> GetUserBookings()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User not found");
+            }
+            var bookings = await _bookingService.GetUserBookingsAsync(userId);
+            foreach (var booking in bookings)
+            {
+                Console.WriteLine(booking.RoomNumber);
+                Console.WriteLine(booking.RoomCategory);
+                Console.WriteLine(booking.Amount);
+            }
+
             return Ok(bookings);
         }
 
@@ -86,15 +117,34 @@ namespace MiniHotel.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
+            if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User not found");
             }
+
+            Console.WriteLine(userId);
 
             try
             {
                 var bookingDto = await _bookingService.CreateBookingAsync(createDto, userId);
                 return CreatedAtRoute(nameof(GetBookingById), new { id = bookingDto.BookingId }, bookingDto);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpPost("admin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<BookingDto>> CreateBookingByAdmin([FromBody] BookingCreateByAdminDto createDto)
+        {
+            try
+            {
+                var result = await _bookingService.CreateOfflineBookingAsync(createDto);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -159,20 +209,6 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Marks an existing booking as completed.
-        /// </summary>
-        /// <param name="id">The unique identifier of the booking to complete.</param>
-        /// <returns>The updated booking data transfer object with status set to Completed.</returns>
-        [HttpPatch("{id:int}/completed")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Task<ActionResult<BookingDto>> CompletedBooking(int id)
-        {
-            return UpdateStatusAsync(id, BookingStatus.Completed);
-        }
-
-        /// <summary>
         /// Updates the status of a booking.
         /// </summary>
         /// <param name="id">The unique identifier of the booking.</param>
@@ -198,6 +234,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>An <see cref="ActionResult"/> representing the HTTP response.</returns>
         private ActionResult HandleException(Exception ex)
         {
+            _logger.LogError(ex.Message);
             switch (ex)
             {
                 case KeyNotFoundException:
