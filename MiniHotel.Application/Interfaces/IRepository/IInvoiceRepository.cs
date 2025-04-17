@@ -7,6 +7,6 @@ namespace MiniHotel.Application.Interfaces.IRepository
         Task<Invoice> AddItemAsync(InvoiceItem item);
         Task UpdateAsync(Invoice invoice);
         Task CreateAsync(Invoice invoice);
-        Task RemoveItemAsync(int invoiceItemId);
+        Task<int> RemoveItemAsync(int invoiceItemId);
     }
 }

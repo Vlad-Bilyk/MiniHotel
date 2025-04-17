@@ -49,6 +49,8 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<RoomType, RoomTypeDto>().ReverseMap();
             CreateMap<RoomType, RoomTypeUpsertDto>().ReverseMap();
 
+            CreateMap<Payment, PaymentDto>();
+
             CreateMap<DateTime, DateOnly>().ConvertUsing(dateTime => DateOnly.FromDateTime(dateTime));
         }
 

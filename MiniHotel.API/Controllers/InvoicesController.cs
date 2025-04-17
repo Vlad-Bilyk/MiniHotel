@@ -66,18 +66,19 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Adds an invoice item to a specific booking's invoice.
+        /// Adds an invoice item to a specific invoice's invoice.
         /// </summary>
-        /// <param name="bookingId">The unique identifier of the booking.</param>
+        /// <param name="invoiceId">The unique identifier of the invoice.</param>
         /// <param name="createItem">The data needed to create the invoice item.</param>
         /// <returns>The updated invoice DTO with the new item included.</returns>
         /// <response code="201">Returns the invoice with the new item added.</response>
-        [HttpPost("{bookingId}/items")]
+        [HttpPost("{invoiceId}/items")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<InvoiceDto>> AddInvoiceItem(int bookingId, InvoiceItemCreateDto createItem)
+        public async Task<ActionResult<InvoiceDto>> AddInvoiceItem(int invoiceId, InvoiceItemCreateDto createItem)
         {
-            var dto = await _invoiceService.AddItemAsync(bookingId, createItem);
-            return Ok(dto);
+            var invoice = await _invoiceService.AddItemAsync(invoiceId, createItem);
+            await _invoiceService.RecalculateAsync(invoice.InvoiceId);
+            return Ok(invoice);
         }
 
         /// <summary>

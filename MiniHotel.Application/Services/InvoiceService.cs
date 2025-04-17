@@ -9,7 +9,7 @@ namespace MiniHotel.Application.Services
 {
     public class InvoiceService : IInvoiceService
     {
-        private const string IncludeProperties = "InvoiceItems,InvoiceItems.Service";
+        private const string IncludeProperties = "InvoiceItems,InvoiceItems.Service,Payments";
 
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IBookingRepository _bookingRepository;
@@ -74,6 +74,29 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<InvoiceDto>(invoice);
         }
 
+        public async Task RecalculateAsync(int invoiceId)
+        {
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+                          ?? throw new KeyNotFoundException("Invoice not found");
+
+            InvoiceStatus newStatus;
+            if (invoice.PaidAmount == 0)
+            {
+                newStatus = InvoiceStatus.Pending;
+            }
+            else if (invoice.PaidAmount < invoice.TotalAmount)
+            {
+                newStatus = InvoiceStatus.PartiallyPaid;
+            }
+            else
+            {
+                newStatus = InvoiceStatus.Paid;
+            }
+
+            invoice.Status = newStatus;
+            await _invoiceRepository.UpdateAsync(invoice);
+        }
+
         public async Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync()
         {
             var invoices = await _invoiceRepository.GetAllAsync(includeProperties: IncludeProperties);
@@ -89,7 +112,8 @@ namespace MiniHotel.Application.Services
 
         public async Task RemoveItemAsync(int invoiceItemId)
         {
-            await _invoiceRepository.RemoveItemAsync(invoiceItemId);
+            var invoiceId = await _invoiceRepository.RemoveItemAsync(invoiceItemId);
+            await RecalculateAsync(invoiceId);
         }
 
         public async Task<InvoiceDto> UpdateStatusAsync(int invoiceId, InvoiceStatus status)

@@ -20,6 +20,7 @@ namespace MiniHotel.Infrastructure.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,6 +58,12 @@ namespace MiniHotel.Infrastructure.Data
             builder.Entity<RoomType>()
                 .HasIndex(rt => rt.RoomCategory)
                 .IsUnique();
+
+            builder.Entity<Payment>()
+                .HasOne(p => p.Invoice)
+                .WithMany(i => i.Payments)
+                .HasForeignKey(p => p.InvoiceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Global convention: for all enum properties, use EnumToStringConverter
             foreach (var entityType in builder.Model.GetEntityTypes())

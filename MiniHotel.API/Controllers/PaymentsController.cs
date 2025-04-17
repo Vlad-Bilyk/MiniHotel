@@ -58,7 +58,7 @@ namespace MiniHotel.API.Controllers
         {
             return await ExecuteSafeAsync(async () =>
             {
-                var updatedInvoice = await _paymentService.MarkPaidOfflineAsync(invoiceId);
+                var updatedInvoice = await _paymentService.PayOfflineAsync(invoiceId);
                 return Ok(updatedInvoice);
             }, invoiceId, "Offline payment");
         }

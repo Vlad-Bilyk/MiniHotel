@@ -4,6 +4,7 @@
     {
         Paid,
         Pending,
+        PartiallyPaid,
         Cancelled,
         Refunded,
         Undefiend

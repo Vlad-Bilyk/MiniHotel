@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 using Newtonsoft.Json;
 using System.Text;
@@ -20,13 +21,15 @@ namespace MiniHotel.Infrastructure.Services
         private readonly LiqPayClient _liqPayClient;
         private readonly IConfiguration _configuration;
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IInvoiceService _invoiceService;
         private readonly ILogger<PaymentService> _logger;
         private readonly IMapper _mapper;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IConfiguration configuration,
-                              IMapper mapper, ILogger<PaymentService> logger)
+                              IMapper mapper, IInvoiceService invoiceService, ILogger<PaymentService> logger)
         {
             _invoiceRepository = invoiceRepository;
+            _invoiceService = invoiceService;
             _configuration = configuration;
             _mapper = mapper;
             _logger = logger;
@@ -52,7 +55,7 @@ namespace MiniHotel.Infrastructure.Services
                 Version = 3,
                 PublicKey = _configuration["LiqPay:PublicKey"],
                 Action = LiqPayRequestAction.Pay,
-                Amount = Convert.ToDouble(invoice.TotalAmount),
+                Amount = Convert.ToDouble(invoice.AmountDue),
                 Currency = "UAH",
                 Description = description,
                 OrderId = invoiceId.ToString(),
@@ -65,19 +68,12 @@ namespace MiniHotel.Infrastructure.Services
             return await Task.FromResult(formHtml);
         }
 
-        public async Task<InvoiceDto> MarkPaidOfflineAsync(int invoiceId)
+        public async Task<InvoiceDto> PayOfflineAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
                           ?? throw new KeyNotFoundException("Invoice not found");
 
-            if (invoice.Status == InvoiceStatus.Paid)
-            {
-                throw new InvalidOperationException("Рахунок уже оплачено");
-            }
-
-            invoice.Status = InvoiceStatus.Paid;
-            await _invoiceRepository.UpdateAsync(invoice);
-            return _mapper.Map<InvoiceDto>(invoice);
+            return await AddPaymentAsync(invoiceId, invoice.AmountDue, PaymentMethod.OnSite);
         }
 
         public async Task ProcessCallbackAsync(LiqPayCallbackDto dto)
@@ -100,18 +96,18 @@ namespace MiniHotel.Infrastructure.Services
             if (!int.TryParse(response.OrderId, out var invoiceId))
                 throw new InvalidOperationException("Invalid OrderId in callback");
 
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
-                          ?? throw new KeyNotFoundException($"Invoice not found");
+            if (response.Status.Equals(LiqPayResponseStatus.Success.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                await AddPaymentAsync(
+                    invoiceId, Convert.ToDecimal(response.Amount),
+                    PaymentMethod.Online, response.PaymentId.ToString());
+            }
+            else
+            {
+                throw new InvalidOperationException($"Payment failed: {response.Status}");
+            }
 
             _logger.LogInformation("LiqPay callback received for Invoice {InvoiceId}: status={Status}", invoiceId, response.Status);
-
-            invoice.Status = response.Status.Equals("success", StringComparison.OrdinalIgnoreCase)
-                ? InvoiceStatus.Paid
-                : InvoiceStatus.Cancelled;
-
-            _logger.LogInformation("Invoice {InvoiceId} status updated to {NewStatus}", invoiceId, invoice.Status);
-
-            await _invoiceRepository.UpdateAsync(invoice);
         }
 
         public async Task<InvoiceDto> MarkRefundAsync(int invoiceId)
@@ -127,6 +123,32 @@ namespace MiniHotel.Infrastructure.Services
             _logger.LogInformation("Refunding Invoice {InvoiceId}", invoiceId);
             invoice.Status = InvoiceStatus.Refunded;
             await _invoiceRepository.UpdateAsync(invoice);
+            return _mapper.Map<InvoiceDto>(invoice);
+        }
+
+        public async Task<InvoiceDto> AddPaymentAsync(int invoiceId, decimal amount, PaymentMethod method, string? externalId = null)
+        {
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps + ",Payments")
+                          ?? throw new KeyNotFoundException("Invoice not found");
+
+            if (amount <= 0 || amount > invoice.AmountDue)
+            {
+                throw new InvalidOperationException("Invalid payment amount");
+            }
+
+            invoice.Payments.Add(new Payment
+            {
+                InvoiceId = invoice.InvoiceId,
+                Amount = amount,
+                Method = method,
+                ExternalId = externalId,
+                PaidAt = DateTime.UtcNow
+            });
+
+            invoice.PaidAmount += amount;
+
+            await _invoiceRepository.UpdateAsync(invoice);
+            await _invoiceService.RecalculateAsync(invoice.InvoiceId);
             return _mapper.Map<InvoiceDto>(invoice);
         }
     }

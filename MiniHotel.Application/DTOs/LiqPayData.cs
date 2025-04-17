@@ -9,5 +9,11 @@ namespace MiniHotel.Application.DTOs
 
         [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
+
+        [JsonProperty("amount")]
+        public decimal Amount { get; set; }
+
+        [JsonProperty("payment_id")]
+        public int PaymentId { get; set; }
     }
 }
