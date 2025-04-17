@@ -9,6 +9,8 @@ namespace MiniHotel.Application.Services
 {
     public class InvoiceService : IInvoiceService
     {
+        private const string IncludeProperties = "InvoiceItems,InvoiceItems.Service";
+
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IServiceRepository _serviceRepository;
@@ -74,14 +76,13 @@ namespace MiniHotel.Application.Services
 
         public async Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync()
         {
-            var includeProp = "InvoiceItems,InvoiceItems.Service";
-            var invoices = await _invoiceRepository.GetAllAsync(includeProperties: includeProp);
+            var invoices = await _invoiceRepository.GetAllAsync(includeProperties: IncludeProperties);
             return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
         }
 
-        public async Task<InvoiceDto> GetInvoiceAsync(int invoiceId)
+        public async Task<InvoiceDto> GetInvoiceByBookingIdAsync(int bookingId)
         {
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.BookingId == bookingId, IncludeProperties)
                           ?? throw new KeyNotFoundException("Invoice not found");
             return _mapper.Map<InvoiceDto>(invoice);
         }

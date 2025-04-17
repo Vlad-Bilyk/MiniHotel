@@ -27,6 +27,7 @@ import { ServicesFormDialogComponent } from './pages/admin/services/services-for
 
 import { BookingsComponent } from './pages/admin/bookings/bookings.component';
 import { BookingsOfflineDialogComponent } from './pages/admin/bookings/bookings-offline-dialog/bookings-offline-dialog.component';
+import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/booking-details.component';
 
 import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
 import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
@@ -48,6 +49,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -62,6 +66,9 @@ const MATERIAL_MODULES = [
   MatSortModule,
   MatTableModule,
   MatTooltipModule,
+  MatCardModule,
+  MatProgressSpinnerModule,
+  MatDividerModule,
 ];
 
 @NgModule({
@@ -90,6 +97,7 @@ const MATERIAL_MODULES = [
 
     BookingsComponent,
     BookingsOfflineDialogComponent,
+    BookingDetailsComponent,
 
     NightsLabelPipe,
     RoomLabelPipe,

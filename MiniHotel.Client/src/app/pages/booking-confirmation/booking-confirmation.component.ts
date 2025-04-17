@@ -2,8 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BookingsService, PaymentsService } from '../../api/services';
-import { BookingCreateDto, BookingDto } from '../../api/models';
+import { BookingCreateDto, BookingDto, PaymentMethod } from '../../api/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { catchError, of, finalize } from 'rxjs';
+
+interface StoredBookingData {
+  roomNumber: string;
+  startDate: string;
+  endDate: string;
+  pricePerDay: number;
+  roomType?: string;
+}
 
 @Component({
   selector: 'app-booking-confirmation',
@@ -12,15 +21,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './booking-confirmation.component.css',
 })
 export class BookingConfirmationComponent implements OnInit {
-  bookingData: BookingCreateDto | null = null;
+  paymentForm!: FormGroup;
   isLoading = false;
 
   totalPrice = 0;
-  pricePerDay = 0;
   nights = 0;
-  roomType: string = '';
 
-  paymentForm!: FormGroup;
+  bookingData!: StoredBookingData;
 
   constructor(
     private router: Router,
@@ -30,83 +37,116 @@ export class BookingConfirmationComponent implements OnInit {
     private fb: FormBuilder
   ) { }
 
-  ngOnInit(): void {
-    const state = JSON.parse(localStorage.getItem('bookingData') || 'null');
+  // Map radio selection to enum
+  private paymentMap: Record<string, PaymentMethod> = {
+    online: PaymentMethod.Online,
+    partial: PaymentMethod.Online, // replace with real partian method
+    onsite: PaymentMethod.OnSite,
+  };
 
+  ngOnInit(): void {
+    this.loadStoredData();
+    this.initForm();
+  }
+
+  confirmBooking(): void {
+    if (this.paymentForm.invalid) {
+      this.paymentForm.markAllAsTouched();
+      return;
+    }
+
+    const dto = this.buildDto();
+    this.isLoading = true;
+
+    this.bookingsService
+      .createBooking({ body: dto })
+      .pipe(
+        catchError((err) => {
+          console.error(err);
+          this.toastr.error('Не вдалося створити бронювання.');
+          return of(null);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe((booking: BookingDto | null) => {
+        if (!booking) {
+          return;
+        }
+        this.handleSuccess(booking);
+      });
+  }
+
+  private loadStoredData(): void {
+    const raw = localStorage.getItem('bookingData');
+    if (!raw) {
+      this.abort('Недостатньо даних для підтвердження бронювання.');
+      return;
+    }
+
+    const state = JSON.parse(raw) as StoredBookingData;
     if (
-      !state ||
       !state.roomNumber ||
       !state.startDate ||
       !state.endDate ||
       !state.pricePerDay
     ) {
-      this.toastr.error('Недостатньо даних для підтвердження бронювання.');
-      this.router.navigate(['/']);
+      this.abort('Недостатньо даних для підтвердження бронювання.');
       return;
     }
 
-    this.bookingData = {
-      roomNumber: state.roomNumber,
-      startDate: new Date(state.startDate).toISOString(),
-      endDate: new Date(state.endDate).toISOString(),
-    };
-
-    this.pricePerDay = state.pricePerDay;
+    this.bookingData = state;
     const start = new Date(state.startDate);
     const end = new Date(state.endDate);
     this.nights = Math.ceil(
       (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
     );
-    this.totalPrice = this.nights * this.pricePerDay;
-    this.roomType = state.roomType;
+    this.totalPrice = this.nights * state.pricePerDay;
+  }
 
+  private abort(message: string): void {
+    this.toastr.error(message);
+    this.router.navigate(['/']);
+  }
+
+  private initForm(): void {
     this.paymentForm = this.fb.group({
       selectedPayment: ['online', Validators.required],
       comment: [''],
     });
   }
 
-  confirmBooking(): void {
-    if (!this.bookingData) return;
-
-    const paymentMethod = this.paymentForm.get('selectedPayment')?.value;
-    const comment = this.paymentForm.get('comment')?.value;
-
-    this.isLoading = true;
-
-    this.bookingsService.createBooking({ body: this.bookingData }).subscribe({
-      next: (booking: BookingDto) => {
-        this.toastr.success('Бронювання успішно створено!');
-        if (paymentMethod === 'online' || paymentMethod === 'partial') {
-          this.onlinePayment(booking);
-        } else {
-          this.router.navigate(['/']);
-          this.toastr.info('Очікуємо оплату на місці. Дякуємо за бронювання!');
-        }
-
-        console.log('User comment:', comment);
-      },
-      error: (err) => {
-        this.toastr.error('Не вдалося створити бронювання.');
-        console.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+  private buildDto(): BookingCreateDto {
+    const { selectedPayment, comment } = this.paymentForm.value;
+    return {
+      roomNumber: this.bookingData.roomNumber,
+      startDate: this.bookingData.startDate,
+      endDate: this.bookingData.endDate,
+      paymentMethod: this.paymentMap[selectedPayment],
+    };
   }
 
-  private onlinePayment(booking: BookingDto): void {
-    localStorage.setItem('lastInvoiceId', booking.invoiceId?.toString()!);
+  private handleSuccess(booking: BookingDto): void {
+    this.toastr.success('Бронювання успішно створено!');
+    const method = this.paymentForm.value.selectedPayment;
+    if (method === 'online' || method === 'partial') {
+      this.redirectToPayment(booking.invoiceId!);
+    } else {
+      this.toastr.info('Очікуємо оплату готівкою при заселенні.');
+      this.router.navigate(['/my-bookings']);
+    }
+  }
 
-    this.paymentsService.payOnline$Plain({ invoiceId: booking.invoiceId! }).subscribe({
-      next: (htmlForm) => {
-        document.body.innerHTML = htmlForm;
-        const form = document.querySelector('form') as HTMLFormElement;
-        form.submit();
+  private redirectToPayment(invoiceId: number): void {
+    this.paymentsService.payOnline$Plain({ invoiceId }).subscribe({
+      next: (html) => {
+        document.body.innerHTML = html;
+        (document.querySelector('form') as HTMLFormElement).submit();
       },
       error: (err) => {
-        this.toastr.error('Не вдалося розпочати оплату онлайн.')
         console.error(err);
-      }
-    })
+        this.toastr.error('Не вдалося розпочати оплату онлайн.');
+        this.router.navigate(['/my-bookings']);
+      },
+    });
   }
 }

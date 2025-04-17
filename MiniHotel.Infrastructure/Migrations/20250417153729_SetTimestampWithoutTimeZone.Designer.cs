@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniHotel.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniHotel.Infrastructure.Migrations
 {
     [DbContext(typeof(MiniHotelDbContext))]
-    partial class MiniHotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250417153729_SetTimestampWithoutTimeZone")]
+    partial class SetTimestampWithoutTimeZone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +199,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", null, t =>
+                    b.ToTable("Bookings", t =>
                         {
                             t.HasCheckConstraint("CK_Booking_EndDate", "\"EndDate\" >= \"StartDate\"");
                         });
@@ -231,7 +234,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("HotelUsers", (string)null);
+                    b.ToTable("HotelUsers");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Invoice", b =>
@@ -257,7 +260,7 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.InvoiceItem", b =>
@@ -294,7 +297,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("InvoiceItems", (string)null);
+                    b.ToTable("InvoiceItems");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Room", b =>
@@ -324,7 +327,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.RoomType", b =>
@@ -351,7 +354,7 @@ namespace MiniHotel.Infrastructure.Migrations
                     b.HasIndex("RoomCategory")
                         .IsUnique();
 
-                    b.ToTable("RoomTypes", (string)null);
+                    b.ToTable("RoomTypes");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Service", b =>
@@ -380,7 +383,7 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasKey("ServiceId");
 
-                    b.ToTable("Services", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("MiniHotel.Infrastructure.Identity.ApplicationUser", b =>

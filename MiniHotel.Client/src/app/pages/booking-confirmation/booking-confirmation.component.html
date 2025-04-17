@@ -1,11 +1,11 @@
 <div class="container py-5">
     <h2 class="mb-4 text-center">Підтвердження бронювання</h2>
-    <div class="row gy-4">
+    <form [formGroup]="paymentForm" class="row gy-4">
 
         <!-- Left column: Payment & comment -->
         <div class="col-md-6">
             <div class="card shadow-sm h-100">
-                <div class="card-body" [formGroup]="paymentForm">
+                <div class="card-body">
                     <h5 class="card-title mb-3">Метод оплати</h5>
 
                     <div class="btn-group w-100 mb-4" role="group">
@@ -27,6 +27,10 @@
                             <i class="bi bi-percent me-1"></i> Часткова
                         </label>
                     </div>
+                    <div *ngIf="paymentForm.get('selectedPayment')?.touched && paymentForm.get('selectedPayment')?.invalid"
+                        class="text-danger mb-3">
+                        Будь ласка, оберіть спосіб оплати.
+                    </div>
 
                     <h5 class="card-title mb-2">Коментар до бронювання</h5>
                     <textarea class="form-control" rows="4" maxlength="300" formControlName="comment"
@@ -44,20 +48,21 @@
                 <div class="card-body">
                     <h5 class="card-title mb-3">Ваше бронювання</h5>
                     <h6 class="text-primary">Міні-готель</h6>
-                    <p class="mb-1">Номер: {{ bookingData?.roomNumber }}</p>
-                    <p class="mb-1">Тип номера: {{ roomType }}</p>
+                    <p class="mb-1"><strong>Номер:</strong> {{ bookingData.roomNumber }}</p>
+                    <p class="mb-1"><strong>Тип номера:</strong> {{ bookingData.roomType }}</p>
 
                     <hr>
 
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
-                            <i class="bi bi-calendar-event me-1"></i> Заїзд: {{ bookingData?.startDate |
-                            date:'dd.MM.yyy' }} <br />
-                            <i class="bi bi-calendar-check me-1"></i> Виїзд: {{ bookingData?.endDate | date:'dd.MM.yyyy'
-                            }}
+                            <i class="bi bi-calendar-event me-1"></i>
+                            <strong>Заїзд:</strong> {{ bookingData.startDate | date:'dd.MM.yyyy' }}<br />
+                            <i class="bi bi-calendar-check me-1"></i>
+                            <strong>Виїзд:</strong> {{ bookingData.endDate | date:'dd.MM.yyyy' }}
                         </div>
                         <div>
-                            <i class="bi bi-moon-stars me-1"></i> {{ nights | nightsLabel }}
+                            <i class="bi bi-moon-stars me-1"></i>
+                            <strong>{{ nights | nightsLabel }}</strong>
                         </div>
                     </div>
 
@@ -65,11 +70,11 @@
 
                     <div class="d-flex justify-content-between">
                         <span>Ціна за ніч:</span>
-                        <strong>{{ pricePerDay | currency:'UAH ':'symbol':'1.0-0' }}</strong>
+                        <strong>{{ bookingData.pricePerDay| currency:'UAH':'symbol':'1.0-0' }}</strong>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Всього:</span>
-                        <strong>{{ totalPrice | currency:'UAH ':'symbol':'1.0-0' }}</strong>
+                        <strong>{{ totalPrice | currency:'UAH':'symbol':'1.0-0' }}</strong>
                     </div>
                 </div>
             </div>
@@ -77,10 +82,11 @@
 
         <!-- Confirm button -->
         <div class="col-12 text-end">
-            <button class="btn btn-primary px-5 mt-3" (click)="confirmBooking()" [disabled]="isLoading">
-                <i class="bi bi-check-circle me-2"></i>Підтвердити бронювання
+            <button type="button" class="btn btn-primary px-5 mt-3" (click)="confirmBooking()" [disabled]="isLoading">
+                <i class="bi bi-check-circle me-2"></i>
+                {{ isLoading ? 'Обробка...' : 'Підтвердити бронювання' }}
             </button>
         </div>
 
-    </div>
+    </form>
 </div>

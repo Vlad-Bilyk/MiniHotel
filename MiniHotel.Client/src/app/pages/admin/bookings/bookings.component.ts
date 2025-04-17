@@ -3,6 +3,7 @@ import {
   BookingCreateByAdminDto,
   BookingDto,
   BookingStatus,
+  PaymentMethod,
 } from '../../../api/models';
 import { BookingsService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +15,14 @@ import { formatDate } from '@angular/common';
 import { BookingsOfflineDialogComponent } from './bookings-offline-dialog/bookings-offline-dialog.component';
 import { DialogService } from '../../../shared/services/dialog.service';
 
+const STATUS_ORDER: Record<BookingStatus, number> = {
+  [BookingStatus.Pending]: 1,
+  [BookingStatus.Confirmed]: 2,
+  [BookingStatus.CheckedIn]: 3,
+  [BookingStatus.CheckedOut]: 4,
+  [BookingStatus.Cancelled]: 5,
+};
+
 @Component({
   selector: 'app-bookings',
   standalone: false,
@@ -22,12 +31,14 @@ import { DialogService } from '../../../shared/services/dialog.service';
 })
 export class BookingsComponent implements OnInit {
   BookingStatus = BookingStatus;
+  PaymentMethod = PaymentMethod;
   displayedColumns = [
     'client',
     'roomNumber',
     'roomType',
     'dates',
     'startDate',
+    'payment',
     'status',
     'actions',
   ];
@@ -57,6 +68,12 @@ export class BookingsComponent implements OnInit {
 
         this.configureSorting();
         this.configureFiltering();
+
+        this.sort.sort({
+          id: 'status',
+          start: 'desc',
+          disableClear: false
+        });
       },
       error: (err) => {
         this.toastr.error('Не вдалося завантажити бронювання');
@@ -121,9 +138,8 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-  // TODO: add real navigate
-  viewDetails(bookingId: number): void {
-    this.router.navigate(['/']);
+  viewDetails(id: number): void {
+    this.router.navigate(['admin/booking-details', id]);
   }
 
   createOfflineBooking(): void {
@@ -133,7 +149,7 @@ export class BookingsComponent implements OnInit {
         undefined,
         (dto) => this.bookingsService.createBookingByAdmin({ body: dto }),
         'Офлайн-бронювання успішно створено',
-        '500px',
+        '500px'
       )
       .subscribe(() => {
         this.loadBookings();
@@ -145,6 +161,8 @@ export class BookingsComponent implements OnInit {
       switch (property) {
         case 'startDate':
           return item.startDate ? new Date(item.startDate as any) : new Date(0);
+        case 'status':
+          return STATUS_ORDER[item.bookingStatus!] ?? Number.MAX_SAFE_INTEGER;
         default:
           return (item as any)[property];
       }

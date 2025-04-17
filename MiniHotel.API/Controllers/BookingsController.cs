@@ -55,13 +55,6 @@ namespace MiniHotel.API.Controllers
                 return BadRequest("User not found");
             }
             var bookings = await _bookingService.GetUserBookingsAsync(userId);
-            foreach (var booking in bookings)
-            {
-                Console.WriteLine(booking.RoomNumber);
-                Console.WriteLine(booking.RoomCategory);
-                Console.WriteLine(booking.Amount);
-            }
-
             return Ok(bookings);
         }
 

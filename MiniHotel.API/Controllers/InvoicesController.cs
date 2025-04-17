@@ -32,18 +32,18 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Retrieves an invoice by its unique identifier.
+        /// Retrieves an invoice by booking unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the invoice.</param>
+        /// <param name="bookingId">The unique identifier of the booking.</param>
         /// <returns>An invoice DTO if found.</returns>
         /// <response code="200">Returns the invoice.</response>
         /// <response code="404">If the invoice is not found.</response>
-        [HttpGet("{id:int}", Name = "GetInvoice")]
+        [HttpGet("{bookingId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<InvoiceDto>> GetInvoice(int id)
+        public async Task<ActionResult<InvoiceDto>> GetInvoiceByBookingId(int bookingId)
         {
-            var invoice = await _invoiceService.GetInvoiceAsync(id);
+            var invoice = await _invoiceService.GetInvoiceByBookingIdAsync(bookingId);
             if (invoice == null)
             {
                 return NotFound();
@@ -62,7 +62,7 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<InvoiceDto>> CreateInvoice(int bookingId)
         {
             var dto = await _invoiceService.CreateInvoiceForBookingAsync(bookingId);
-            return CreatedAtAction(nameof(GetInvoice), new { bookingId }, dto);
+            return CreatedAtAction(nameof(GetInvoiceByBookingId), new { bookingId }, dto);
         }
 
         /// <summary>

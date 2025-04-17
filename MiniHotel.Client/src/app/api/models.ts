@@ -7,8 +7,6 @@ export type { BookingCreateByAdminDto } from './models/booking-create-by-admin-d
 export type { BookingCreateDto } from './models/booking-create-dto';
 export type { BookingDto } from './models/booking-dto';
 export { BookingStatus } from './models/booking-status';
-export type { DateOnly } from './models/date-only';
-export { DayOfWeek } from './models/day-of-week';
 export type { InvoiceDto } from './models/invoice-dto';
 export type { InvoiceItemCreateDto } from './models/invoice-item-create-dto';
 export type { InvoiceItemDto } from './models/invoice-item-dto';

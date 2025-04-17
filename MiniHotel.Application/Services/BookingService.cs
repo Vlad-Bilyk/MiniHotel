@@ -41,6 +41,7 @@ namespace MiniHotel.Application.Services
                     RoomId = room.RoomId,
                     StartDate = bookingcreateDto.StartDate,
                     EndDate = bookingcreateDto.EndDate,
+                    PaymentMethod = bookingcreateDto.PaymentMethod,
                     BookingStatus = BookingStatus.Pending,
                 };
 

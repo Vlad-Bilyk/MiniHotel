@@ -10,18 +10,18 @@ import { RequestBuilder } from '../../request-builder';
 
 import { InvoiceDto } from '../../models/invoice-dto';
 
-export interface GetInvoice$Plain$Params {
+export interface GetInvoiceByBookingId$Plain$Params {
 
 /**
- * The unique identifier of the invoice.
+ * The unique identifier of the booking.
  */
-  id: number;
+  bookingId: number;
 }
 
-export function getInvoice$Plain(http: HttpClient, rootUrl: string, params: GetInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-  const rb = new RequestBuilder(rootUrl, getInvoice$Plain.PATH, 'get');
+export function getInvoiceByBookingId$Plain(http: HttpClient, rootUrl: string, params: GetInvoiceByBookingId$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+  const rb = new RequestBuilder(rootUrl, getInvoiceByBookingId$Plain.PATH, 'get');
   if (params) {
-    rb.path('id', params.id, {});
+    rb.path('bookingId', params.bookingId, {});
   }
 
   return http.request(
@@ -34,4 +34,4 @@ export function getInvoice$Plain(http: HttpClient, rootUrl: string, params: GetI
   );
 }
 
-getInvoice$Plain.PATH = '/api/Invoices/{id}';
+getInvoiceByBookingId$Plain.PATH = '/api/Invoices/{bookingId}';

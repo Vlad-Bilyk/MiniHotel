@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MiniHotel.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Application.DTOs
 {
@@ -13,5 +14,8 @@ namespace MiniHotel.Application.DTOs
 
         [Required]
         public DateTime EndDate { get; set; }
+
+        [Required]
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

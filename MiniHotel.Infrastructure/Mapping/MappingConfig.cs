@@ -29,7 +29,8 @@ namespace MiniHotel.Infrastructure.Mapping
                 .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(src => src.Invoice.InvoiceId))
                 .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.RoomCategory))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Invoice.TotalAmount))
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => GetFullName(src)));
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => GetFullName(src)))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => GetPhoneNumber(src)));
 
             CreateMap<Booking, UserBookingsDto>()
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room.RoomNumber))
@@ -58,6 +59,16 @@ namespace MiniHotel.Infrastructure.Mapping
 
             return booking.User != null
                 ? $"{booking.User.FirstName} {booking.User.LastName}"
+                : null;
+        }
+
+        private static string? GetPhoneNumber(Booking booking)
+        {
+            if (!string.IsNullOrWhiteSpace(booking.PhoneNumber))
+                return booking.PhoneNumber;
+
+            return booking.User != null
+                ? booking.User.PhoneNumber
                 : null;
         }
     }

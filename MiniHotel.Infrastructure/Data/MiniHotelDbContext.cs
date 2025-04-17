@@ -71,6 +71,26 @@ namespace MiniHotel.Infrastructure.Data
                     }
                 }
             }
+
+            // Global convention: for all DateTime properties, use UTC conversion
+            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+                toDb => DateTime.SpecifyKind(toDb, DateTimeKind.Utc),
+                fromDb => DateTime.SpecifyKind(fromDb, DateTimeKind.Utc)
+            );
+
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                var props = entityType.ClrType
+                    .GetProperties()
+                    .Where(p => p.PropertyType == typeof(DateTime));
+
+                foreach (var prop in props)
+                {
+                    builder.Entity(entityType.Name)
+                        .Property(prop.Name)
+                        .HasConversion(dateTimeConverter);
+                }
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { RoomTypesComponent } from './pages/admin/room-types/room-types.component';
 import { ServicesComponent } from './pages/admin/services/services.component';
 import { BookingsComponent } from './pages/admin/bookings/bookings.component';
+import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/booking-details.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,10 +18,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'booking-confirmation', component: BookingConfirmationComponent },
   { path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard] },
-  { path: 'room-types', component: RoomTypesComponent, canActivate: [authGuard] },
-  { path: 'rooms', component: RoomsComponent, canActivate: [authGuard] },
-  { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
-  { path: 'bookings', component: BookingsComponent, canActivate: [authGuard] },
+  { path: 'admin/room-types', component: RoomTypesComponent, canActivate: [authGuard] },
+  { path: 'admin/rooms', component: RoomsComponent, canActivate: [authGuard] },
+  { path: 'admin/services', component: ServicesComponent, canActivate: [authGuard] },
+  { path: 'admin/bookings', component: BookingsComponent, canActivate: [authGuard] },
+  { path: 'admin/booking-details/:id', component: BookingDetailsComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

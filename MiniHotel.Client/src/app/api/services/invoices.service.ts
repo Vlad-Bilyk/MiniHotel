@@ -19,10 +19,10 @@ import { createInvoice } from '../fn/invoices/create-invoice';
 import { CreateInvoice$Params } from '../fn/invoices/create-invoice';
 import { createInvoice$Plain } from '../fn/invoices/create-invoice-plain';
 import { CreateInvoice$Plain$Params } from '../fn/invoices/create-invoice-plain';
-import { getInvoice } from '../fn/invoices/get-invoice';
-import { GetInvoice$Params } from '../fn/invoices/get-invoice';
-import { getInvoice$Plain } from '../fn/invoices/get-invoice-plain';
-import { GetInvoice$Plain$Params } from '../fn/invoices/get-invoice-plain';
+import { getInvoiceByBookingId } from '../fn/invoices/get-invoice-by-booking-id';
+import { GetInvoiceByBookingId$Params } from '../fn/invoices/get-invoice-by-booking-id';
+import { getInvoiceByBookingId$Plain } from '../fn/invoices/get-invoice-by-booking-id-plain';
+import { GetInvoiceByBookingId$Plain$Params } from '../fn/invoices/get-invoice-by-booking-id-plain';
 import { getInvoices } from '../fn/invoices/get-invoices';
 import { GetInvoices$Params } from '../fn/invoices/get-invoices';
 import { getInvoices$Plain } from '../fn/invoices/get-invoices-plain';
@@ -104,65 +104,65 @@ export class InvoicesService extends BaseService {
     );
   }
 
-  /** Path part for operation `getInvoice()` */
-  static readonly GetInvoicePath = '/api/Invoices/{id}';
+  /** Path part for operation `getInvoiceByBookingId()` */
+  static readonly GetInvoiceByBookingIdPath = '/api/Invoices/{bookingId}';
 
   /**
-   * Retrieves an invoice by its unique identifier.
+   * Retrieves an invoice by booking unique identifier.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getInvoice$Plain()` instead.
+   * To access only the response body, use `getInvoiceByBookingId$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getInvoice$Plain$Response(params: GetInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return getInvoice$Plain(this.http, this.rootUrl, params, context);
+  getInvoiceByBookingId$Plain$Response(params: GetInvoiceByBookingId$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return getInvoiceByBookingId$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Retrieves an invoice by its unique identifier.
+   * Retrieves an invoice by booking unique identifier.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getInvoice$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `getInvoiceByBookingId$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getInvoice$Plain(params: GetInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.getInvoice$Plain$Response(params, context).pipe(
+  getInvoiceByBookingId$Plain(params: GetInvoiceByBookingId$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.getInvoiceByBookingId$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 
   /**
-   * Retrieves an invoice by its unique identifier.
+   * Retrieves an invoice by booking unique identifier.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getInvoice()` instead.
+   * To access only the response body, use `getInvoiceByBookingId()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getInvoice$Response(params: GetInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return getInvoice(this.http, this.rootUrl, params, context);
+  getInvoiceByBookingId$Response(params: GetInvoiceByBookingId$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
+    return getInvoiceByBookingId(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Retrieves an invoice by its unique identifier.
+   * Retrieves an invoice by booking unique identifier.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getInvoice$Response()` instead.
+   * To access the full response (for headers, for example), `getInvoiceByBookingId$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getInvoice(params: GetInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.getInvoice$Response(params, context).pipe(
+  getInvoiceByBookingId(params: GetInvoiceByBookingId$Params, context?: HttpContext): Observable<InvoiceDto> {
+    return this.getInvoiceByBookingId$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
