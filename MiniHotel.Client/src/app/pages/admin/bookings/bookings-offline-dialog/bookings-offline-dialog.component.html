@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>Оформлення офлайн‑бронювання</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" mat-dialog-content>
+
+    <!-- Chose room -->
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Номер</mat-label>
+        <mat-select formControlName="roomNumber" [disabled]="loadingRooms || !availableRooms.length">
+            <mat-option *ngIf="loadingRooms" [disabled]="true">Завантаження…</mat-option>
+            <mat-option *ngFor="let room of availableRooms" [value]="room.roomNumber">
+                {{ room.roomNumber }} — {{ room.roomCategory }} (₴{{ room.pricePerDay }})
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('roomNumber')?.hasError('required')">Обери номер</mat-error>
+    </mat-form-field>
+
+    <!-- Dates -->
+    <div class="d-flex gap-2">
+        <mat-form-field appearance="fill" class="flex-1">
+            <mat-label>Дата заїзду</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="startDate" (dateChange)="onDatesChange()"
+                placeholder="dd.MM.yyyy">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error *ngIf="form.get('startDate')?.hasError('required')">Обов’язково</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="flex-1">
+            <mat-label>Дата виїзду</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="endDate" (dateChange)="onDatesChange()"
+                placeholder="dd.MM.yyyy">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="form.get('endDate')?.hasError('required')">Обов’язково</mat-error>
+        </mat-form-field>
+    </div>
+
+    <!-- Dates range error -->
+    <div class="text-danger" *ngIf="form.errors?.['dateRange']">
+        {{ form.errors?.['dateRange'] }}
+    </div>
+
+    <!-- Another fields -->
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>ПІБ клієнта</mat-label>
+        <input matInput formControlName="fullName" placeholder="Ім’я та прізвище">
+        <mat-error *ngIf="form.get('fullName')?.hasError('required')">Обов’язкове поле</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Телефон</mat-label>
+        <input matInput formControlName="phoneNumber" placeholder="+380XXXXXXXXX" />
+        <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')">
+            Обов’язкове поле
+        </mat-error>
+        <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">
+            Невірний формат. Від 7 до 15 цифр, опційно з “+”
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Спосіб оплати</mat-label>
+        <mat-select formControlName="paymentMethod">
+            <mat-option *ngFor="let m of paymentMethods" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('paymentMethod')?.hasError('required')">Обов’язкове поле</mat-error>
+    </mat-form-field>
+
+</form>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Відміна</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">Створити</button>
+</mat-dialog-actions>

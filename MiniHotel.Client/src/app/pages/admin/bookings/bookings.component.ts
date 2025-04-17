@@ -1,14 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BookingDto, BookingStatus } from '../../../api/models';
+import {
+  BookingCreateByAdminDto,
+  BookingDto,
+  BookingStatus,
+} from '../../../api/models';
 import { BookingsService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ThemePalette } from '@angular/material/core';
 import { formatDate } from '@angular/common';
+import { BookingsOfflineDialogComponent } from './bookings-offline-dialog/bookings-offline-dialog.component';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-bookings',
@@ -20,7 +24,7 @@ export class BookingsComponent implements OnInit {
   BookingStatus = BookingStatus;
   displayedColumns = [
     'client',
-    'room',
+    'roomNumber',
     'roomType',
     'dates',
     'startDate',
@@ -37,7 +41,7 @@ export class BookingsComponent implements OnInit {
     private bookingsService: BookingsService,
     private toastr: ToastrService,
     private router: Router,
-    private dialog: MatDialog
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -122,8 +126,19 @@ export class BookingsComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  // TODO: open dialog with create form
-  createOfflineBooking(): void { }
+  createOfflineBooking(): void {
+    this.dialogService
+      .openEntityDialog<undefined, BookingCreateByAdminDto>(
+        BookingsOfflineDialogComponent,
+        undefined,
+        (dto) => this.bookingsService.createBookingByAdmin({ body: dto }),
+        'Офлайн-бронювання успішно створено',
+        '500px',
+      )
+      .subscribe(() => {
+        this.loadBookings();
+      });
+  }
 
   private configureSorting(): void {
     this.dataSource.sortingDataAccessor = (item, property) => {

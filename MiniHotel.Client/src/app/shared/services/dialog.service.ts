@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentType, ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { catchError, filter, Observable, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,26 +27,11 @@ export class DialogService {
       data: dialogData,
     });
 
-    return new Observable((observer) => {
-      dialogRef.afterClosed().subscribe((result: TSubmit | undefined) => {
-        if (!result) {
-          observer.complete();
-          return;
-        }
-
-        submitFn(result).subscribe({
-          next: (response) => {
-            this.toastr.success(successMessage);
-            observer.next(response);
-            observer.complete();
-          },
-          error: (err) => {
-            this.toastr.error('Щось пішло не так');
-            console.error('[DialogService Error]', err);
-            observer.error(err);
-          },
-        });
-      });
-    })
+    return dialogRef.afterClosed().pipe(
+      filter(result => !!result),
+      switchMap(result => submitFn(result as TSubmit)),
+      tap(() => this.toastr.success(successMessage)),
+      catchError(err => { this.toastr.error('Щось пішло не так'); return throwError(() => err); })
+    );
   }
 }
