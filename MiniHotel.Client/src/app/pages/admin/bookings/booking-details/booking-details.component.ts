@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import {
   BookingDto,
+  BookingStatus,
   InvoiceDto,
   InvoiceItemDto,
   InvoiceStatus,
@@ -31,6 +32,10 @@ export class BookingDetailsComponent implements OnInit {
   loading = true;
   payLoading = false;
 
+  bookingLoading = false;
+  BookingStatus = BookingStatus;
+  bookingId!: number;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -42,9 +47,8 @@ export class BookingDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadBooking(id);
-    this.loadInvoice(id);
+    this.bookingId = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadData();
   }
 
   payOffline(): void {
@@ -68,9 +72,66 @@ export class BookingDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  private loadInvoice(id: number): void {
+  checkIn(id: number): void {
+    this.bookingsService.checkInBooking({ id }).subscribe({
+      next: () => {
+        this.toastr.success('Гість заселений');
+        this.loadData();
+      },
+      error: (err) => {
+        this.toastr.error('Не вдалося заселити гостя');
+        console.error(err);
+      },
+    });
+  }
+
+  checkOut(id: number): void {
+    this.bookingsService.checkOutBooking({ id }).subscribe({
+      next: () => {
+        this.toastr.success('Бронювання закрито');
+        this.loadData();
+      },
+      error: (err) => {
+        this.toastr.error('Не вдалося виконати check-out');
+        console.error(err);
+      },
+    });
+  }
+
+  cancel(id: number): void {
+    this.bookingsService.cancelBooking({ id }).subscribe({
+      next: () => {
+        this.toastr.success('Бронювання скасовано');
+        this.loadData();
+      },
+      error: (err) => {
+        this.toastr.error('Не вдалося скасувати бронювання');
+        console.error(err);
+      },
+    });
+  }
+
+  confirm(id: number): void {
+    this.bookingsService.confirmedBooking({ id }).subscribe({
+      next: () => {
+        this.toastr.success('Бронювання підтверджено');
+        this.loadData();
+      },
+      error: (err) => {
+        this.toastr.error('Не вдалося підтвердити бронювання');
+        console.error(err);
+      },
+    });
+  }
+
+  private loadData(): void {
+    this.loadInvoice();
+    this.loadBooking();
+  }
+
+  private loadInvoice(): void {
     this.invoicesService
-      .getInvoiceByBookingId({ bookingId: id })
+      .getInvoiceByBookingId({ bookingId: this.bookingId })
       .pipe(
         catchError((err) => {
           console.error(err);
@@ -87,9 +148,9 @@ export class BookingDetailsComponent implements OnInit {
       });
   }
 
-  private loadBooking(id: number): void {
+  private loadBooking(): void {
     this.bookingsService
-      .getBookingById({ id })
+      .getBookingById({ id: this.bookingId })
       .pipe(
         catchError((err) => {
           this.toastr.error('Не вдалося завантажити бронювання');

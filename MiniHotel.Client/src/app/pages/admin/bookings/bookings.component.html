@@ -46,14 +46,14 @@
         <ng-container matColumnDef="payment">
             <th mat-header-cell *matHeaderCellDef>Оплата</th>
             <td mat-cell *matCellDef="let b">
-                <span *ngIf="b.paymentMethod === PaymentMethod.Online">💳</span>
-                <span *ngIf="b.paymentMethod === PaymentMethod.OnSite">💵</span>
+                <span *ngIf="b.paymentMethod === PaymentMethod.Online">Онлайн</span>
+                <span *ngIf="b.paymentMethod === PaymentMethod.OnSite">На місці</span>
             </td>
         </ng-container>
 
         <!-- Status with Badge -->
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Статус</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Статус</th>
             <td mat-cell *matCellDef="let b">
                 <span class="badge" [ngClass]="{
                 'bg-warning': b.bookingStatus === 'Pending',
