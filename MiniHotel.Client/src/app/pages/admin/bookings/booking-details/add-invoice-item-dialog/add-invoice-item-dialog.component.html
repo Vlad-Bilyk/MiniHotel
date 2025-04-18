@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Додати послугу</h2>
+<mat-dialog-content [formGroup]="form">
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Послуга</mat-label>
+        <mat-select formControlName="serviceName" required>
+            <mat-option *ngFor="let s of services" [value]="s.name">
+                {{ s.name }} — {{ s.price | currency:'UAH' }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Кількість</mat-label>
+        <input matInput type="number" min="1" formControlName="quantity" />
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close()">Скасувати</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">Додати</button>
+</mat-dialog-actions>

@@ -4,9 +4,11 @@
 
 import { InvoiceItemType } from '../models/invoice-item-type';
 export interface InvoiceItemDto {
+  createdAt?: string;
   description?: string | null;
   invoiceItemId?: number;
   invoiceItemType?: InvoiceItemType;
+  isLocked?: boolean;
   lineTotal?: number;
   quantity?: number;
   serviceName?: string | null;

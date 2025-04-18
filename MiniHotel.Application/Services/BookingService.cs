@@ -76,12 +76,17 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
         {
-            var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId)
+            var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, includeProperties: "Invoice")
                 ?? throw new KeyNotFoundException("Booking not found");
 
             if (booking.BookingStatus == BookingStatus.Cancelled || booking.BookingStatus == BookingStatus.CheckedOut)
             {
                 throw new InvalidOperationException("Cannot update status of cancelled or checkedOut booking.");
+            }
+
+            if (newStatus == BookingStatus.Cancelled)
+            {
+                await _invoiceService.UpdateStatusAsync(booking.Invoice.InvoiceId, InvoiceStatus.Cancelled);
             }
 
             booking.BookingStatus = newStatus;

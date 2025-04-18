@@ -10,6 +10,8 @@ namespace MiniHotel.Application.DTOs
         public decimal UnitPrice { get; set; }
         public string? ServiceName { get; set; } = string.Empty;
         public InvoiceItemType InvoiceItemType { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsLocked { get; set; }
         public decimal LineTotal => Quantity * UnitPrice;
     }
 }

@@ -39,7 +39,9 @@ namespace MiniHotel.Application.Services
                 ServiceId = service.ServiceId,
                 Description = string.IsNullOrEmpty(createItem.Description) ? service.Description : createItem.Description,
                 Quantity = createItem.Quantity,
-                UnitPrice = service.Price
+                UnitPrice = service.Price,
+                CreatedAt = DateTime.UtcNow,
+                ItemType = InvoiceItemType.AdditionalService,
             };
 
             var updatedInvoice = await _invoiceRepository.AddItemAsync(item);
@@ -65,7 +67,8 @@ namespace MiniHotel.Application.Services
                         Description = $"Бронюванян номеру {booking.Room.RoomNumber} - {nights} ночей",
                         Quantity = nights,
                         UnitPrice = booking.Room.RoomType.PricePerNight,
-                        ItemType = InvoiceItemType.RoomBooking
+                        ItemType = InvoiceItemType.RoomBooking,
+                        CreatedAt = DateTime.UtcNow
                     }
                 }
             };
@@ -100,14 +103,40 @@ namespace MiniHotel.Application.Services
         public async Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync()
         {
             var invoices = await _invoiceRepository.GetAllAsync(includeProperties: IncludeProperties);
-            return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
+            var invoiceDtoList = _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
+
+            // Refactor this later
+            invoiceDtoList
+                .Where(i => i.Payments.Any())
+                .ToList()
+                .ForEach(dto =>
+                {
+                    var lastPaidAt = dto.Payments.Max(p => p.PaidAt);
+                    dto.InvoiceItems.ToList().ForEach(item =>
+                    {
+                        item.IsLocked = item.CreatedAt <= lastPaidAt;
+                    });
+                });
+
+            return invoiceDtoList;
         }
 
         public async Task<InvoiceDto> GetInvoiceByBookingIdAsync(int bookingId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.BookingId == bookingId, IncludeProperties)
                           ?? throw new KeyNotFoundException("Invoice not found");
-            return _mapper.Map<InvoiceDto>(invoice);
+            var invoiceDto = _mapper.Map<InvoiceDto>(invoice);
+
+            if (invoice.Payments.Any())
+            {
+                var lastPaidAt = invoice.Payments.Max(p => p.PaidAt);
+                foreach (var itemDto in invoiceDto.InvoiceItems)
+                {
+                    itemDto.IsLocked = itemDto.CreatedAt <= lastPaidAt;
+                }
+            }
+
+            return invoiceDto;
         }
 
         public async Task RemoveItemAsync(int invoiceItemId)

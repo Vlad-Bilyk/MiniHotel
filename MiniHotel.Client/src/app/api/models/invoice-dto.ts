@@ -4,11 +4,14 @@
 
 import { InvoiceItemDto } from '../models/invoice-item-dto';
 import { InvoiceStatus } from '../models/invoice-status';
+import { PaymentDto } from '../models/payment-dto';
 export interface InvoiceDto {
   bookingId?: number;
   createdAt?: string;
   invoiceId?: number;
   invoiceItems?: Array<InvoiceItemDto> | null;
+  paidAmount?: number;
+  payments?: Array<PaymentDto> | null;
   status?: InvoiceStatus;
   totalAmount?: number;
 }

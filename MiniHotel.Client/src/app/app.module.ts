@@ -52,6 +52,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -69,6 +71,7 @@ const MATERIAL_MODULES = [
   MatCardModule,
   MatProgressSpinnerModule,
   MatDividerModule,
+  MatIconModule,
 ];
 
 @NgModule({
@@ -101,6 +104,7 @@ const MATERIAL_MODULES = [
 
     NightsLabelPipe,
     RoomLabelPipe,
+    AddInvoiceItemDialogComponent,
   ],
   imports: [
     // Angular core

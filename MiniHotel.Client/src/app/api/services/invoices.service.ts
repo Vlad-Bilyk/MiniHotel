@@ -231,10 +231,10 @@ export class InvoicesService extends BaseService {
   }
 
   /** Path part for operation `addInvoiceItem()` */
-  static readonly AddInvoiceItemPath = '/api/Invoices/{bookingId}/items';
+  static readonly AddInvoiceItemPath = '/api/Invoices/{invoiceId}/items';
 
   /**
-   * Adds an invoice item to a specific booking's invoice.
+   * Adds an invoice item to a specific invoice's invoice.
    *
    *
    *
@@ -248,7 +248,7 @@ export class InvoicesService extends BaseService {
   }
 
   /**
-   * Adds an invoice item to a specific booking's invoice.
+   * Adds an invoice item to a specific invoice's invoice.
    *
    *
    *
@@ -264,7 +264,7 @@ export class InvoicesService extends BaseService {
   }
 
   /**
-   * Adds an invoice item to a specific booking's invoice.
+   * Adds an invoice item to a specific invoice's invoice.
    *
    *
    *
@@ -278,7 +278,7 @@ export class InvoicesService extends BaseService {
   }
 
   /**
-   * Adds an invoice item to a specific booking's invoice.
+   * Adds an invoice item to a specific invoice's invoice.
    *
    *
    *

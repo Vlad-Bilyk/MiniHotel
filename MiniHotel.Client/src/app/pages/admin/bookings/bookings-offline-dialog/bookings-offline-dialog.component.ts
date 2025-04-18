@@ -55,18 +55,12 @@ export class BookingsOfflineDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   onDatesChange(): void {
     const { startDate, endDate } = this.form.value;
     if (this.form.get('startDate')!.valid && this.form.get('endDate')!.valid) {
       this.loadAvailableRooms(startDate, endDate);
     }
   }
-
 
   loadAvailableRooms(start: Date, end: Date): void {
     this.loadingRooms = true;

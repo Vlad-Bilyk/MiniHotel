@@ -1,27 +1,27 @@
-<div class="container mt-5 py-5" *ngIf="!loading; else loadingTpl">
+<div class="container mt-5 py-5" *ngIf="!loading && booking; else loadingTpl">
     <button class="btn btn-link mb-3" (click)="back()">← Повернутися до списку</button>
 
-    <h2 class="mb-4">Деталі бронювання #{{ booking.bookingId }}</h2>
+    <h2 class="mb-4">Деталі бронювання #{{ bookingId }}</h2>
 
     <!-- Actions with booking -->
     <div class="mb-3 d-flex flex-wrap gap-2">
-        <button mat-flat-button color="primary" *ngIf="booking.bookingStatus === BookingStatus.Pending"
-            [disabled]="bookingLoading" (click)="confirm(booking.bookingId!)">
+        <button mat-flat-button color="primary" [disabled]="!permissions.canConfirm || bookingLoading"
+            (click)="confirm()">
             Підтвердити
         </button>
-        <button mat-flat-button color="accent"
-            *ngIf="booking.bookingStatus === BookingStatus.Confirmed && invoice?.status === InvoiceStatus.Paid"
-            [disabled]="bookingLoading" (click)="checkIn(booking.bookingId!)">
-            Check‑in
-        </button>
-        <button mat-flat-button color="warn" *ngIf="booking.bookingStatus === BookingStatus.CheckedIn"
-            [disabled]="bookingLoading" (click)="checkOut(booking.bookingId!)">
-            <!-- TODO: add check for additional services before check-out -->>
-            Check‑out
-        </button>
-        <button mat-flat-button color="warn"
-            *ngIf="booking.bookingStatus === BookingStatus.Pending || booking.bookingStatus === BookingStatus.Confirmed"
-            [disabled]="bookingLoading" (click)="cancel(booking.bookingId!)">
+        <span matTooltip="Бронювання має бути підтвердженим та оплаченим">
+            <button mat-flat-button color="accent" [disabled]="!permissions.canCheckIn || bookingLoading"
+                (click)="checkIn()">
+                Check‑in
+            </button>
+        </span>
+        <span matTooltip="Рахунок має бути оплачений">
+            <button mat-flat-button color="warn" [disabled]="!permissions.canCheckOut || bookingLoading"
+                (click)="checkOut()">
+                Check‑out
+            </button>
+        </span>
+        <button mat-flat-button color="warn" [disabled]="!permissions.canCancel|| bookingLoading" (click)="cancel()">
             Скасувати
         </button>
     </div>
@@ -44,8 +44,7 @@
                     <p><strong>Період:</strong> {{ booking.startDate | date:'dd.MM.yyyy' }} — {{ booking.endDate |
                         date:'dd.MM.yyyy' }}
                     </p>
-                    <p><strong>Статус:</strong> <mat-chip color="accent" selected>{{ booking.bookingStatus }}</mat-chip>
-                    </p>
+                    <p><strong>Статус: </strong> {{ booking.bookingStatus }}</p>
                 </div>
             </div>
         </mat-card-content>
@@ -54,17 +53,22 @@
     <!-- Invoice information -->
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Рахунок #{{ invoice?.invoiceId }}</mat-card-title>
+            <mat-card-title>Рахунок #{{ invoice.invoiceId }}</mat-card-title>
         </mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <p><strong>Створено:</strong> {{ invoice?.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
-                    <p><strong>Статус оплати:</strong> {{ invoice?.status }}
-                        <button mat-flat-button color="primary" *ngIf="invoice?.status === InvoiceStatus.Pending"
-                            [disabled]="payLoading" class="ml-2" (click)="payOffline()">
-                            {{ payLoading ? 'Обробка...' : 'Позначити як оплачено' }}
+                    <p><strong>Створено:</strong> {{ invoice.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
+                    <p><strong>Статус оплати:</strong> {{ invoice.status }}
+                        <!-- Payment actions -->
+                        <button mat-flat-button color="primary" *ngIf="permissions.canPayOffline"
+                            [disabled]="payLoading" (click)="payOffline()">
+                            {{ payLoading ? 'Обробка...' : 'Оплата готівкою' }}
+                        </button>
+                        <button mat-stroked-button color="primary" *ngIf="permissions.canAddService"
+                            (click)="openAddServiceDialog()">
+                            <mat-icon>add</mat-icon> Додати послугу
                         </button>
                     </p>
                 </div>
@@ -72,15 +76,22 @@
 
             <mat-divider class="mb-3"></mat-divider>
 
+            <!-- Invoice items -->
             <div class="table-responsive">
                 <table mat-table [dataSource]="items" class="mat-elevation-z1 w-100">
                     <ng-container matColumnDef="service">
                         <th mat-header-cell *matHeaderCellDef>Послуга</th>
-                        <td mat-cell *matCellDef="let i">{{ i.service?.name || i.description }}</td>
+                        <td mat-cell *matCellDef="let i">{{ i.serviceName || i.description }}</td>
                     </ng-container>
                     <ng-container matColumnDef="qty">
                         <th mat-header-cell *matHeaderCellDef>К-ть</th>
                         <td mat-cell *matCellDef="let i">{{ i.quantity }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef>Створено</th>
+                        <td mat-cell *matCellDef="let i">
+                            {{ i.createdAt | date:'dd.MM.yyyy HH:mm' }}
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="price">
                         <th mat-header-cell *matHeaderCellDef>Ціна</th>
@@ -92,13 +103,27 @@
                             {{ (i.quantity * i.unitPrice) | currency:'UAH':'symbol' }}
                         </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['service','qty','price','total']"></tr>
-                    <tr mat-row *matRowDef="let row; columns: ['service','qty','price','total']"></tr>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let i">
+                            <span [matTooltip]="i.isLocked ? 'Позицію вже оплачено' : 'Видалити послугу'">
+                                <button mat-icon-button color="warn"
+                                    [disabled]="i.isLocked || payLoading || bookingLoading"
+                                    (click)="removeItem(i.invoiceItemId)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="['service','createdAt','qty','price','total','actions']">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['service','createdAt','qty','price','total','actions']">
+                    </tr>
                 </table>
             </div>
 
             <div class="d-flex justify-content-end mt-3">
-                <h3>Всього: {{ invoice?.totalAmount | currency:'UAH':'symbol' }}</h3>
+                <h3>Всього: {{ invoice.totalAmount | currency:'UAH':'symbol' }}</h3>
             </div>
         </mat-card-content>
     </mat-card>

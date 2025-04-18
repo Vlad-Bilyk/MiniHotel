@@ -13,15 +13,19 @@ namespace MiniHotel.Domain.Entities
 
         public int? ServiceId { get; set; }
 
-        [StringLength(500)]
+        [StringLength(200)]
         public string? Description { get; set; }
 
+        [Range(1, 1000)]
         public int Quantity { get; set; }
 
         public InvoiceItemType ItemType { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal UnitPrice { get; set; }
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
 
         [ForeignKey(nameof(ServiceId))]
         public Service? Service { get; set; }

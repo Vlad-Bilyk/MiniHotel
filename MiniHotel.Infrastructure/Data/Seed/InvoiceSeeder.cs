@@ -34,6 +34,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
                         Description = $"Бронювання номеру {b.Room.RoomNumber} - { (b.EndDate - b.StartDate).Days } ночей",
                         Quantity = (b.EndDate - b.StartDate).Days,
                         UnitPrice = b.Room.RoomType.PricePerNight,
+                        CreatedAt = DateTime.UtcNow
                     }
                 }
             });

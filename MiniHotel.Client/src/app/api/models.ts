@@ -13,6 +13,7 @@ export type { InvoiceItemDto } from './models/invoice-item-dto';
 export { InvoiceItemType } from './models/invoice-item-type';
 export { InvoiceStatus } from './models/invoice-status';
 export type { LoginRequestDto } from './models/login-request-dto';
+export type { PaymentDto } from './models/payment-dto';
 export { PaymentMethod } from './models/payment-method';
 export type { ProblemDetails } from './models/problem-details';
 export type { RegisterRequestDto } from './models/register-request-dto';

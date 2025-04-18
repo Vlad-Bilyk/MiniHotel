@@ -14,9 +14,9 @@ import { InvoiceItemCreateDto } from '../../models/invoice-item-create-dto';
 export interface AddInvoiceItem$Plain$Params {
 
 /**
- * The unique identifier of the booking.
+ * The unique identifier of the invoice.
  */
-  bookingId: number;
+  invoiceId: number;
   
     /**
      * The data needed to create the invoice item.
@@ -27,7 +27,7 @@ export interface AddInvoiceItem$Plain$Params {
 export function addInvoiceItem$Plain(http: HttpClient, rootUrl: string, params: AddInvoiceItem$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
   const rb = new RequestBuilder(rootUrl, addInvoiceItem$Plain.PATH, 'post');
   if (params) {
-    rb.path('bookingId', params.bookingId, {});
+    rb.path('invoiceId', params.invoiceId, {});
     rb.body(params.body, 'application/*+json');
   }
 
@@ -41,4 +41,4 @@ export function addInvoiceItem$Plain(http: HttpClient, rootUrl: string, params: 
   );
 }
 
-addInvoiceItem$Plain.PATH = '/api/Invoices/{bookingId}/items';
+addInvoiceItem$Plain.PATH = '/api/Invoices/{invoiceId}/items';
