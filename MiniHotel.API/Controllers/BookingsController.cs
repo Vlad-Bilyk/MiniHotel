@@ -132,7 +132,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookingDto>> CreateBookingByAdmin([FromBody] BookingCreateByAdminDto createDto)
+        public async Task<ActionResult<BookingDto>> CreateBookingByReception([FromBody] BookingCreateByReceptionDto createDto)
         {
             try
             {

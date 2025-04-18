@@ -8,15 +8,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { BookingCreateByAdminDto } from '../../models/booking-create-by-admin-dto';
+import { BookingCreateByReceptionDto } from '../../models/booking-create-by-reception-dto';
 import { BookingDto } from '../../models/booking-dto';
 
-export interface CreateBookingByAdmin$Plain$Params {
-      body?: BookingCreateByAdminDto
+export interface CreateBookingByReception$Plain$Params {
+      body?: BookingCreateByReceptionDto
 }
 
-export function createBookingByAdmin$Plain(http: HttpClient, rootUrl: string, params?: CreateBookingByAdmin$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-  const rb = new RequestBuilder(rootUrl, createBookingByAdmin$Plain.PATH, 'post');
+export function createBookingByReception$Plain(http: HttpClient, rootUrl: string, params?: CreateBookingByReception$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+  const rb = new RequestBuilder(rootUrl, createBookingByReception$Plain.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
   }
@@ -31,4 +31,4 @@ export function createBookingByAdmin$Plain(http: HttpClient, rootUrl: string, pa
   );
 }
 
-createBookingByAdmin$Plain.PATH = '/api/Bookings/admin';
+createBookingByReception$Plain.PATH = '/api/Bookings/admin';

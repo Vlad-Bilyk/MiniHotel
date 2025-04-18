@@ -32,10 +32,10 @@ import { createBooking } from '../fn/bookings/create-booking';
 import { CreateBooking$Params } from '../fn/bookings/create-booking';
 import { createBooking$Plain } from '../fn/bookings/create-booking-plain';
 import { CreateBooking$Plain$Params } from '../fn/bookings/create-booking-plain';
-import { createBookingByAdmin } from '../fn/bookings/create-booking-by-admin';
-import { CreateBookingByAdmin$Params } from '../fn/bookings/create-booking-by-admin';
-import { createBookingByAdmin$Plain } from '../fn/bookings/create-booking-by-admin-plain';
-import { CreateBookingByAdmin$Plain$Params } from '../fn/bookings/create-booking-by-admin-plain';
+import { createBookingByReception } from '../fn/bookings/create-booking-by-reception';
+import { CreateBookingByReception$Params } from '../fn/bookings/create-booking-by-reception';
+import { createBookingByReception$Plain } from '../fn/bookings/create-booking-by-reception-plain';
+import { CreateBookingByReception$Plain$Params } from '../fn/bookings/create-booking-by-reception-plain';
 import { getBookingById } from '../fn/bookings/get-booking-by-id';
 import { GetBookingById$Params } from '../fn/bookings/get-booking-by-id';
 import { getBookingById$Plain } from '../fn/bookings/get-booking-by-id-plain';
@@ -308,49 +308,49 @@ export class BookingsService extends BaseService {
     );
   }
 
-  /** Path part for operation `createBookingByAdmin()` */
-  static readonly CreateBookingByAdminPath = '/api/Bookings/admin';
+  /** Path part for operation `createBookingByReception()` */
+  static readonly CreateBookingByReceptionPath = '/api/Bookings/admin';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `createBookingByAdmin$Plain()` instead.
+   * To access only the response body, use `createBookingByReception$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createBookingByAdmin$Plain$Response(params?: CreateBookingByAdmin$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return createBookingByAdmin$Plain(this.http, this.rootUrl, params, context);
+  createBookingByReception$Plain$Response(params?: CreateBookingByReception$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return createBookingByReception$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `createBookingByAdmin$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `createBookingByReception$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createBookingByAdmin$Plain(params?: CreateBookingByAdmin$Plain$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.createBookingByAdmin$Plain$Response(params, context).pipe(
+  createBookingByReception$Plain(params?: CreateBookingByReception$Plain$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.createBookingByReception$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `createBookingByAdmin()` instead.
+   * To access only the response body, use `createBookingByReception()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createBookingByAdmin$Response(params?: CreateBookingByAdmin$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
-    return createBookingByAdmin(this.http, this.rootUrl, params, context);
+  createBookingByReception$Response(params?: CreateBookingByReception$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDto>> {
+    return createBookingByReception(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `createBookingByAdmin$Response()` instead.
+   * To access the full response (for headers, for example), `createBookingByReception$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createBookingByAdmin(params?: CreateBookingByAdmin$Params, context?: HttpContext): Observable<BookingDto> {
-    return this.createBookingByAdmin$Response(params, context).pipe(
+  createBookingByReception(params?: CreateBookingByReception$Params, context?: HttpContext): Observable<BookingDto> {
+    return this.createBookingByReception$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
     );
   }

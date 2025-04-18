@@ -214,6 +214,7 @@ export class BookingDetailsComponent implements OnInit {
       canCancel:
         status === BookingStatus.Pending || status === BookingStatus.Confirmed,
       canAddService: status === BookingStatus.CheckedIn,
+      canDeleteService: status === BookingStatus.CheckedIn,
       canPayOffline: isNotPaid,
       canEdit:
         status === BookingStatus.Pending || status === BookingStatus.Confirmed,

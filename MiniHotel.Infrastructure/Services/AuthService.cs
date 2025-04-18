@@ -70,7 +70,7 @@ namespace MiniHotel.Infrastructure.Services
                 };
             }
 
-            if (!string.IsNullOrEmpty(request.Role) && Enum.TryParse<UserRole>(request.Role, out var result))
+            if (!string.IsNullOrEmpty(request.Role.ToString()) && Enum.TryParse<UserRole>(request.Role.ToString(), out var result))
             {
                 await _userManager.AddToRoleAsync(applicationUser, result.ToString());
             }

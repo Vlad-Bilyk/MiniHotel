@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Enums;
 using MiniHotel.Infrastructure.Identity;
 
 namespace MiniHotel.Infrastructure.Data.Seed
@@ -28,11 +29,11 @@ namespace MiniHotel.Infrastructure.Data.Seed
             var users = new[]
             {
                 // client account for all offline bookings, dont delete
-                new RegisterRequestDto { FirstName = "Offline", LastName = "Client", Email = "offline_client@hotel.local", PhoneNumber = "0000000000", Password = "Password1!", ConfirmPassword = "Password1!", Role = "Customer" },
-                new RegisterRequestDto { FirstName = "John", LastName = "Doe", Email = "customer1@hotel.com", PhoneNumber = "+380501234567", Password = "P@ssw0rd1!", ConfirmPassword = "P@ssw0rd1!", Role = "Customer" },
-                new RegisterRequestDto { FirstName = "Jane", LastName = "Smith", Email = "customer2@hotel.com", PhoneNumber = "+380501234568", Password = "P@ssw0rd2!", ConfirmPassword = "P@ssw0rd2!", Role = "Customer" },
-                new RegisterRequestDto { FirstName = "Marta", LastName = "Manager", Email = "manager@hotel.com", PhoneNumber = "+380501234569", Password = "P@ssw0rd3!", ConfirmPassword = "P@ssw0rd3!", Role = "Manager" },
-                new RegisterRequestDto { FirstName = "Admin", LastName = "User", Email = "admin@hotel.com", PhoneNumber = "+380501234570", Password = "P@ssw0rd4!", ConfirmPassword = "P@ssw0rd4!", Role = "Admin" }
+                new RegisterRequestDto { FirstName = "Offline", LastName = "Client", Email = "offline_client@hotel.local", PhoneNumber = "0000000000", Password = "Password1!", ConfirmPassword = "Password1!", Role = UserRole.Client },
+                new RegisterRequestDto { FirstName = "John", LastName = "Doe", Email = "john.doe@gmail.com", PhoneNumber = "+380501234567", Password = "P@ssw0rd1!", ConfirmPassword = "P@ssw0rd1!", Role = UserRole.Client },
+                new RegisterRequestDto { FirstName = "Jane", LastName = "Smith", Email = "jane.smith@gmail.com", PhoneNumber = "+380501234568", Password = "P@ssw0rd2!", ConfirmPassword = "P@ssw0rd2!", Role = UserRole.Client },
+                new RegisterRequestDto { FirstName = "Manager", LastName = "User", Email = "manager@hotel.com", PhoneNumber = "+380501234569", Password = "P@ssw0rd3!", ConfirmPassword = "P@ssw0rd3!", Role = UserRole.Manager },
+                new RegisterRequestDto { FirstName = "Receptionist", LastName = "User", Email = "receptionist@hotel.com", PhoneNumber = "+380501234570", Password = "P@ssw0rd4!", ConfirmPassword = "P@ssw0rd4!", Role = UserRole.Receptionist }
             };
 
             foreach (var user in users)

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  BookingCreateByAdminDto,
+  BookingCreateByReceptionDto,
   BookingDto,
   BookingStatus,
   PaymentMethod,
@@ -91,10 +91,10 @@ export class BookingsComponent implements OnInit {
 
   createOfflineBooking(): void {
     this.dialogService
-      .openEntityDialog<undefined, BookingCreateByAdminDto>(
+      .openEntityDialog<undefined, BookingCreateByReceptionDto>(
         BookingsOfflineDialogComponent,
         undefined,
-        (dto) => this.bookingsService.createBookingByAdmin({ body: dto }),
+        (dto) => this.bookingsService.createBookingByReception({ body: dto }),
         'Офлайн-бронювання успішно створено',
         '500px'
       )

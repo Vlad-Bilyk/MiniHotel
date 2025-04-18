@@ -49,7 +49,7 @@ namespace MiniHotel.Application.Services
             });
         }
 
-        public async Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByAdminDto createDto)
+        public async Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByReceptionDto createDto)
         {
             return await CreateBookingInternal(async () =>
             {

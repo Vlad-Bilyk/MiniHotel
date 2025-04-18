@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
             Validators.pattern(/^\+?\d{7,15}$/),
           ]),
         ],
-        role: [this.isManager ? 'Customer' : 'Customer'],
+        role: [this.isManager ? 'Manager' : 'Client'],
         password: [
           '',
           Validators.compose([

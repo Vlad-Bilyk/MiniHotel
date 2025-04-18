@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Application.DTOs
 {
-    public class BookingCreateByAdminDto
+    public class BookingCreateByReceptionDto
     {
         [Required]
         [StringLength(4)]

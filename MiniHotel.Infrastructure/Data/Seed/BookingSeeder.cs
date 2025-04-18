@@ -18,8 +18,8 @@ namespace MiniHotel.Infrastructure.Data.Seed
         {
             if (await _db.Bookings.AnyAsync()) return;
 
-            var customers = await _db.HotelUsers
-                .Where(u => u.Role == UserRole.Customer && u.Email != "offline_client@hotel.local")
+            var clients = await _db.HotelUsers
+                .Where(u => u.Role == UserRole.Client && u.Email != "offline_client@hotel.local")
                 .ToListAsync();
 
             var rooms = await _db.Rooms
@@ -27,28 +27,28 @@ namespace MiniHotel.Infrastructure.Data.Seed
                 .ToListAsync();
 
             var baseDate = DateTime.UtcNow.Date.AddDays(-14);
-            var bookings = new List<Booking>();
 
-            foreach (var customer in customers)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    var raw = customer.UserId.GetHashCode() + i;
-                    var index = Math.Abs(raw) % rooms.Count;
-
-                    var room = rooms[index];
-                    bookings.Add(new Booking
+            var bookings = clients
+                .SelectMany(client => Enumerable.Range(0, 4)
+                    .Select(i =>
                     {
-                        UserId = customer.UserId,
-                        RoomId = room.RoomId,
-                        Room = room,
-                        StartDate = baseDate.AddDays(i * 3),
-                        EndDate = baseDate.AddDays(i * 3 + 2),
-                        BookingStatus = BookingStatus.Confirmed,
-                        PaymentMethod = PaymentMethod.OnSite,
-                    });
-                }
-            }
+                        var raw = client.UserId.GetHashCode() + i;
+                        var index = Math.Abs(raw) % rooms.Count;
+                        var room = rooms[index];
+
+                        return new Booking
+                        {
+                            UserId = client.UserId,
+                            RoomId = room.RoomId,
+                            Room = room,
+                            StartDate = baseDate.AddDays(i * 3),
+                            EndDate = baseDate.AddDays(i * 3 + 2),
+                            BookingStatus = BookingStatus.Confirmed,
+                            PaymentMethod = PaymentMethod.OnSite,
+                        };
+                    })
+                )
+                .ToList();
 
             _db.Bookings.AddRange(bookings);
             await _db.SaveChangesAsync();

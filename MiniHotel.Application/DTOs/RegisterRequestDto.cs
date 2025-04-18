@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MiniHotel.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Application.DTOs
 {
@@ -29,7 +30,7 @@ namespace MiniHotel.Application.DTOs
         [Compare("Password", ErrorMessage = "Паролі не співпадають.")]
         public string ConfirmPassword { get; set; } = default!;
 
-        public string Role { get; set; } = "Customer";
+        public UserRole Role { get; set; } = UserRole.Client;
 
     }
 }

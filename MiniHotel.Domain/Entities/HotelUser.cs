@@ -21,7 +21,7 @@ namespace MiniHotel.Domain.Entities
         public required string PhoneNumber { get; set; }
 
         [Required]
-        public UserRole Role { get; set; } = UserRole.Customer;
+        public UserRole Role { get; set; } = UserRole.Client;
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }

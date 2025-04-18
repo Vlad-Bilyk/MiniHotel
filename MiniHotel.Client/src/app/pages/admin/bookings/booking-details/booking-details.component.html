@@ -108,7 +108,7 @@
                         <td mat-cell *matCellDef="let i">
                             <span [matTooltip]="i.isLocked ? 'Позицію вже оплачено' : 'Видалити послугу'">
                                 <button mat-icon-button color="warn"
-                                    [disabled]="i.isLocked || payLoading || bookingLoading"
+                                    [disabled]="!permissions.canDeleteService || i.isLocked"
                                     (click)="removeItem(i.invoiceItemId)">
                                     <mat-icon>delete</mat-icon>
                                 </button>

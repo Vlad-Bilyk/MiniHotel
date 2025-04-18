@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BookingCreateByAdminDto, PaymentMethod, RoomDto } from '../../../../api/models';
+import { BookingCreateByReceptionDto, PaymentMethod, RoomDto } from '../../../../api/models';
 import { MatDialogRef } from '@angular/material/dialog';
 import { dateRangeValidator } from '../../../../shared/validators/date-range.validator';
 import { finalize, Subject, takeUntil } from 'rxjs';
@@ -47,7 +47,7 @@ export class BookingsOfflineDialogComponent implements OnInit {
 
   submit(): void {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value as BookingCreateByAdminDto);
+      this.dialogRef.close(this.form.value as BookingCreateByReceptionDto);
     }
   }
 
