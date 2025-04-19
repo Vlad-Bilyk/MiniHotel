@@ -11,11 +11,12 @@ import { RoomTypesComponent } from './pages/admin/room-types/room-types.componen
 import { ServicesComponent } from './pages/admin/services/services.component';
 import { BookingsComponent } from './pages/admin/bookings/bookings.component';
 import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/booking-details.component';
+import { UsersComponent } from './pages/admin/users/users.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'auth/register', component: RegisterComponent },
+  { path: 'auth/login', component: LoginComponent },
   { path: 'booking-confirmation', component: BookingConfirmationComponent },
   { path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard] },
   { path: 'admin/room-types', component: RoomTypesComponent, canActivate: [authGuard] },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'admin/services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'admin/bookings', component: BookingsComponent, canActivate: [authGuard] },
   { path: 'admin/booking-details/:id', component: BookingDetailsComponent, canActivate: [authGuard] },
+  { path: 'admin/users', component: UsersComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

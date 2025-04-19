@@ -33,6 +33,9 @@
             <li>
               <a class="dropdown-item" [routerLink]="['admin/bookings']">Бронювання</a>
             </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['admin/users']">Користувачі</a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -41,10 +44,10 @@
         <!-- If user is not logged in: show login/register -->
         <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Вхід</a>
+            <a class="nav-link" [routerLink]="['auth/login']" routerLinkActive="active">Вхід</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/register']" routerLinkActive="active">Реєстрація</a>
+            <a class="nav-link" [routerLink]="['auth/register']" routerLinkActive="active">Реєстрація</a>
           </li>
         </ng-container>
 

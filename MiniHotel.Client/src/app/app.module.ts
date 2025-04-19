@@ -54,6 +54,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
+import { UsersComponent } from './pages/admin/users/users.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -105,6 +106,7 @@ const MATERIAL_MODULES = [
     NightsLabelPipe,
     RoomLabelPipe,
     AddInvoiceItemDialogComponent,
+    UsersComponent,
   ],
   imports: [
     // Angular core

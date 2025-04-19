@@ -41,20 +41,8 @@ export class AuthServiceWrapper {
     return !!localStorage.getItem(this.tokenKey);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
-  }
-
   logout(): void {
     localStorage.removeItem(this.tokenKey);
-  }
-
-  getUserRole(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null;
   }
 
   hasRole(role: string): boolean {
@@ -64,5 +52,17 @@ export class AuthServiceWrapper {
   hasAnyRole(roles: string[]): boolean {
     const userRole = this.getUserRole();
     return !!userRole && roles.includes(userRole);
+  }
+
+  private getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null;
+  }
+
+  private getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
   }
 }

@@ -4,60 +4,82 @@
 
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="row">
+                <!-- First Name -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Ім’я</label>
                     <input formControlName="firstName" type="text" class="form-control"
-                        [class.is-invalid]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
-                    <div class="invalid-feedback">Обов’язкове поле</div>
+                        [class.is-invalid]="formControls['firstName'].touched && formControls['firstName'].invalid" />
+                    <div class="invalid-feedback" *ngIf="formControls['firstName']?.hasError('required')">
+                        Обов’язкове поле
+                    </div>
+                    <div class="invalid-feedback" *ngIf="formControls['firstName']?.hasError('maxlength')">
+                        Не більше 50 символів
+                    </div>
                 </div>
 
+                <!-- Last Name -->
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Прізвище</label>
                     <input formControlName="lastName" type="text" class="form-control"
-                        [class.is-invalid]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
-                    <div class="invalid-feedback">Обов’язкове поле</div>
+                        [class.is-invalid]="formControls['lastName'].touched && formControls['lastName'].invalid" />
+                    <div class="invalid-feedback" *ngIf="formControls['firstName']?.hasError('required')">
+                        Обов’язкове поле
+                    </div>
+                    <div class="invalid-feedback" *ngIf="formControls['firstName']?.hasError('maxlength')">
+                        Не більше 50 символів
+                    </div>
                 </div>
             </div>
 
+            <!-- Email -->
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <input formControlName="email" type="email" class="form-control" autocomplete="email"
-                    [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+                <input formControlName="email" type="email" class="form-control"
+                    [class.is-invalid]="formControls['email'].touched && formControls['email'].invalid" />
                 <div class="invalid-feedback">Введіть правильний email</div>
             </div>
 
+            <!-- Phone -->
             <div class="mb-3">
                 <label class="form-label">Телефон</label>
                 <input formControlName="phoneNumber" type="tel" class="form-control" autocomplete="tel"
-                    [class.is-invalid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.invalid">
+                    [class.is-invalid]="formControls['phoneNumber'].touched && formControls['phoneNumber'].invalid" />
                 <div class="invalid-feedback">Невірний номер телефону</div>
             </div>
 
-            <div class="mb-3" *ngIf="isManager">
+            <!-- Role (only for Manager) -->
+            <div class="mb-3" *ngIf="showRoleSelected">
                 <label class="form-label">Роль</label>
-                <select formControlName="role" class="form-select">
-                    <option value="Client">Клієнт</option>
-                    <option value="Manager">Менеджер</option>
-                    <option value="Receptionist"></option>
+                <select formControlName="role" class="form-select"
+                    [class.is-invalid]="formControls['role'].touched && formControls['role'].invalid">
+                    <option *ngFor="let r of roleOptions" [value]="r">{{ r }}</option>
                 </select>
+                <div class="invalid-feedback">Виберіть роль</div>
             </div>
 
+            <!-- Password -->
             <div class="mb-3 position-relative">
                 <label class="form-label">Пароль</label>
                 <input type="password" formControlName="password" class="form-control"
-                    [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" />
-                <div class="invalid-feedback">Пароль повинен містити мінімум 8 символів, включаючи великі та малі
-                    літери, цифру та спеціальний символ.</div>
+                    [class.is-invalid]="formControls['password'].touched && formControls['password'].invalid" />
+                <div class="invalid-feedback">
+                    Пароль повинен мати мінімум 6 символів, великі/малі літери, цифру та спецсимвол.
+                </div>
             </div>
 
+            <!-- Confirm Password -->
             <div class="mb-3 position-relative">
                 <label class="form-label">Підтвердження паролю</label>
-                <input type="password" formControlName="confirmPassword" class="form-control"
-                    [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.errors?.['mismatch']" />
+                <input type="password" formControlName="confirmPassword" class="form-control" [class.is-invalid]="
+              (formControls['confirmPassword'].touched || registerForm.touched)
+              && registerForm.hasError('mismatch')" />
                 <div class="invalid-feedback">Паролі не співпадають</div>
             </div>
 
-            <button class="btn btn-primary w-100 mt-2" [disabled]="isSubmitting || registerForm.invalid">
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="isSubmitting || registerForm.invalid">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                    aria-hidden="true"></span>
                 {{ isSubmitting ? 'Реєстрація...' : 'Зареєструватися' }}
             </button>
         </form>
