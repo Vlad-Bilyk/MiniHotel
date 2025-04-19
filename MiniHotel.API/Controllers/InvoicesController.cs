@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.API.Controllers
@@ -10,6 +12,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.AdminRoles)]
     public class InvoicesController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
@@ -49,20 +52,6 @@ namespace MiniHotel.API.Controllers
                 return NotFound();
             }
             return Ok(invoice);
-        }
-
-        /// <summary>
-        /// Creates an invoice for a specific booking.
-        /// </summary>
-        /// <param name="bookingId">The unique identifier of the booking.</param>
-        /// <returns>The created invoice DTO.</returns>
-        /// <response code="201">Returns the newly created invoice.</response>
-        [HttpPost("{bookingId}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<InvoiceDto>> CreateInvoice(int bookingId)
-        {
-            var dto = await _invoiceService.CreateInvoiceForBookingAsync(bookingId);
-            return CreatedAtAction(nameof(GetInvoiceByBookingId), new { bookingId }, dto);
         }
 
         /// <summary>

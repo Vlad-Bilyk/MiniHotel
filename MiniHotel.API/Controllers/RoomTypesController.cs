@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Manager)]
     public class RoomTypesController : ControllerBase
     {
         private readonly IRoomTypeRepository _roomTypeRepository;

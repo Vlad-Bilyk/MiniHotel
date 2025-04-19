@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Constants;
 
 namespace MiniHotel.API.Controllers
 {
@@ -10,6 +12,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -33,6 +36,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<ActionResult> PayOnline(int invoiceId)
         {
             return await ExecuteSafeAsync(async () =>
@@ -54,6 +58,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(typeof(InvoiceDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<InvoiceDto>> PayOffline([FromRoute] int invoiceId)
         {
             return await ExecuteSafeAsync(async () =>
@@ -75,6 +80,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult> Callback([FromForm] LiqPayCallbackDto dto)
         {
             if (dto is null || string.IsNullOrWhiteSpace(dto.Data) || string.IsNullOrWhiteSpace(dto.Signature))
@@ -102,6 +108,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(typeof(InvoiceDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<InvoiceDto>> Refund([FromRoute] int invoiceId)
         {
             return await ExecuteSafeAsync(async () =>

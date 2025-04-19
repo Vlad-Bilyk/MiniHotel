@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.API.Controllers
@@ -12,6 +14,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ServicesController : ControllerBase
     {
         private readonly IServiceRepository _serviceRepository;
@@ -29,6 +32,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of service DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetServices()
         {
             IEnumerable<Service> services = await _serviceRepository.GetAllAsync();
@@ -47,6 +51,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult> GetServiceById(int id)
         {
             Service service = await _serviceRepository.GetAsync(r => r.ServiceId == id);
@@ -69,6 +74,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<ServiceDto>> CreateService([FromBody] ServiceUpsertDto createDto)
         {
             Service service = _mapper.Map<Service>(createDto);
@@ -88,6 +94,7 @@ namespace MiniHotel.API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateService(int id, [FromBody] ServiceUpsertDto updateDto)
         {
             if (updateDto == null)
@@ -113,6 +120,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteService(int id)
         {
             Service service = await _serviceRepository.GetAsync(r => r.ServiceId == id);

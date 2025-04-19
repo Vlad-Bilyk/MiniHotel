@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthServiceWrapper } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
+import { UserRole } from '../../api/models';
 
 @Component({
   selector: 'app-navbar',
@@ -9,10 +10,14 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  constructor(public authService: AuthServiceWrapper, private router: Router) { }
+  public UserRole = UserRole;
+
+  constructor(
+    public authService: AuthServiceWrapper,
+    private router: Router) { }
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['auth/login']);
   }
 }

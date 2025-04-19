@@ -6,34 +6,36 @@
     <!-- Navigation links -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Rooms -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            Home
-          </a>
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Номери</a>
         </li>
+        <!-- Contacts -->
         <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Контакти</a>
+        </li>
+        <li class="nav-item" *appHasRole="[UserRole.Client]">
           <a class="nav-link" [routerLink]="['/my-bookings']" routerLinkActive="active">Мої Бронювання</a>
         </li>
-        <!-- TODO: Replace authService to RoleGuard -->
-        <li class="nav-item dropdown" *ngIf="authService.hasRole('Manager')">
+        <!-- Admin panel -->
+        <li class="nav-item dropdown" *appHasRole="[UserRole.Manager, UserRole.Receptionist]">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Адміністрування
           </a>
           <ul class="dropdown-menu">
-            <li>
+            <li *appHasRole="UserRole.Manager">
               <a class="dropdown-item" [routerLink]="['admin/rooms']">Номери</a>
             </li>
-            <li>
+            <li *appHasRole="UserRole.Manager">
               <a class="dropdown-item" [routerLink]="['admin/room-types']">Типи номерів</a>
             </li>
-            <li>
+            <li *appHasRole="UserRole.Manager">
               <a class="dropdown-item" [routerLink]="['admin/services']">Сервіси</a>
             </li>
-            <li>
+            <li *appHasRole="[UserRole.Manager, UserRole.Receptionist]">
               <a class="dropdown-item" [routerLink]="['admin/bookings']">Бронювання</a>
             </li>
-            <li>
+            <li *appHasRole="UserRole.Manager">
               <a class="dropdown-item" [routerLink]="['admin/users']">Користувачі</a>
             </li>
           </ul>

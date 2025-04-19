@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Enums;
 using System.Security.Claims;
 
@@ -12,6 +13,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
@@ -29,6 +31,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of booking data transfer objects.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
         {
             var bookings = await _bookingService.GetBookingsAsync();
@@ -47,6 +50,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.Client)]
         public async Task<ActionResult<IEnumerable<UserBookingsDto>>> GetUserBookings()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -68,6 +72,7 @@ namespace MiniHotel.API.Controllers
         [HttpGet("{id:int}", Name = "GetBookingById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<BookingDto>> GetBookingById(int id)
         {
             try
@@ -96,6 +101,7 @@ namespace MiniHotel.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.Client)]
         public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] BookingCreateDto createDto)
         {
             if (createDto == null)
@@ -132,6 +138,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<BookingDto>> CreateBookingByReception([FromBody] BookingCreateByReceptionDto createDto)
         {
             try
@@ -154,6 +161,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public Task<ActionResult<BookingDto>> CancelBooking(int id)
         {
             return UpdateStatusAsync(id, BookingStatus.Cancelled);
@@ -168,6 +176,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public Task<ActionResult<BookingDto>> CheckInBooking(int id)
         {
             return UpdateStatusAsync(id, BookingStatus.CheckedIn);
@@ -182,6 +191,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public Task<ActionResult<BookingDto>> CheckOutBooking(int id)
         {
             return UpdateStatusAsync(id, BookingStatus.CheckedOut);
@@ -196,6 +206,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public Task<ActionResult<BookingDto>> ConfirmedBooking(int id)
         {
             return UpdateStatusAsync(id, BookingStatus.Confirmed);

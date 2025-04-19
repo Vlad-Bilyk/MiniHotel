@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MiniHotel.API;
 using MiniHotel.API.Configuration;
 using MiniHotel.Application.Interfaces;
@@ -15,7 +16,6 @@ using MiniHotel.Infrastructure.Mapping;
 using MiniHotel.Infrastructure.Reposiitories;
 using MiniHotel.Infrastructure.Services;
 using System.Reflection;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -98,6 +98,8 @@ builder.Services.Configure<LiqPayOptions>(builder.Configuration.GetSection("LiqP
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "MiniHotel API", Version = "v1" });
+
     options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
     {
         Description = "Development server",
@@ -108,6 +110,32 @@ builder.Services.AddSwaggerGen(options =>
 
     var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+
+    // Add security definition for JWT
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "¬вед≥ть токен €к: Bearer {token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
@@ -135,18 +163,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseHsts();
 }
-
-// TODO: Remove this middleware in production
-app.Use(async (context, next) =>
-{
-    var identity = new ClaimsIdentity("Fake");
-    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "e09dc253-eaec-4204-80f2-e62025881eca"));
-    identity.AddClaim(new Claim(ClaimTypes.Name, "TestUser"));
-    var principal = new ClaimsPrincipal(identity);
-
-    context.User = principal;
-    await next();
-});
 
 app.UseHttpsRedirection();
 

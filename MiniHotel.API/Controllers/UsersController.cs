@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.API.Controllers
@@ -11,6 +13,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Manager)]
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -82,29 +85,6 @@ namespace MiniHotel.API.Controllers
 
             _mapper.Map(updateDto, existingUser);
             await _userRepository.UpdateAsync(existingUser);
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Deletes a user by their unique identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the user to delete.</param>
-        /// <returns>No content if the deletion is successful.</returns>
-        /// <response code="204">User deleted successfully.</response>
-        /// <response code="404">If the user is not found.</response>
-        /// <response code="400">If the request is invalid.</response>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            HotelUser user = await _userRepository.GetAsync(r => r.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            await _userRepository.RemoveAsync(user);
             return NoContent();
         }
     }

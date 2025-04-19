@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
+using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 
@@ -13,6 +15,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RoomsController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;
@@ -30,6 +33,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of room DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
         {
             IEnumerable<Room> rooms = await _roomRepository.GetAllAsync(includeProperties: "RoomType");
@@ -48,6 +52,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult> GetRoomById(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id, includeProperties: "RoomType");
@@ -70,6 +75,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
             var roomType = await _roomRepository.GetAsync(rt => rt.RoomType.RoomCategory == createDto.RoomCategory, "RoomType");
@@ -103,6 +109,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomUpsertDto updateDto)
         {
             if (updateDto == null)
@@ -128,6 +135,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteRoom(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
@@ -152,6 +160,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate)
         {
             if (endDate < startDate)
@@ -183,6 +192,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<RoomDto>> UpdateRoomStatus(int id, RoomStatus newStatus)
         {
             try
