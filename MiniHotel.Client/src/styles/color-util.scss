@@ -1,0 +1,94 @@
+/* Background colors */
+.bg-primary {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+.bg-primary-container {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.bg-secondary {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+.bg-secondary-container {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.bg-tertiary {
+  background-color: var(--mat-sys-tertiary);
+  color: var(--mat-sys-on-tertiary);
+}
+.bg-tertiary-container {
+  background-color: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.bg-surface {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+.bg-surface-container {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+}
+
+.bg-error-container {
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+/* Text colors */
+.text-primary {
+  color: var(--mat-sys-primary);
+}
+.text-secondary {
+  color: var(--mat-sys-secondary);
+}
+.text-tertiary {
+  color: var(--mat-sys-tertiary);
+}
+.text-surface {
+  color: var(--mat-sys-on-surface);
+}
+.text-on-primary {
+  color: var(--mat-sys-on-primary);
+}
+.text-on-secondary {
+  color: var(--mat-sys-on-secondary);
+}
+.text-on-tertiary {
+  color: var(--mat-sys-on-tertiary);
+}
+.text-error {
+  color: var(--mat-sys-error);
+}
+.text-outline {
+  color: var(--mat-sys-outline);
+}
+
+/* Card utility */
+.card-container {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Button-style backgrounds */
+.btn-primary {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}

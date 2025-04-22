@@ -1,10 +1,22 @@
-@use './styles/custom-theme.scss' as *;
+@use "@angular/material" as mat;
+@use "./styles/theme-colors" as tc;
+@use "./styles/color-util.scss";
+@use "./styles/btn-error.scss";
 
-html, body {
-  height: 100%;
-}
+@include mat.core();
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+$my-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: tc.$primary-palette,
+      tertiary: tc.$tertiary-palette,
+      use-system-variables: true,
+    ),
+  )
+);
+
+html {
+  @include mat.theme($my-theme);
+  @include mat.all-component-themes($my-theme);
 }

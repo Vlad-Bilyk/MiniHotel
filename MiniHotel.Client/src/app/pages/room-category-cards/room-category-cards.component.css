@@ -1,41 +1,75 @@
 .room-card {
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    /* трохи глибше тінь */
-    border-radius: 8px;
-    /* м’якіші кути */
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--mat-elevation-shadow-6);
+    transform: translateY(-4px);
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 }
 
-@media (min-width: 768px) {
-    .room-card {
-        flex-direction: row;
-    }
+mat-card-title {
+  margin: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
 }
 
 .room-card__content {
-    flex: 1 1 auto;
-    /* текст може рости та стискатись */
-    overflow-wrap: break-word;
+  flex: 1 1 auto;
+  overflow-wrap: break-word;
+  padding: 1rem;
 }
 
 .room-card__image {
-    flex-shrink: 0;
-    /* не даємо блоку зображення стискатись */
-    margin-top: 1rem;
-    /* щоб на мобільних під текстом був відступ */
-}
+  flex-shrink: 0; /* do not let the image block shrink */
+  margin-top: 1rem; /* to have an indent on the mobile under the text */
 
-@media (min-width: 768px) {
-    .room-card__image {
-        margin-top: 0;
-        margin-left: 1rem;
-    }
-}
+  @media (min-width: 768px) {
+    margin-top: 0;
+    margin-left: 1rem;
+  }
 
-.room-card__image img {
+  img {
     display: block;
     max-width: 100%;
     height: auto;
     border-radius: 4px;
+  }
+}
+
+.room-card__info {
+  display: flex;
+  flex-direction: column;
+  /* so that this block stretches the entire height of the .room-card __content */
+  padding-left: 16px;
+  padding-top: 16px;
+}
+
+.room-card_description {
+  font-size: 1rem;
+  color: var(--mat-sys-on-surface-variant, #6c757d);
+  margin-bottom: 1rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.room-card_price {
+  margin-top: auto;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+}
+
+.room-card__content mat-card-actions {
+  margin-top: 0;
 }

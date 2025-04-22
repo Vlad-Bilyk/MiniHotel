@@ -1,0 +1,123 @@
+/* These tokens are generated using https://themes.angular-material.dev/ */
+/* Preview: https://themes.angular-material.dev/?primary=%231976D2&seed-error=%23E53935&seed-neutral=%23CFD8DC&seed-neutral-variant=%23B0BEC5&seed-primary=%231976D2&seed-secondary=%23FF6F61&seed-tertiary=%2329B6F6 */
+/* Seed Colors: primary: #1976D2, secondary: #FF6F61, tertiary: #29B6F6, error: #E53935, neutral: #CFD8DC, neutral-variant: #B0BEC5 */
+/* Modified System Colors: primary: #1976D2 */
+
+/* Light Theme */
+:root,
+:host {
+  --mat-sys-primary: #1976d2;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #d4e3ff;
+  --mat-sys-on-primary-container: #001c3a;
+  --mat-sys-inverse-primary: #a5c8ff;
+  --mat-sys-primary-fixed: #d4e3ff;
+  --mat-sys-primary-fixed-dim: #a5c8ff;
+  --mat-sys-on-primary-fixed: #001c3a;
+  --mat-sys-on-primary-fixed-variant: #004786;
+  --mat-sys-secondary: #ac332a;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #ffdad5;
+  --mat-sys-on-secondary-container: #410001;
+  --mat-sys-secondary-fixed: #ffdad5;
+  --mat-sys-secondary-fixed-dim: #ffb4aa;
+  --mat-sys-on-secondary-fixed: #410001;
+  --mat-sys-on-secondary-fixed-variant: #8b1a16;
+  --mat-sys-tertiary: #00658d;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #c6e7ff;
+  --mat-sys-on-tertiary-container: #001e2d;
+  --mat-sys-tertiary-fixed: #c6e7ff;
+  --mat-sys-tertiary-fixed-dim: #81cfff;
+  --mat-sys-on-tertiary-fixed: #001e2d;
+  --mat-sys-on-tertiary-fixed-variant: #004c6b;
+  --mat-sys-background: #fcf9f8;
+  --mat-sys-on-background: #1b1c1c;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-dim: #dcd9d9;
+  --mat-sys-surface-bright: #fcf9f8;
+  --mat-sys-surface-container-lowest: #ffffff;
+  --mat-sys-surface-container-low: #f6f3f3;
+  --mat-sys-surface-container: #f0eded;
+  --mat-sys-surface-container-high: #eae7e7;
+  --mat-sys-surface-container-highest: #e4e2e2;
+  --mat-sys-on-surface: #1b1c1c;
+  --mat-sys-shadow: #000000;
+  --mat-sys-scrim: #000000;
+  --mat-sys-surface-tint: #576063;
+  --mat-sys-inverse-surface: #303030;
+  --mat-sys-inverse-on-surface: #f3f0f0;
+  --mat-sys-outline: #73787a;
+  --mat-sys-outline-variant: #c3c7ca;
+  --mat-sys-neutral: #787777;
+  --mat-sys-neutral10: #1b1c1c;
+  --mat-sys-error: #ba1a1a;
+  --mat-sys-error-container: #ffdad6;
+  --mat-sys-on-error: #ffffff;
+  --mat-sys-on-error-container: #410002;
+  --mat-sys-surface-variant: #dfe3e6;
+  --mat-sys-on-surface-variant: #43474a;
+  --mat-sys-neutral-variant: #73787a;
+  --mat-sys-neutral-variant20: #2c3133;
+  --mat-sys-inverse-secondary: #ffb4aa;
+  --mat-sys-inverse-tertiary: #81cfff;
+}
+
+/* Dark Theme */
+.dark {
+  --mat-sys-primary: #1976d2;
+  --mat-sys-on-primary: #00315f;
+  --mat-sys-primary-container: #004786;
+  --mat-sys-on-primary-container: #d4e3ff;
+  --mat-sys-inverse-primary: #005faf;
+  --mat-sys-primary-fixed: #d4e3ff;
+  --mat-sys-primary-fixed-dim: #a5c8ff;
+  --mat-sys-on-primary-fixed: #001c3a;
+  --mat-sys-on-primary-fixed-variant: #004786;
+  --mat-sys-secondary: #ffb4aa;
+  --mat-sys-on-secondary: #690004;
+  --mat-sys-secondary-container: #8b1a16;
+  --mat-sys-on-secondary-container: #ffdad5;
+  --mat-sys-secondary-fixed: #ffdad5;
+  --mat-sys-secondary-fixed-dim: #ffb4aa;
+  --mat-sys-on-secondary-fixed: #410001;
+  --mat-sys-on-secondary-fixed-variant: #8b1a16;
+  --mat-sys-tertiary: #81cfff;
+  --mat-sys-on-tertiary: #00344b;
+  --mat-sys-tertiary-container: #004c6b;
+  --mat-sys-on-tertiary-container: #c6e7ff;
+  --mat-sys-tertiary-fixed: #c6e7ff;
+  --mat-sys-tertiary-fixed-dim: #81cfff;
+  --mat-sys-on-tertiary-fixed: #001e2d;
+  --mat-sys-on-tertiary-fixed-variant: #004c6b;
+  --mat-sys-background: #131314;
+  --mat-sys-on-background: #e4e2e2;
+  --mat-sys-surface: #131314;
+  --mat-sys-surface-dim: #131314;
+  --mat-sys-surface-bright: #393939;
+  --mat-sys-surface-container-lowest: #0e0e0e;
+  --mat-sys-surface-container-low: #1b1c1c;
+  --mat-sys-surface-container: #1f2020;
+  --mat-sys-surface-container-high: #2a2a2a;
+  --mat-sys-surface-container-highest: #353535;
+  --mat-sys-on-surface: #e4e2e2;
+  --mat-sys-shadow: #000000;
+  --mat-sys-scrim: #000000;
+  --mat-sys-surface-tint: #bfc8cc;
+  --mat-sys-inverse-surface: #e4e2e2;
+  --mat-sys-inverse-on-surface: #303030;
+  --mat-sys-outline: #8d9193;
+  --mat-sys-outline-variant: #43474a;
+  --mat-sys-neutral: #787777;
+  --mat-sys-neutral10: #1b1c1c;
+  --mat-sys-error: #ffb4ab;
+  --mat-sys-error-container: #93000a;
+  --mat-sys-on-error: #690005;
+  --mat-sys-on-error-container: #ffdad6;
+  --mat-sys-surface-variant: #43474a;
+  --mat-sys-on-surface-variant: #c3c7ca;
+  --mat-sys-neutral-variant: #73787a;
+  --mat-sys-neutral-variant20: #2c3133;
+  --mat-sys-inverse-secondary: #ac332a;
+  --mat-sys-inverse-tertiary: #00658d;
+}
