@@ -1,66 +1,60 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <div class="container-fluid">
-    <!-- Application logo or name -->
-    <a class="navbar-brand" [routerLink]="['/']">Mini Hotel</a>
+<mat-toolbar color="primary" class="mat-elevation-z4" style="position: sticky; top: 0; z-index: 1000;">
+  <mat-toolbar-row>
+    <!-- Logo / application name -->
+    <button mat-button class="logo" [routerLink]="['/']">Mini Hotel</button>
 
-    <!-- Navigation links -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Rooms -->
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/room-categories']" routerLinkActive="active">Номери</a>
-        </li>
-        <!-- Contacts -->
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Контакти</a>
-        </li>
-        <li class="nav-item" *appHasRole="[UserRole.Client]">
-          <a class="nav-link" [routerLink]="['/my-bookings']" routerLinkActive="active">Мої Бронювання</a>
-        </li>
-        <!-- Admin panel -->
-        <li class="nav-item dropdown" *appHasRole="[UserRole.Manager, UserRole.Receptionist]">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Адміністрування
-          </a>
-          <ul class="dropdown-menu">
-            <li *appHasRole="UserRole.Manager">
-              <a class="dropdown-item" [routerLink]="['admin/rooms']">Номери</a>
-            </li>
-            <li *appHasRole="UserRole.Manager">
-              <a class="dropdown-item" [routerLink]="['admin/room-types']">Типи номерів</a>
-            </li>
-            <li *appHasRole="UserRole.Manager">
-              <a class="dropdown-item" [routerLink]="['admin/services']">Сервіси</a>
-            </li>
-            <li *appHasRole="[UserRole.Manager, UserRole.Receptionist]">
-              <a class="dropdown-item" [routerLink]="['admin/bookings']">Бронювання</a>
-            </li>
-            <li *appHasRole="UserRole.Manager">
-              <a class="dropdown-item" [routerLink]="['admin/users']">Користувачі</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-      <!-- Account controls -->
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <!-- If user is not logged in: show login/register -->
-        <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['auth/login']" routerLinkActive="active">Вхід</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['auth/register']" routerLinkActive="active">Реєстрація</a>
-          </li>
-        </ng-container>
+    <!-- Main navigation links -->
+    <button mat-button [routerLink]="['/room-categories']" routerLinkActive="active-link">Номери</button>
+    <button mat-button [routerLink]="['/']" routerLinkActive="active-link">Контакти</button>
+    <!-- Only show "My Bookings" to clients -->
+    <button mat-button *appHasRole="[UserRole.Client]" [routerLink]="['/my-bookings']" routerLinkActive="active-link">
+      Мої бронювання
+    </button>
 
-        <!-- If logged in: show logout button -->
-        <ng-template #loggedInBlock>
-          <li class="nav-item d-flex align-items-center">
-            <i class="bi bi-person-circle fs-5 me-2"></i>
-            <button class="btn btn-outline-danger btn-sm" (click)="logout()">Вихід</button>
-          </li>
-        </ng-template>
-      </ul>
-    </div>
-  </div>
-</nav>
+    <!-- Administration dropdown for Manager & Receptionist -->
+    <button mat-button *appHasRole="[UserRole.Manager, UserRole.Receptionist]" [matMenuTriggerFor]="adminMenu">
+      Управління
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #adminMenu="matMenu">
+      <button mat-menu-item *appHasRole="UserRole.Manager" [routerLink]="['/admin/rooms']">
+        Номери
+      </button>
+      <button mat-menu-item *appHasRole="UserRole.Manager" [routerLink]="['/admin/room-types']">
+        Типи номерів
+      </button>
+      <button mat-menu-item *appHasRole="UserRole.Manager" [routerLink]="['/admin/services']">
+        Послуги
+      </button>
+      <!-- Both Manager & Receptionist see bookings -->
+      <button mat-menu-item *appHasRole="[UserRole.Manager, UserRole.Receptionist]" [routerLink]="['/admin/bookings']">
+        Бронювання
+      </button>
+      <button mat-menu-item *appHasRole="UserRole.Manager" [routerLink]="['/admin/users']">
+        Користувачі
+      </button>
+    </mat-menu>
+
+    <!-- Spacer pushes account controls to the right -->
+    <span class="flex-spacer"></span>
+
+    <!-- If not logged in, show Login/Register -->
+    <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+      <button mat-button [routerLink]="['/auth/login']">Вхід</button>
+      <button mat-button [routerLink]="['/auth/register']">Реєстрація</button>
+    </ng-container>
+
+    <!-- Logged‑in user menu -->
+    <ng-template #loggedIn>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>person</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Вихід
+        </button>
+      </mat-menu>
+    </ng-template>
+  </mat-toolbar-row>
+</mat-toolbar>

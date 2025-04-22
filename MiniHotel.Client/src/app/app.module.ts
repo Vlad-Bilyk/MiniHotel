@@ -61,6 +61,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -80,6 +82,8 @@ const MATERIAL_MODULES = [
   MatDividerModule,
   MatIconModule,
   MatGridListModule,
+  MatMenuModule,
+  MatToolbarModule,
 ];
 
 @NgModule({

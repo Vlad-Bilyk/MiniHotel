@@ -1,0 +1,21 @@
+/* Utility spacer to push items apart in the toolbar */
+.flex-spacer {
+    flex: 1 1 auto;
+}
+
+/* Style for active router links */
+.active-link {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Logo styling */
+.logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Optional: reduce default toolbar padding */
+mat-toolbar {
+    padding: 0 1rem;
+}
