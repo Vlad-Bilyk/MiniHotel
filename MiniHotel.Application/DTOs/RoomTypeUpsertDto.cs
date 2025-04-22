@@ -11,7 +11,9 @@ namespace MiniHotel.Application.DTOs
         [Column(TypeName = "decimal(18, 2)")]
         public decimal PricePerNight { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+        [Required, StringLength(500)]
+        public string Description { get; set; } = default!;
+
+        public string? ImageUrl { get; set; }
     }
 }

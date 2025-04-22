@@ -14,7 +14,9 @@ namespace MiniHotel.Domain.Entities
         [Column(TypeName = "decimal(18, 2)")]
         public decimal PricePerNight { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+        [Required, StringLength(500)]
+        public required string Description { get; set; }
+
+        public string? ImageUrl { get; set; }
     }
 }

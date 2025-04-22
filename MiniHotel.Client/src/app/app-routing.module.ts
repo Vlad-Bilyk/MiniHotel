@@ -14,11 +14,13 @@ import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/
 import { UsersComponent } from './pages/admin/users/users.component';
 import { roleGuard } from './core/guards/role.guard';
 import { UserRole } from './api/models';
+import { RoomCategoryCardsComponent } from './pages/room-category-cards/room-category-cards.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'auth/register', component: RegisterComponent },
   { path: 'auth/login', component: LoginComponent },
+  { path: 'room-categories', component: RoomCategoryCardsComponent },
   { path: 'booking-confirmation', component: BookingConfirmationComponent, canActivate: [authGuard, roleGuard([UserRole.Client])] },
   { path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard, roleGuard([UserRole.Client])] },
   { path: 'admin/room-types', component: RoomTypesComponent, canActivate: [authGuard, roleGuard([UserRole.Manager])] },

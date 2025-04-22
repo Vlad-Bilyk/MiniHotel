@@ -4,6 +4,7 @@
 
 export interface RoomTypeDto {
   description?: string | null;
+  imageUrl?: string | null;
   pricePerNight?: number;
   roomCategory?: string | null;
   roomTypeId?: number;

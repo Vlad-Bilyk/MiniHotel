@@ -1,0 +1,43 @@
+.room-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #eceff1;
+    /* небілий, але світлий сірий */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* трохи глибше тінь */
+    border-radius: 8px;
+    /* м’якіші кути */
+}
+
+@media (min-width: 768px) {
+    .room-card {
+        flex-direction: row;
+    }
+}
+
+.room-card__content {
+    flex: 1 1 auto;
+    /* текст може рости та стискатись */
+    overflow-wrap: break-word;
+}
+
+.room-card__image {
+    flex-shrink: 0;
+    /* не даємо блоку зображення стискатись */
+    margin-top: 1rem;
+    /* щоб на мобільних під текстом був відступ */
+}
+
+@media (min-width: 768px) {
+    .room-card__image {
+        margin-top: 0;
+        margin-left: 1rem;
+    }
+}
+
+.room-card__image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}

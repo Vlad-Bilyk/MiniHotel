@@ -64,7 +64,7 @@ export class RoomTypesComponent implements OnInit {
       formData: {
         roomCategory: rt.roomCategory!,
         pricePerNight: rt.pricePerNight,
-        description: rt.description,
+        description: rt.description!,
       },
     };
 

@@ -1,0 +1,39 @@
+<!-- room-category-cards.component.html -->
+<!-- Спінер під час завантаження -->
+<div *ngIf="loading" class="d-flex justify-content-center py-5">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<!-- Контент -->
+<div *ngIf="!loading" class="container py-5">
+    <h2 class="mb-4 text-center display-5">Категорії номерів</h2>
+
+    <div class="row g-4">
+        <!-- col-12 гарантує 1 картку в рядку на ВСІХ екранах -->
+        <div class="col-12" *ngFor="let room of roomTypes">
+            <mat-card class="room-card d-flex flex-column flex-lg-row align-items-stretch p-3">
+                <!-- Ліва частина: опис -->
+                <div class="room-card__content flex-fill pe-3 d-flex flex-column">
+                    <h5 class="mb-2 fs-4 fs-md-5">{{ room.roomCategory }}</h5>
+                    <p class="lead room-card_description text-muted">
+                        {{ room.description || 'Опис відсутній.' }}
+                    </p>
+                    <p class="mt-auto mb-4">
+                        <strong class="fs-5 fs-md-4">
+                            {{ room.pricePerNight | currency:'UAH':'symbol' }} / ніч
+                        </strong>
+                    </p>
+                    <button mat-flat-button color="primary" class="align-self-start">
+                        Забронювати
+                    </button>
+                </div>
+
+                <!-- Права частина: фото -->
+                <div class="room-card__image ms-md-3 mt-3 mt-md-0">
+                    <img class="img-fluid rounded" [src]="room.imageUrl || 'https://fakeimg.pl/600x400'"
+                        alt="{{ room.roomCategory }}" />
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

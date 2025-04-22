@@ -1,4 +1,4 @@
-<div class="container mt-5 py-5" *ngIf="!loading && booking; else loadingTpl">
+<div class="container" *ngIf="!loading && booking; else loadingTpl">
     <button class="btn btn-link mb-3" (click)="back()">← Повернутися до списку</button>
 
     <h2 class="mb-4">Деталі бронювання #{{ bookingId }}</h2>

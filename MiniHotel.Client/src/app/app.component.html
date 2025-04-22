@@ -1,6 +1,6 @@
 <div class="page-wrapper d-flex flex-column min-vh-100">
     <app-navbar></app-navbar>
-    <main class="flex-fill">
+    <main class="flex-fill mt-5" [ngClass]="{'py-5': !isHomeRoute }">
         <router-outlet></router-outlet>
     </main>
     <footer class="footer mt-auto py-3 text-center bg-dark text-white">

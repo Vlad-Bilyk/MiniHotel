@@ -15,10 +15,6 @@ import { addInvoiceItem } from '../fn/invoices/add-invoice-item';
 import { AddInvoiceItem$Params } from '../fn/invoices/add-invoice-item';
 import { addInvoiceItem$Plain } from '../fn/invoices/add-invoice-item-plain';
 import { AddInvoiceItem$Plain$Params } from '../fn/invoices/add-invoice-item-plain';
-import { createInvoice } from '../fn/invoices/create-invoice';
-import { CreateInvoice$Params } from '../fn/invoices/create-invoice';
-import { createInvoice$Plain } from '../fn/invoices/create-invoice-plain';
-import { CreateInvoice$Plain$Params } from '../fn/invoices/create-invoice-plain';
 import { getInvoiceByBookingId } from '../fn/invoices/get-invoice-by-booking-id';
 import { GetInvoiceByBookingId$Params } from '../fn/invoices/get-invoice-by-booking-id';
 import { getInvoiceByBookingId$Plain } from '../fn/invoices/get-invoice-by-booking-id-plain';
@@ -163,69 +159,6 @@ export class InvoicesService extends BaseService {
    */
   getInvoiceByBookingId(params: GetInvoiceByBookingId$Params, context?: HttpContext): Observable<InvoiceDto> {
     return this.getInvoiceByBookingId$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
-    );
-  }
-
-  /** Path part for operation `createInvoice()` */
-  static readonly CreateInvoicePath = '/api/Invoices/{bookingId}';
-
-  /**
-   * Creates an invoice for a specific booking.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `createInvoice$Plain()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  createInvoice$Plain$Response(params: CreateInvoice$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return createInvoice$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Creates an invoice for a specific booking.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `createInvoice$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  createInvoice$Plain(params: CreateInvoice$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.createInvoice$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
-    );
-  }
-
-  /**
-   * Creates an invoice for a specific booking.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `createInvoice()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  createInvoice$Response(params: CreateInvoice$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return createInvoice(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Creates an invoice for a specific booking.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `createInvoice$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  createInvoice(params: CreateInvoice$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.createInvoice$Response(params, context).pipe(
       map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }

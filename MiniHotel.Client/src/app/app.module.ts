@@ -15,6 +15,8 @@ import { BookingSearchComponent } from './pages/booking-search/booking-search.co
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 
+import { RoomCategoryCardsComponent } from './pages/room-category-cards/room-category-cards.component';
+
 import { RoomsComponent } from './pages/admin/rooms/rooms.component';
 import { RoomCardComponent } from './shared/room-card/room-card.component';
 import { RoomFormDialogComponent } from './pages/admin/rooms/room-form-dialog/room-form-dialog.component';
@@ -28,9 +30,14 @@ import { ServicesFormDialogComponent } from './pages/admin/services/services-for
 import { BookingsComponent } from './pages/admin/bookings/bookings.component';
 import { BookingsOfflineDialogComponent } from './pages/admin/bookings/bookings-offline-dialog/bookings-offline-dialog.component';
 import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/booking-details.component';
+import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
+
+import { UsersComponent } from './pages/admin/users/users.component';
 
 import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
 import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
+
+import { HasRoleDirective } from './shared/directives/has-role.directive';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
@@ -53,9 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
-import { UsersComponent } from './pages/admin/users/users.component';
-import { HasRoleDirective } from './shared/directives/has-role.directive';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -74,6 +79,7 @@ const MATERIAL_MODULES = [
   MatProgressSpinnerModule,
   MatDividerModule,
   MatIconModule,
+  MatGridListModule,
 ];
 
 @NgModule({
@@ -109,6 +115,7 @@ const MATERIAL_MODULES = [
     AddInvoiceItemDialogComponent,
     UsersComponent,
     HasRoleDirective,
+    RoomCategoryCardsComponent,
   ],
   imports: [
     // Angular core
