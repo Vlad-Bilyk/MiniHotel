@@ -1,0 +1,44 @@
+@use "sass:map";
+
+// Breckpoints as in Bootstrap
+$breakpoints: (
+  xs: 0,
+  // mobile
+  sm: 576px,
+  // tablet (vertical)
+  md: 768px,
+  // tablet (horizontal)
+  lg: 992px,
+  // laptop
+  xl: 1200px,
+  // big
+  xxl: 1400px // very big,,,,,
+);
+
+// Maximum container widths per breakpoint
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+);
+
+// Selector-mixin container
+@mixin container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  // For each breakpoint set max-width
+  @each $bp, $min in $breakpoints {
+    @if map.has-key($container-max-widths, $bp) and $min != 0 {
+      $max: map.get($container-max-widths, $bp);
+      @media (min-width: $min) {
+        max-width: $max;
+      }
+    }
+  }
+}

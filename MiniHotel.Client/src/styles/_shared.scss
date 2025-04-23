@@ -1,0 +1,5 @@
+@mixin loading-centered {
+  display: flex; // center spinner
+  justify-content: center;
+  padding: 3rem 0;
+}

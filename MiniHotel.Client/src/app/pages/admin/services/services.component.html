@@ -1,43 +1,85 @@
-<div class="container">
-    <h2 class="mb-3">Services Management</h2>
+<!-- services.component.html -->
+<div class="app-container">
 
-    <button class="btn btn-primary mb-3" (click)="createService()">Add New Service</button>
+    <!-- Loading spinner -->
+    <div *ngIf="loading" class="loading-centered" style="height:200px">
+        <mat-progress-spinner diameter="48" mode="indeterminate" color="primary">
+        </mat-progress-spinner>
+    </div>
 
-    <table class="table table-bordered table-hover" *ngIf="!isLoading; else loading">
-        <thead class="table-light">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let service of services">
-                <td>{{ service.name }}</td>
-                <td class="description-col" matTooltip="{{ service.description }}">
-                    {{ service.description }}
-                </td>
-                <td>{{ service.price | currency }}</td>
-                <td>
-                    <span class="badge" [ngClass]="service.isAvailable ? 'bg-success' : 'bg-secondary'">
-                        {{ service.isAvailable ? 'Available' : 'Unavailable' }}
-                    </span>
-                </td>
-                <td class="text-center">
-                    <button class="btn btn-sm btn-warning me-2" (click)="editService(service)">Edit</button>
-                    <button class="btn btn-sm btn-danger" (click)="deleteService(service.serviceId!)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Main content -->
+    <ng-container *ngIf="!loading">
+        <h2 class="mat-headline-small mb-0">Управління послугами</h2>
 
-    <ng-template #loading>
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+            <button mat-flat-button (click)="createService()">
+                <mat-icon>add</mat-icon>
+                Додати послугу
+            </button>
+
+            <!-- Search field -->
+            <mat-form-field appearance="outline">
+                <mat-label>Пошук</mat-label>
+                <input #searchInput matInput (keyup)="applyFilter(searchInput.value)" placeholder="Назва, ціна...">
+                <button mat-icon-button matSuffix *ngIf="searchValue" (click)="applyFilter('')">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
         </div>
-    </ng-template>
+
+        <!-- Services table -->
+        <table mat-table [dataSource]="dataSource" class="mat-table mat-elevation-z1 services-table">
+
+            <!-- Name -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Назва</th>
+                <td mat-cell *matCellDef="let s">{{ s.name }}</td>
+            </ng-container>
+
+            <!-- Description -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Опис</th>
+                <td mat-cell *matCellDef="let s">
+                    <span class="text-ellipsis">{{ s.description }}</span>
+                </td>
+            </ng-container>
+
+            <!-- Price -->
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Ціна</th>
+                <td mat-cell *matCellDef="let s">
+                    {{ s.price | currency:'UAH':'symbol' }}
+                </td>
+            </ng-container>
+
+            <!-- Status -->
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Статус</th>
+                <td mat-cell *matCellDef="let s">
+                    {{ s.isAvailable ? 'Доступна' : 'Недоступна' }}
+                </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="text-center"></th>
+                <td mat-cell *matCellDef="let s" class="text-center">
+                    <button mat-icon-button matTooltip="Редагувати" (click)="editService(s)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Видалити" (click)="deleteService(s.serviceId!)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator [length]="dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5,10,20]"
+            showFirstLastButtons>
+        </mat-paginator>
+    </ng-container>
 </div>

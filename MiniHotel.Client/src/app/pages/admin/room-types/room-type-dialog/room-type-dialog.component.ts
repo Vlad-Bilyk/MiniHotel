@@ -25,7 +25,7 @@ export class RoomTypeDialogComponent {
     this.form = this.fb.group({
       roomCategory: [data.formData?.roomCategory || '', Validators.required],
       pricePerNight: [data.formData?.pricePerNight || '', [Validators.required, Validators.min(0)]],
-      description: [data.formData?.description || '', Validators.maxLength(500)],
+      description: [data.formData?.description || '', [Validators.required, Validators.maxLength(500)]],
     });
   }
 

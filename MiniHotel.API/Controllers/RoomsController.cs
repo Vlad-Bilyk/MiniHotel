@@ -19,12 +19,14 @@ namespace MiniHotel.API.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly IRoomTypeRepository _roomTypeRepository;
         private readonly IMapper _mapper;
 
-        public RoomsController(IRoomRepository roomRepository, IMapper mapper)
+        public RoomsController(IRoomRepository roomRepository, IMapper mapper, IRoomTypeRepository roomTypeRepository)
         {
             _roomRepository = roomRepository;
             _mapper = mapper;
+            _roomTypeRepository = roomTypeRepository;
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
-            var roomType = await _roomRepository.GetAsync(rt => rt.RoomType.RoomCategory == createDto.RoomCategory, "RoomType");
+            var roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomCategory == createDto.RoomCategory);
             if (roomType is null)
             {
                 return BadRequest("Room type not found.");

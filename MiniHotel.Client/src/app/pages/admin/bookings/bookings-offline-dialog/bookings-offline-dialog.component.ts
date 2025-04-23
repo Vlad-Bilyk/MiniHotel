@@ -10,7 +10,7 @@ import { RoomsService } from '../../../../api/services';
   selector: 'app-bookings-offline-dialog',
   standalone: false,
   templateUrl: './bookings-offline-dialog.component.html',
-  styleUrl: './bookings-offline-dialog.component.css',
+  styleUrl: './bookings-offline-dialog.component.scss',
 })
 export class BookingsOfflineDialogComponent implements OnInit {
   form!: FormGroup;

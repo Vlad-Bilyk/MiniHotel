@@ -2,6 +2,11 @@
 @use "./styles/theme-colors" as tc;
 @use "./styles/color-util.scss";
 @use "./styles/btn-error.scss";
+@use "./styles/layout" as layout;
+@use "./styles/tables" as tables;
+@use "./styles/shared" as shared;
+@use "./styles/forms" as forms;
+@use "./styles/table-toolbar" as tbar;
 
 @include mat.core();
 
@@ -17,6 +22,23 @@ $my-theme: mat.define-theme(
 );
 
 html {
+  @include tables.app-table-styles();
   @include mat.theme($my-theme);
   @include mat.all-component-themes($my-theme);
+}
+
+.app-container {
+  @include layout.container;
+}
+
+.loading-centered {
+  @include shared.loading-centered;
+}
+
+.app-form {
+  @include forms.app-form-styles();
+}
+
+.table-toolbar {
+  @include tbar.table-toolbar;
 }

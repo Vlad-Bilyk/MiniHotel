@@ -1,19 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ServiceDto, ServiceUpsertDto } from '../../../api/models';
 import { ServicesService } from '../../../api/services';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { ToastrService } from 'ngx-toastr';
 import { ServiceFormData, ServicesFormDialogComponent } from './services-form-dialog/services-form-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-services',
   standalone: false,
   templateUrl: './services.component.html',
-  styleUrl: './services.component.css'
+  styleUrl: './services.component.scss'
 })
 export class ServicesComponent implements OnInit {
-  services: ServiceDto[] = [];
-  isLoading = false;
+  displayedColumns = ['name', 'description', 'price', 'status', 'actions'];
+
+  dataSource = new MatTableDataSource<ServiceDto>([]);
+  loading = false;
+  searchValue = "";
+
+  @ViewChild(MatPaginator) set MatPaginator(p: MatPaginator) {
+    this.dataSource.paginator = p;
+  }
 
   constructor(
     private hotelService: ServicesService,
@@ -22,21 +31,26 @@ export class ServicesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchServices();
+    this.loadServices();
   }
 
-  fetchServices(): void {
-    this.isLoading = true;
+  loadServices(): void {
+    this.loading = true;
     this.hotelService.getServices().subscribe({
       next: (data) => {
-        this.services = data.filter(s => s.serviceId !== 1);
-        this.isLoading = false;
+        this.dataSource.data = data;
+        this.loading = false;
       },
       error: (err) => {
         this.toastr.error('Сталася помилка під час завантаження');
         console.error(err);
+        this.loading = false;
       },
     });
+  }
+
+  applyFilter(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 
   deleteService(id: number): void {
@@ -45,7 +59,7 @@ export class ServicesComponent implements OnInit {
     this.hotelService.deleteService({ id }).subscribe({
       next: () => {
         this.toastr.success('Послугу видалено');
-        this.fetchServices();
+        this.loadServices();
       },
       error: (err) => {
         this.toastr.error('Сталася помилка під час видалення');
@@ -69,7 +83,7 @@ export class ServicesComponent implements OnInit {
       (data) => this.hotelService.updateService({ id: service.serviceId!, body: data }),
       'Послугу оновлено успішно',
       '500px'
-    ).subscribe(() => this.fetchServices());
+    ).subscribe(() => this.loadServices());
   }
 
   createService(): void {
@@ -82,6 +96,6 @@ export class ServicesComponent implements OnInit {
       (data) => this.hotelService.createService({ body: data }),
       'Послугу створено успішно',
       '500px'
-    ).subscribe(() => this.fetchServices());
+    ).subscribe(() => this.loadServices());
   }
 }

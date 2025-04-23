@@ -1,0 +1,35 @@
+@use "sass:map";
+
+// Mixin with shared form layout & utilities
+@mixin app-form-styles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // space between fields
+
+  // utility to make fields full width
+  .full-width {
+    width: 100%;
+  }
+
+  // row layout for grouped fields (dates, etc.)
+  .form-row {
+    display: flex;
+    gap: 1rem;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+    }
+  }
+
+  // actions container (buttons)
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  // consistent margin for mat-error messages
+  .mat-error {
+    margin-top: 0.25rem;
+  }
+}

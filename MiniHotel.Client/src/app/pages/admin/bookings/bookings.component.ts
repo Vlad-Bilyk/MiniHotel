@@ -13,6 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BookingsOfflineDialogComponent } from './bookings-offline-dialog/bookings-offline-dialog.component';
 import { DialogService } from '../../../shared/services/dialog.service';
+import { formatDate } from '@angular/common';
 
 const STATUS_ORDER: Record<BookingStatus, number> = {
   [BookingStatus.Pending]: 1,
@@ -26,26 +27,23 @@ const STATUS_ORDER: Record<BookingStatus, number> = {
   selector: 'app-bookings',
   standalone: false,
   templateUrl: './bookings.component.html',
-  styleUrl: './bookings.component.css',
+  styleUrl: './bookings.component.scss',
 })
 export class BookingsComponent implements OnInit {
+  displayedColumns = ['client', 'room', 'roomType', 'dates', 'payment', 'status', 'actions'];
+
   BookingStatus = BookingStatus;
   PaymentMethod = PaymentMethod;
-  displayedColumns = [
-    'client',
-    'roomNumber',
-    'roomType',
-    'dates',
-    'startDate',
-    'payment',
-    'status',
-    'actions',
-  ];
-  dataSource = new MatTableDataSource<BookingDto>();
+  dataSource = new MatTableDataSource<BookingDto>([]);
   searchTerm = '';
+  loading = true;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) set MatPaginator(p: MatPaginator) {
+    this.dataSource.paginator = p;
+  }
+  @ViewChild(MatSort) set MatSort(s: MatSort) {
+    this.dataSource.sort = s;
+  }
 
   constructor(
     private bookingsService: BookingsService,
@@ -59,24 +57,20 @@ export class BookingsComponent implements OnInit {
   }
 
   loadBookings(): void {
+    this.loading = true;
     this.bookingsService.getBookings().subscribe({
       next: (bookings) => {
         this.dataSource = new MatTableDataSource(bookings);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
 
         this.configureSorting();
         this.configureFiltering();
 
-        this.sort.sort({
-          id: 'status',
-          start: 'asc',
-          disableClear: false
-        });
+        this.loading = false;
       },
       error: (err) => {
         this.toastr.error('Не вдалося завантажити бронювання');
         console.error(err);
+        this.loading = false;
       },
     });
   }
@@ -120,14 +114,23 @@ export class BookingsComponent implements OnInit {
     this.dataSource.filterPredicate = (data, filter) => {
       const search = filter.trim().toLowerCase();
 
+      const start = data.startDate
+        ? formatDate(data.startDate, 'dd.MM.yyyy', "uk-UA").toLowerCase()
+        : '';
+
+      const end = data.endDate
+        ? formatDate(data.endDate, 'dd.MM.yyyy', 'uk-UA').toLowerCase()
+        : '';
+
       return Boolean(
         (data.fullName?.toLowerCase().includes(search) ?? false) ||
         (data.roomNumber?.toLowerCase().includes(search) ?? false) ||
         (data.roomCategory?.toLowerCase().includes(search) ?? false) ||
         (data.paymentMethod?.toLowerCase().includes(search) ?? false) ||
+        (data.paymentMethod?.toLowerCase().includes(search) ?? false) ||
         (data.bookingStatus?.toLowerCase().includes(search) ?? false) ||
-        data.startDate?.toString().toLowerCase().includes(search) ||
-        data.endDate?.toString().toLowerCase().includes(search)
+        start.includes(search) ||
+        end.includes(search)
       );
     };
   }

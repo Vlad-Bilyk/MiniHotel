@@ -1,26 +1,35 @@
 <h2 mat-dialog-title>Додати послугу</h2>
-<mat-dialog-content [formGroup]="form">
-    <mat-form-field appearance="fill" class="w-100">
+<mat-dialog-content class="app-form" [formGroup]="form">
+    <mat-form-field appearance="fill" class="full-width">
         <mat-label>Послуга</mat-label>
         <mat-select formControlName="serviceName" required>
             <mat-option *ngFor="let s of services" [value]="s.name">
                 {{ s.name }} — {{ s.price | currency:'UAH' }}
             </mat-option>
         </mat-select>
+        <mat-error *ngIf="form.get('serviceName')?.hasError('required')">
+            Оберіть послугу
+        </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Description</mat-label>
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Коментарі</mat-label>
         <textarea matInput formControlName="description" rows="3"></textarea>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-100">
+    <mat-form-field appearance="fill" class="full-width">
         <mat-label>Кількість</mat-label>
-        <input matInput type="number" min="1" formControlName="quantity" />
+        <input matInput type="number" min="1" formControlName="quantity" required="" />
+        <mat-error *ngIf="form.get('quantity')?.hasError('required')">
+            Вкажіть кількість
+        </mat-error>
+        <mat-error *ngIf="form.get('quantity')?.hasError('min')">
+            Мінімум&nbsp;1
+        </mat-error>
     </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" class="form-actions">
     <button mat-button (click)="dialogRef.close()">Скасувати</button>
     <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">Додати</button>
 </mat-dialog-actions>

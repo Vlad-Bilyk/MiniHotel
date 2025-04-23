@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RoomDto, RoomUpsertDto } from '../../../api/models';
 import { RoomsService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,8 @@ import {
   RoomFormDialogComponent,
 } from './room-form-dialog/room-form-dialog.component';
 import { DialogService } from '../../../shared/services/dialog.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-rooms',
@@ -15,25 +17,32 @@ import { DialogService } from '../../../shared/services/dialog.service';
   styleUrl: './rooms.component.css',
 })
 export class RoomsComponent implements OnInit {
-  rooms: RoomDto[] = [];
-  isLoading = true;
+  displayedColumns = ['number', 'category', 'price', 'status', 'actions'];
+
+  dataSource = new MatTableDataSource<RoomDto>([]);
+  loading = true;
+  searchValue = '';
+
+  @ViewChild(MatPaginator) set MatPaginator(p: MatPaginator) {
+    this.dataSource.paginator = p;
+  }
 
   constructor(
     private roomsService: RoomsService,
     private toastr: ToastrService,
     private dialogService: DialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.fetchRooms();
+    this.loadRooms();
   }
 
-  fetchRooms(): void {
-    this.isLoading = true;
+  loadRooms(): void {
+    this.loading = true;
     this.roomsService.getRooms().subscribe({
       next: (data) => {
-        this.rooms = data;
-        this.isLoading = false;
+        this.dataSource.data = data;
+        this.loading = false;
       },
       error: (err) => {
         this.toastr.error('Сталася помилка під час завантаження');
@@ -42,13 +51,17 @@ export class RoomsComponent implements OnInit {
     });
   }
 
+  applyFilter(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
+  }
+
   deleteRoom(id: number): void {
     if (!confirm('Ви впевнені, що хочете видалити цей номер')) return;
 
     this.roomsService.deleteRoom({ id }).subscribe({
       next: () => {
         this.toastr.success('Номер видалено');
-        this.fetchRooms();
+        this.loadRooms();
       },
       error: (err) => {
         this.toastr.error('сталася помилка під час видалення');
@@ -79,7 +92,7 @@ export class RoomsComponent implements OnInit {
         'Запис успішно оновлено'
       )
       .subscribe(() => {
-        this.fetchRooms();
+        this.loadRooms();
       });
   }
 
@@ -97,7 +110,7 @@ export class RoomsComponent implements OnInit {
         'Додано нову кімнату'
       )
       .subscribe(() => {
-        this.fetchRooms();
+        this.loadRooms();
       });
   }
 }

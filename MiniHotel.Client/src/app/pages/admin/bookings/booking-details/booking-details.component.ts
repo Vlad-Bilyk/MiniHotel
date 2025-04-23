@@ -24,9 +24,11 @@ import { AddInvoiceItemDialogComponent } from './add-invoice-item-dialog/add-inv
   selector: 'app-booking-details',
   standalone: false,
   templateUrl: './booking-details.component.html',
-  styleUrl: './booking-details.component.css',
+  styleUrl: './booking-details.component.scss',
 })
 export class BookingDetailsComponent implements OnInit {
+  displayedColumns = ['service', 'createdAt', 'qty', 'price', 'total', 'actions'];
+
   InvoiceStatus = InvoiceStatus;
   booking!: BookingDto;
   invoice!: InvoiceDto;

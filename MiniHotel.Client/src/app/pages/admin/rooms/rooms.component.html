@@ -1,37 +1,78 @@
-<div class="container">
-    <h2 class="mb-3">Rooms Management</h2>
+<div class="app-container">
+    <h2 class="mat-headline-small mb-0">Номери</h2>
 
-    <button class="btn btn-primary mb-3" (click)="createRoom()">Create New Room</button>
+    <!-- toolbar  -->
+    <div class="table-toolbar">
+        <button mat-flat-button color="primary" (click)="createRoom()">
+            <mat-icon>add</mat-icon>
+            Додати номер
+        </button>
 
-    <table class="table table-bordered table-hover" *ngIf="!isLoading; else loading">
-        <thead class="table-light">
-            <tr>
-                <th scope="col">Room Number</th>
-                <th scope="col">Category</th>
-                <th scope="col">Price per Day</th>
-                <th scope="col">Status</th>
-                <th scope="col" class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let room of rooms">
-                <td>{{ room.roomNumber }}</td>
-                <td>{{ room.roomCategory }}</td>
-                <td>{{ room.pricePerDay | currency }}</td>
-                <td>{{ room.roomStatus }}</td>
-                <td class="text-center">
-                    <button class="btn btn-sm btn-warning me-2" (click)="editRoom(room)">Edit</button>
-                    <button class="btn btn-sm btn-danger" (click)="deleteRoom(room.roomId!)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
+        <!-- Search field -->
+        <mat-form-field appearance="outline">
+            <mat-label>Пошук</mat-label>
+            <input #searchInput matInput (keyup)="applyFilter(searchInput.value)" placeholder="Номер, ціна...">
+            <button mat-icon-button matSuffix *ngIf="searchValue" (click)="applyFilter('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+    <!-- loader -->
+    <div *ngIf="loading" class="loading-centered" style="height: 200px">
+        <mat-progress-spinner mode="indeterminate" diameter="48">
+        </mat-progress-spinner>
+    </div>
+
+    <!--  table -->
+    <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mat-table mat-elevation-z1">
+
+        <!-- Number -->
+        <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header># Номер</th>
+            <td mat-cell *matCellDef="let r">{{ r.roomNumber }}</td>
+        </ng-container>
+
+        <!-- Category -->
+        <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
+            <td mat-cell *matCellDef="let r">{{ r.roomCategory }}</td>
+        </ng-container>
+
+        <!-- Price -->
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ціна / ніч</th>
+            <td mat-cell *matCellDef="let r" class="text-right">
+                {{ r.pricePerDay | currency:'UAH':'symbol' }}
+            </td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Статус</th>
+            <td mat-cell *matCellDef="let r">
+                {{ r.roomStatus }}
+            </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="text-center"></th>
+            <td mat-cell *matCellDef="let r" class="text-center">
+                <button mat-icon-button color="primary" matTooltip="Редагувати" (click)="editRoom(r)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Видалити" (click)="deleteRoom(r.roomId!)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <ng-template #loading>
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    </ng-template>
+    <mat-paginator [length]="dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5,10,20]"
+        showFirstLastButtons>
+    </mat-paginator>
 </div>

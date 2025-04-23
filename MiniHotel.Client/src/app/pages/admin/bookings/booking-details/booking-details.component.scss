@@ -1,0 +1,83 @@
+.booking-toolbar {
+  background-color: var(--mat-sys-background);
+  padding-bottom: 1.5rem;
+  padding-left: 0;
+
+  .toolbar-title {
+    margin-left: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .toolbar-spacer {
+    flex: 1 1 auto; /* move button to right side*/
+  }
+
+  button {
+    margin-left: 0.5rem;
+  }
+}
+
+.info-grid {
+  display: grid;
+  gap: 2rem; /* space between info blocks */
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr; /* two columns on desktop */
+  }
+}
+
+.total-row {
+  display: flex;
+  justify-content: flex-end; /* align total amount right */
+  margin-top: 1rem;
+}
+
+/* style the action buttons container */
+.invoice-actions {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.booking-details {
+  display: grid;
+  gap: 1.5rem;
+  /* two columns on desktop, one on mobile */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  dt,
+  dd {
+    margin: 0; /* remove default dl spacing */
+  }
+}
+
+/* style the telephone link */
+.booking-phone {
+  text-decoration: none;
+  color: var(--mat-sys-primary);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.table-total {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+  border-top: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-container-low);
+}
+
+/* add space below the card header */
+mat-card-header {
+  margin-bottom: 1rem;
+}
+
+/* optionally increase spacing around the divider */
+mat-card mat-divider {
+  margin: 0.5rem 0 1rem;
+}

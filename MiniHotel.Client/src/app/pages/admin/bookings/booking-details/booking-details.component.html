@@ -1,135 +1,189 @@
-<div class="container" *ngIf="!loading && booking; else loadingTpl">
-    <button class="btn btn-link mb-3" (click)="back()">← Повернутися до списку</button>
+<div class="app-container">
+    <!-- View loaded content or spinner -->
+    <ng-container *ngIf="!loading && booking; else loadingTpl">
 
-    <h2 class="mb-4">Деталі бронювання #{{ bookingId }}</h2>
+        <!-- Actions toolbar -->
+        <mat-toolbar class="booking-toolbar">
 
-    <!-- Actions with booking -->
-    <div class="mb-3 d-flex flex-wrap gap-2">
-        <button mat-flat-button [disabled]="!permissions.canConfirm || bookingLoading" (click)="confirm()">
-            Підтвердити
-        </button>
-        <span matTooltip="Бронювання має бути підтвердженим та оплаченим">
-            <button mat-flat-button [disabled]="!permissions.canCheckIn || bookingLoading" (click)="checkIn()">
-                Check‑in
+            <button mat-icon-button (click)="back()">
+                <mat-icon>arrow_back</mat-icon>
             </button>
-        </span>
-        <span matTooltip="Рахунок має бути оплачений">
-            <button mat-flat-button class="btn-error" [disabled]="!permissions.canCheckOut || bookingLoading"
-                (click)="checkOut()">
-                Check‑out
+
+            <!-- English comment: page title -->
+            <span class="toolbar-title">Деталі бронювання #{{ bookingId }}</span>
+
+            <!-- English comment: push following buttons to the end -->
+            <span class="toolbar-spacer"></span>
+            <button mat-flat-button [disabled]="!permissions.canConfirm || bookingLoading" (click)="confirm()">
+                Підтвердити
             </button>
-        </span>
-        <button mat-flat-button class="btn-error" [disabled]="!permissions.canCancel|| bookingLoading"
-            (click)="cancel()">
-            Скасувати
-        </button>
-    </div>
+            <span matTooltip="Бронювання має бути підтвердженим та оплаченим">
+                <button mat-flat-button color="" [disabled]="!permissions.canCheckIn || bookingLoading"
+                    (click)="checkIn()">
+                    Check‑in
+                </button>
+            </span>
+            <span matTooltip="Рахунок має бути оплачений">
+                <button mat-flat-button class="btn-error" [disabled]="!permissions.canCheckOut || bookingLoading"
+                    (click)="checkOut()">
+                    Check‑out
+                </button>
+            </span>
+            <button mat-flat-button class="btn-error" [disabled]="!permissions.canCancel|| bookingLoading"
+                (click)="cancel()">
+                Скасувати
+            </button>
+        </mat-toolbar>
 
-    <!-- Information about booking -->
-    <mat-card class="mb-4">
-        <mat-card-header>
-            <mat-card-title>Інформація про бронювання</mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-            <div class="row">
-                <div class="col-sm-6 mb-3">
-                    <p><strong>Клієнт:</strong> {{ booking.fullName || 'Невідомий клієнт' }}</p>
-                    <p><strong>Телефон:</strong> {{ booking.phoneNumber || '—' }}</p>
-                    <p><strong>Спосіб оплати:</strong> {{ booking.paymentMethod }}</p>
-                </div>
-                <div class="col-sm-6 mb-3">
-                    <p><strong>Номер:</strong> {{ booking.roomNumber }} ({{ booking.roomCategory }})</p>
-                    <p><strong>Період:</strong> {{ booking.startDate | date:'dd.MM.yyyy' }} — {{ booking.endDate |
-                        date:'dd.MM.yyyy' }}
-                    </p>
-                    <p><strong>Статус: </strong> {{ booking.bookingStatus }}</p>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
+        <!-- Booking info card -->
+        <mat-card class="mb-4">
+            <mat-card-header>
+                <mat-card-title>Інформація про бронювання</mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <dl class="booking-details">
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Клієнт</dt>
+                        <dd class="mat-body-1">
+                            {{ booking.fullName || 'Невідомий клієнт' }}
+                        </dd>
+                    </div>
 
-    <!-- Invoice information -->
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Рахунок #{{ invoice.invoiceId }}</mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-            <div class="row mb-3">
-                <div class="col-sm-6">
-                    <p><strong>Створено:</strong> {{ invoice.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
-                    <p><strong>Статус оплати:</strong> {{ invoice.status }}
-                        <!-- Payment actions -->
-                        <button mat-flat-button color="primary" *ngIf="permissions.canPayOffline"
-                            [disabled]="payLoading" (click)="payOffline()">
-                            {{ payLoading ? 'Обробка...' : 'Оплата готівкою' }}
-                        </button>
-                        <button mat-stroked-button color="primary" *ngIf="permissions.canAddService"
-                            (click)="openAddServiceDialog()">
-                            <mat-icon>add</mat-icon> Додати послугу
-                        </button>
-                    </p>
-                </div>
-            </div>
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Телефон</dt>
+                        <dd class="mat-body-1">
+                            <!-- make phone clickable -->
+                            <a *ngIf="booking.phoneNumber; else noPhone" href="tel:{{ booking.phoneNumber }}"
+                                class="booking-phone">
+                                {{ booking.phoneNumber }}
+                            </a>
+                            <ng-template #noPhone>—</ng-template>
+                        </dd>
+                    </div>
 
-            <mat-divider class="mb-3"></mat-divider>
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Спосіб оплати</dt>
+                        <dd class="mat-body-1">{{ booking.paymentMethod }}</dd>
+                    </div>
 
-            <!-- Invoice items -->
-            <div class="table-responsive">
-                <table mat-table [dataSource]="items" class="mat-elevation-z1 w-100">
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Номер</dt>
+                        <dd class="mat-body-1">
+                            {{ booking.roomNumber }} ({{ booking.roomCategory }})
+                        </dd>
+                    </div>
+
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Період</dt>
+                        <dd class="mat-body-1">
+                            {{ booking.startDate | date:'dd.MM.yyyy' }} —
+                            {{ booking.endDate | date:'dd.MM.yyyy' }}
+                        </dd>
+                    </div>
+
+                    <div class="detail-item">
+                        <dt class="mat-subtitle-2">Статус</dt>
+                        <dd class="mat-body-1">
+                            {{ booking.bookingStatus }}
+                        </dd>
+                    </div>
+                </dl>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Invoice card -->
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Рахунок #{{invoice.invoiceId}}</mat-card-title>
+                <mat-card-subtitle>
+                    Створено: {{invoice.createdAt | date:'dd.MM.yyyy HH:mm'}} •
+                    Статус: <mat-chip color="primary" selected>{{invoice.status}}</mat-chip>
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <!-- Invoice actions -->
+                <mat-card-actions align="start" class="invoice-actions">
+                    <button mat-stroked-button *ngIf="permissions.canPayOffline" [disabled]="payLoading"
+                        (click)="payOffline()">
+                        {{ payLoading ? 'Обробка…' : 'Оплата готівкою' }}
+                    </button>
+                    <button mat-stroked-button *ngIf="permissions.canAddService" (click)="openAddServiceDialog()">
+                        <mat-icon>add</mat-icon>
+                        Додати послугу
+                    </button>
+                </mat-card-actions>
+
+                <!-- Invoice items table -->
+                <table mat-table [dataSource]="items" matSort class="mat-table mat-elevation-z1 bookings-table">
+
+                    <!-- Service -->
                     <ng-container matColumnDef="service">
                         <th mat-header-cell *matHeaderCellDef>Послуга</th>
-                        <td mat-cell *matCellDef="let i">{{ i.serviceName || i.description }}</td>
+                        <td mat-cell *matCellDef="let i">
+                            {{ i.serviceName || i.description }}
+                        </td>
                     </ng-container>
-                    <ng-container matColumnDef="qty">
-                        <th mat-header-cell *matHeaderCellDef>К-ть</th>
-                        <td mat-cell *matCellDef="let i">{{ i.quantity }}</td>
-                    </ng-container>
+
+                    <!-- Created At -->
                     <ng-container matColumnDef="createdAt">
                         <th mat-header-cell *matHeaderCellDef>Створено</th>
                         <td mat-cell *matCellDef="let i">
                             {{ i.createdAt | date:'dd.MM.yyyy HH:mm' }}
                         </td>
                     </ng-container>
+
+                    <!-- Quantity -->
+                    <ng-container matColumnDef="qty">
+                        <th mat-header-cell *matHeaderCellDef>К-ть</th>
+                        <td mat-cell *matCellDef="let i">{{ i.quantity }}</td>
+                    </ng-container>
+
+                    <!-- Price -->
                     <ng-container matColumnDef="price">
                         <th mat-header-cell *matHeaderCellDef>Ціна</th>
-                        <td mat-cell *matCellDef="let i">{{ i.unitPrice | currency:'UAH':'symbol' }}</td>
+                        <td mat-cell *matCellDef="let i">
+                            {{ i.unitPrice }}
+                        </td>
                     </ng-container>
+
+                    <!-- Total -->
                     <ng-container matColumnDef="total">
                         <th mat-header-cell *matHeaderCellDef class="text-right">Сума</th>
                         <td mat-cell *matCellDef="let i" class="text-right">
-                            {{ (i.quantity * i.unitPrice) | currency:'UAH':'symbol' }}
+                            {{ (i.quantity * i.unitPrice) }}
                         </td>
                     </ng-container>
+
+                    <!-- Actions -->
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let i">
-                            <span [matTooltip]="i.isLocked ? 'Позицію вже оплачено' : 'Видалити послугу'">
-                                <button mat-icon-button color="error"
-                                    [disabled]="!permissions.canDeleteService || i.isLocked"
-                                    (click)="removeItem(i.invoiceItemId)">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </span>
+                            <button mat-icon-button [disabled]="!permissions.canDeleteService || i.isLocked"
+                                matTooltip="{{ i.isLocked ? 'Позицію вже оплачено' : 'Видалити послугу' }}"
+                                (click)="removeItem(i.invoiceItemId)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
                         </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="['service','createdAt','qty','price','total','actions']">
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns">
                     </tr>
-                    <tr mat-row *matRowDef="let row; columns: ['service','createdAt','qty','price','total','actions']">
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns">
                     </tr>
                 </table>
-            </div>
 
-            <div class="d-flex justify-content-end mt-3">
-                <h3>Всього: {{ invoice.totalAmount | currency:'UAH':'symbol' }}</h3>
-            </div>
-        </mat-card-content>
-    </mat-card>
+                <div class="table-total">
+                    Всього: {{ invoice.totalAmount | currency:'UAH':'symbol' }}
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
 </div>
 
 <ng-template #loadingTpl>
-    <div class="d-flex justify-content-center align-items-center" style="height:200px">
-        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <div class="loading-centered" style="height:200px">
+        <mat-progress-spinner mode="indeterminate" diameter="48" color="primary"></mat-progress-spinner>
     </div>
 </ng-template>

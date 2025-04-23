@@ -1,0 +1,29 @@
+/// Shared styles for all Material tables
+@mixin app-table-styles {
+  td.mat-mdc-cell,
+  td.mdc-data-table__cell {
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  th.mat-mdc-header-cell,
+  th.mdc-data-table__header-cell {
+    font-size: 1.2rem;
+  }
+
+  // Hover effect on rows
+  tr.mat-mdc-row:hover,
+  tr.mdc-data-table__row:hover {
+    background: var(--mat-sys-surface-container-high);
+  }
+
+  // Paginator divider
+  mat-paginator {
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  // Sort arrow color
+  .mat-sort-header-arrow {
+    fill: var(--mat-sys-primary);
+  }
+}

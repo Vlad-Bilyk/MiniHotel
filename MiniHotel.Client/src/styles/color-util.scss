@@ -35,6 +35,11 @@
   color: var(--mat-sys-on-surface);
 }
 
+.bg-error {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error-container);
+}
+
 .bg-error-container {
   background-color: var(--mat-sys-error-container);
   color: var(--mat-sys-on-error-container);

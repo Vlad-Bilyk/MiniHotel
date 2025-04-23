@@ -11,11 +11,11 @@ import { AuthServiceWrapper } from '../../../auth/services/auth.service';
   selector: 'app-users',
   standalone: false,
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
+  styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit {
   displayedColumns = ['fullName', 'email', 'phoneNumber', 'role', 'actions'];
-  dataSource = new MatTableDataSource<UserDto>();
+  dataSource = new MatTableDataSource<UserDto>([]);
   loading = true;
   searchValue = '';
   selectedRole = '';
@@ -76,6 +76,7 @@ export class UsersComponent implements OnInit {
     this.router.navigate(['/auth/register'], { queryParams: { isManager } })
   }
 
+  // TODO: implement this dialog
   openEditDialog(user: UserUpdateDto) { }
 
   applyGlobalFilter(value: string) {
