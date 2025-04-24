@@ -63,6 +63,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { EditBookingDialogComponent } from './pages/admin/bookings/edit-booking-dialog/edit-booking-dialog.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -120,6 +121,7 @@ const MATERIAL_MODULES = [
     UsersComponent,
     HasRoleDirective,
     RoomCategoryCardsComponent,
+    EditBookingDialogComponent,
   ],
   imports: [
     // Angular core

@@ -7,7 +7,7 @@ export const dateRangeValidator: ValidatorFn = (
     const end = formGroup.get('endDate')?.value;
 
     if (start && end && end < start) {
-        return { dateRange: 'Дата виїзду має бути не раніше дати заїзду' };
+        return { dateRange: 'Дата заїзду має бути раніше дати виїзду' };
     }
 
     return null;

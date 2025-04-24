@@ -136,6 +136,8 @@ namespace MiniHotel.Application.Services
             booking.EndDate = updateDto.EndDate;
 
             await _bookingRepository.UpdateAsync(booking);
+            await _invoiceService.UpdateBookingTypeItemAsync(booking.BookingId);
+
             return _mapper.Map<BookingDto>(booking);
         }
 

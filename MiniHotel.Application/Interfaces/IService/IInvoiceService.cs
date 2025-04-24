@@ -12,5 +12,6 @@ namespace MiniHotel.Application.Interfaces.IService
         Task<InvoiceDto> UpdateStatusAsync(int invoiceId, InvoiceStatus status);
         Task RemoveItemAsync(int invoiceItemId);
         Task RecalculateAsync(int invoiceId);
+        Task UpdateBookingTypeItemAsync(int bookingId);
     }
 }

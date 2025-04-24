@@ -3,6 +3,7 @@ import {
   BookingCreateByReceptionDto,
   BookingDto,
   BookingStatus,
+  BookingUpdateDto,
   PaymentMethod,
 } from '../../../api/models';
 import { BookingsService } from '../../../api/services';
@@ -14,6 +15,7 @@ import { MatSort } from '@angular/material/sort';
 import { BookingsOfflineDialogComponent } from './bookings-offline-dialog/bookings-offline-dialog.component';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { formatDate } from '@angular/common';
+import { BookingEditFormData, EditBookingDialogComponent } from './edit-booking-dialog/edit-booking-dialog.component';
 
 const STATUS_ORDER: Record<BookingStatus, number> = {
   [BookingStatus.Pending]: 1,
@@ -83,6 +85,23 @@ export class BookingsComponent implements OnInit {
     this.router.navigate(['admin/booking-details', id]);
   }
 
+  editBooking(booking: BookingDto): void {
+    this.dialogService.openEntityDialog<BookingEditFormData, BookingUpdateDto>(
+      EditBookingDialogComponent,
+      {
+        formData: {
+          roomNumber: booking.roomNumber!,
+          startDate: booking.startDate!,
+          endDate: booking.endDate!,
+        }
+      },
+      (data) => this.bookingsService.updateBooking({ id: booking.bookingId!, body: data }),
+      'Бронювання оновлено'
+    ).subscribe(() => {
+      this.loadBookings();
+    });
+  }
+
   createOfflineBooking(): void {
     this.dialogService
       .openEntityDialog<undefined, BookingCreateByReceptionDto>(
@@ -95,6 +114,14 @@ export class BookingsComponent implements OnInit {
       .subscribe(() => {
         this.loadBookings();
       });
+  }
+
+  canEdit(b: BookingDto): boolean {
+    const offline = b.paymentMethod !== this.PaymentMethod.Online;
+    const goodStatus =
+      b.bookingStatus === this.BookingStatus.Pending ||
+      b.bookingStatus === this.BookingStatus.Confirmed;
+    return offline && goodStatus;
   }
 
   private configureSorting(): void {

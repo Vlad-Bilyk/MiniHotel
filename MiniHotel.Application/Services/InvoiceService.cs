@@ -64,7 +64,7 @@ namespace MiniHotel.Application.Services
                 {
                     new InvoiceItem
                     {
-                        Description = $"Бронюванян номеру {booking.Room.RoomNumber} - {nights} ночей",
+                        Description = $"Бронювання номеру {booking.Room.RoomNumber} - {nights} ночей",
                         Quantity = nights,
                         UnitPrice = booking.Room.RoomType.PricePerNight,
                         ItemType = InvoiceItemType.RoomBooking,
@@ -152,6 +152,22 @@ namespace MiniHotel.Application.Services
             invoice.Status = status;
             await _invoiceRepository.UpdateAsync(invoice);
             return _mapper.Map<InvoiceDto>(invoice);
+        }
+
+        public async Task UpdateBookingTypeItemAsync(int bookingId)
+        {
+            var invoice = await _invoiceRepository.GetAsync(i => i.BookingId == bookingId, includeProperties: "InvoiceItems,Booking,Booking.Room,Booking.Room.RoomType")
+                                ?? throw new KeyNotFoundException("Invoice not found");
+
+            var bookingItem = invoice.InvoiceItems.SingleOrDefault(i => i.ItemType == InvoiceItemType.RoomBooking)
+                              ?? throw new InvalidOperationException("RoomBooking item is missing.");
+            var nights = (invoice.Booking.EndDate.Date - invoice.Booking.StartDate.Date).Days;
+
+            bookingItem.Description = $"Бронювання номеру {invoice.Booking.Room.RoomNumber} - {nights} ночей";
+            bookingItem.Quantity = nights;
+            bookingItem.UnitPrice = invoice.Booking.Room.RoomType.PricePerNight;
+
+            await _invoiceRepository.SaveAsync();
         }
     }
 }

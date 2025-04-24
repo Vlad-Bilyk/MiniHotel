@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Редагувати бронювання</h2>
+
+<mat-dialog-content class="app-form" [formGroup]="form">
+    <!-- Room selector -->
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Номер</mat-label>
+        <mat-select formControlName="roomNumber" required>
+            <mat-option *ngIf="loadingRooms" disabled>Завантаження…</mat-option>
+            <mat-option *ngFor="let room of availableRooms" [value]="room.roomNumber">
+                {{ room.roomNumber }} — {{ room.roomCategory }} (₴{{ room.pricePerDay }})
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('roomNumber')?.hasError('required')">
+            Оберіть номер
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Dates range -->
+    <div class="form-row">
+        <mat-form-field appearance="fill">
+            <mat-label>Дата заїзду</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="startDate" (dateChange)="onDatesChange()">
+            <mat-datepicker-toggle matSuffix [for]=" picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Дата виїзду</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="endDate" (dateChange)="onDatesChange()">
+            <mat-datepicker-toggle matSuffix [for]=" picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <!-- Date-range validation error -->
+    <mat-error *ngIf="form.errors?.['dateRange']" class="range-error">
+        {{ form.errors?.['dateRange'] }}
+    </mat-error>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Скасувати</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
+        Зберегти
+    </button>
+</mat-dialog-actions>
