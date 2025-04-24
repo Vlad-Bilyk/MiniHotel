@@ -28,6 +28,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of room type DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomTypeDto>>> GetRoomTypes()
         {
             IEnumerable<RoomType> roomTypes = await _roomTypeRepository.GetAllAsync();

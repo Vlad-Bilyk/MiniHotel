@@ -10,7 +10,7 @@ namespace MiniHotel.Application.DTOs
         public required string RoomNumber { get; set; }
 
         [Required]
-        public required string RoomCategory { get; set; }
+        public int RoomTypeId { get; set; }
 
         [Required]
         public RoomStatus RoomStatus { get; set; } = default!;

@@ -152,6 +152,25 @@ namespace MiniHotel.API.Controllers
             }
         }
 
+        [HttpPatch("{id:int}/update")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = Roles.AdminRoles)]
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingUpdateDto updateDto)
+        {
+            try
+            {
+                await _bookingService.UpdateBookingAsync(id, updateDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         /// <summary>
         /// Cancels an existing booking.
         /// </summary>
@@ -242,7 +261,7 @@ namespace MiniHotel.API.Controllers
             switch (ex)
             {
                 case KeyNotFoundException:
-                    return NotFound("Booking not found.");
+                    return NotFound(ex.Message);
                 case InvalidOperationException:
                     return BadRequest("Invalid operation: " + ex.Message);
                 default:

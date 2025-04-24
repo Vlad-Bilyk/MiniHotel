@@ -5,12 +5,12 @@
     </div>
 
     <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{ room.roomCategory }}</h5>
+        <h5 class="card-title">{{ roomType.roomCategory }}</h5>
         <p class="card-text text-muted small">Доступно номерів: {{ totalAvailable }}</p>
-        <p class="card-text">{{ room.description || 'Опис відсутній.' }}</p>
+        <p class="card-text">{{ roomType.description || 'Опис відсутній.' }}</p>
 
         <div class="mt-auto">
-            <p class="fw-bold text-end">{{ room.pricePerDay | currency: 'UAH ':'symbol':'1.0-0' }}</p>
+            <p class="fw-bold text-end">{{ roomType.pricePerNight | currency: 'UAH ':'symbol':'1.0-0' }}</p>
             <button class="btn btn-primary w-100" (click)="bookRoom()">Забронювати</button>
         </div>
     </div>

@@ -7,8 +7,8 @@ namespace MiniHotel.Application.DTOs
         public int RoomId { get; set; }
         public string RoomNumber { get; set; } = default!;
         public string RoomCategory { get; set; } = default!;
+        public int RoomTypeId { get; set; }
         public decimal PricePerDay { get; set; }
         public RoomStatus RoomStatus { get; set; }
-        public string? Description { get; set; }
     }
 }

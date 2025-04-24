@@ -7,6 +7,7 @@ export type { BookingCreateByReceptionDto } from './models/booking-create-by-rec
 export type { BookingCreateDto } from './models/booking-create-dto';
 export type { BookingDto } from './models/booking-dto';
 export { BookingStatus } from './models/booking-status';
+export type { BookingUpdateDto } from './models/booking-update-dto';
 export type { InvoiceDto } from './models/invoice-dto';
 export type { InvoiceItemCreateDto } from './models/invoice-item-create-dto';
 export type { InvoiceItemDto } from './models/invoice-item-dto';

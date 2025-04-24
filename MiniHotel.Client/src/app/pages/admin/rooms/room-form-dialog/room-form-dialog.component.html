@@ -11,8 +11,8 @@
 
     <mat-form-field class="full-width">
         <mat-label>Тип номеру</mat-label>
-        <mat-select formControlName="roomCategory" required>
-            <mat-option *ngFor="let type of roomTypes" [value]="type.roomCategory">
+        <mat-select formControlName="roomTypeId" required>
+            <mat-option *ngFor="let type of roomTypes" [value]="type.roomTypeId">
                 {{ type.roomCategory }} — {{ type.pricePerNight | currency }}
             </mat-option>
         </mat-select>

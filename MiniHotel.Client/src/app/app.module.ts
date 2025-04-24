@@ -18,7 +18,7 @@ import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { RoomCategoryCardsComponent } from './pages/room-category-cards/room-category-cards.component';
 
 import { RoomsComponent } from './pages/admin/rooms/rooms.component';
-import { RoomCardComponent } from './shared/room-card/room-card.component';
+import { RoomTypeCardComponent } from './pages/booking-search/room-type-card/room-type-card.component';
 import { RoomFormDialogComponent } from './pages/admin/rooms/room-form-dialog/room-form-dialog.component';
 
 import { RoomTypesComponent } from './pages/admin/room-types/room-types.component';
@@ -101,7 +101,7 @@ const MATERIAL_MODULES = [
     MyBookingsComponent,
 
     RoomsComponent,
-    RoomCardComponent,
+    RoomTypeCardComponent,
     RoomFormDialogComponent,
 
     RoomTypesComponent,

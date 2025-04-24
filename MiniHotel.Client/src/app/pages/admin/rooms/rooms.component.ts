@@ -75,7 +75,7 @@ export class RoomsComponent implements OnInit {
       isEdit: true,
       formData: {
         roomNumber: room.roomNumber!,
-        roomCategory: room.roomCategory!,
+        roomTypeId: room.roomTypeId!,
         roomStatus: room.roomStatus!,
       },
     };

@@ -30,9 +30,9 @@
     <div class="row" *ngIf="groupedRooms.size > 0">
         <div class="col-md-6 col-lg-4 mb-4" *ngFor="let entry of roomCategoriesData">
             <!-- get first available room -->
-            <app-room-card [room]="entry[1].rooms[0]" [categoryName]="entry[0]" [totalAvailable]="entry[1].total"
-                (book)="onBook($event)">
-            </app-room-card>
+            <app-room-type-card [roomType]="entry[1].rooms[0]" [categoryName]="entry[0]"
+                [totalAvailable]="entry[1].total" (book)="onBook($event)">
+            </app-room-type-card>
         </div>
     </div>
 

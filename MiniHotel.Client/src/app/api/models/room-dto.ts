@@ -4,10 +4,10 @@
 
 import { RoomStatus } from '../models/room-status';
 export interface RoomDto {
-  description?: string | null;
   pricePerDay?: number;
   roomCategory?: string | null;
   roomId?: number;
   roomNumber?: string | null;
   roomStatus?: RoomStatus;
+  roomTypeId?: number;
 }

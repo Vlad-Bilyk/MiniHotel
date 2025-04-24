@@ -28,7 +28,7 @@ export class RoomFormDialogComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       roomNumber: [data.formData?.roomNumber || '', [Validators.required, Validators.maxLength(10)]],
-      roomCategory: [data.formData?.roomCategory || null, Validators.required],
+      roomTypeId: [data.formData?.roomTypeId || null, Validators.required],
       roomStatus: [data.formData?.roomStatus || RoomStatus.Available, Validators.required],
     });
   }

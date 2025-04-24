@@ -48,6 +48,8 @@ import { getUserBookings } from '../fn/bookings/get-user-bookings';
 import { GetUserBookings$Params } from '../fn/bookings/get-user-bookings';
 import { getUserBookings$Plain } from '../fn/bookings/get-user-bookings-plain';
 import { GetUserBookings$Plain$Params } from '../fn/bookings/get-user-bookings-plain';
+import { updateBooking } from '../fn/bookings/update-booking';
+import { UpdateBooking$Params } from '../fn/bookings/update-booking';
 import { UserBookingsDto } from '../models/user-bookings-dto';
 
 @Injectable({ providedIn: 'root' })
@@ -352,6 +354,31 @@ export class BookingsService extends BaseService {
   createBookingByReception(params?: CreateBookingByReception$Params, context?: HttpContext): Observable<BookingDto> {
     return this.createBookingByReception$Response(params, context).pipe(
       map((r: StrictHttpResponse<BookingDto>): BookingDto => r.body)
+    );
+  }
+
+  /** Path part for operation `updateBooking()` */
+  static readonly UpdateBookingPath = '/api/Bookings/{id}/update';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateBooking()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  updateBooking$Response(params: UpdateBooking$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateBooking(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateBooking$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  updateBooking(params: UpdateBooking$Params, context?: HttpContext): Observable<void> {
+    return this.updateBooking$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

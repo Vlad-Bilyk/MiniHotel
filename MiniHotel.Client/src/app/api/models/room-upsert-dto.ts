@@ -4,7 +4,7 @@
 
 import { RoomStatus } from '../models/room-status';
 export interface RoomUpsertDto {
-  roomCategory: string;
   roomNumber: string;
   roomStatus: RoomStatus;
+  roomTypeId: number;
 }

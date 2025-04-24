@@ -80,7 +80,7 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
-            var roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomCategory == createDto.RoomCategory);
+            var roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == createDto.RoomTypeId);
             if (roomType is null)
             {
                 return BadRequest("Room type not found.");

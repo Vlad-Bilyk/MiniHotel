@@ -65,6 +65,17 @@ namespace MiniHotel.Infrastructure.Data
                 .HasForeignKey(p => p.InvoiceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Indexes
+            builder.Entity<Booking>()
+                .HasIndex(b => new
+                {
+                    b.RoomId,
+                    b.StartDate,
+                    b.EndDate,
+                    b.BookingStatus
+                })
+                .HasDatabaseName("IX_Booking_RoomId_StartDate_EndDate_Status");
+
             // Global convention: for all enum properties, use EnumToStringConverter
             foreach (var entityType in builder.Model.GetEntityTypes())
             {

@@ -114,6 +114,31 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<IEnumerable<UserBookingsDto>>(bookings);
         }
 
+        public async Task<BookingDto> UpdateBookingAsync(int bookingId, BookingUpdateDto updateDto)
+        {
+            var room = await ValidateAndGetRoomAsync(updateDto.RoomNumber, updateDto.StartDate, updateDto.EndDate);
+
+            var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, "Room")
+                ?? throw new KeyNotFoundException("Booking not found");
+
+            if (booking.PaymentMethod == PaymentMethod.Online)
+            {
+                throw new InvalidOperationException("Online-paid bookings cannot be edited; please cancel and rebook.");
+            }
+
+            if (booking.BookingStatus is BookingStatus.CheckedIn or BookingStatus.CheckedOut or BookingStatus.Cancelled)
+            {
+                throw new InvalidOperationException("This booking cannot be edited in its current status.");
+            }
+
+            booking.RoomId = room.RoomId;
+            booking.StartDate = updateDto.StartDate;
+            booking.EndDate = updateDto.EndDate;
+
+            await _bookingRepository.UpdateAsync(booking);
+            return _mapper.Map<BookingDto>(booking);
+        }
+
         private async Task<BookingDto> CreateBookingInternal(Func<Task<Booking>> createBookingFunc)
         {
             await using var transaction = await _bookingRepository.BeginTransactionAsync();
@@ -137,9 +162,9 @@ namespace MiniHotel.Application.Services
         {
             var room = await _roomRepository
                 .GetAsync(r => r.RoomNumber == roomNumber)
-                ?? throw new ArgumentException("Room number not found");
-            var availableRooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
-            if (!availableRooms.Any(r => r.RoomId == room.RoomId))
+                ?? throw new KeyNotFoundException("Room number not found");
+            var available = await _roomRepository.IsRoomAvailableAsync(room.RoomId, startDate, endDate);
+            if (!available)
             {
                 throw new ArgumentException("Room is not available for the selected dates");
             }
