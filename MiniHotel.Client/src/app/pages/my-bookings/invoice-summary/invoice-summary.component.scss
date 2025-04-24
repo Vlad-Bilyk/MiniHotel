@@ -1,0 +1,37 @@
+.invoice-icon mat-icon {
+  font-size: 40px;
+  color: var(--mat-primary);
+}
+.status-badge {
+  padding: 0.2em 0.6em;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.status-badge.badge-warning {
+  background: #ffc107;
+  color: #000;
+}
+.status-badge.badge-success {
+  background: #4caf50;
+  color: #fff;
+}
+.status-badge.badge-danger {
+  background: #f44336;
+  color: #fff;
+}
+table.full-width {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+th.mat-header-cell {
+  font-weight: 600;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+}
+td.mat-cell {
+  padding: 0.5rem 0.75rem;
+}
+.total-summary {
+  margin-right: 1rem;
+}

@@ -180,7 +180,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Roles.AdminRoles)]
+        [Authorize]
         public Task<ActionResult<BookingDto>> CancelBooking(int id)
         {
             return UpdateStatusAsync(id, BookingStatus.Cancelled);

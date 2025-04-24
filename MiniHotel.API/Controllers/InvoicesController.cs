@@ -12,7 +12,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = Roles.AdminRoles)]
+    [Authorize]
     public class InvoicesController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
@@ -28,6 +28,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of invoice DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetInvoices()
         {
             var invoices = await _invoiceService.GetAllInvoicesAsync();
@@ -63,6 +64,7 @@ namespace MiniHotel.API.Controllers
         /// <response code="201">Returns the invoice with the new item added.</response>
         [HttpPost("{invoiceId}/items")]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<InvoiceDto>> AddInvoiceItem(int invoiceId, InvoiceItemCreateDto createItem)
         {
             var invoice = await _invoiceService.AddItemAsync(invoiceId, createItem);
@@ -78,6 +80,7 @@ namespace MiniHotel.API.Controllers
         /// <response code="204">If the invoice item is successfully removed.</response>
         [HttpDelete("items/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult> RemoveInvoiceItem(int id)
         {
             await _invoiceService.RemoveItemAsync(id);
@@ -93,6 +96,7 @@ namespace MiniHotel.API.Controllers
         /// <response code="200">Returns the updated invoice.</response>
         [HttpPatch("{id}/status")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<InvoiceDto>> UpdateInvoiceStatus(int id, InvoiceStatus status)
         {
             var invoiceDto = await _invoiceService.UpdateStatusAsync(id, status);

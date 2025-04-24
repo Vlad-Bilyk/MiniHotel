@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingStatus, UserBookingsDto } from '../../api/models';
-import { BookingsService } from '../../api/services';
+import { BookingStatus, InvoiceDto, UserBookingsDto } from '../../api/models';
+import { BookingsService, InvoicesService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { InvoiceSummaryComponent } from './invoice-summary/invoice-summary.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-my-bookings',
@@ -16,8 +17,9 @@ export class MyBookingsComponent implements OnInit {
 
   constructor(
     private bookingsService: BookingsService,
+    private invoiceService: InvoicesService,
     private toastr: ToastrService,
-    private router: Router
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -53,10 +55,15 @@ export class MyBookingsComponent implements OnInit {
     })
   }
 
-  // TODO: Inmplemet in future
-  viewInvoice(invoiceId: number): void {
-    this.toastr.info(`Функціонал перегляду рахунку ще не реалізовано (ID: ${invoiceId})`);
-    console.log('Invoice ID:', invoiceId);
+  viewInvoice(bookingId: number): void {
+    this.invoiceService.getInvoiceByBookingId({ bookingId })
+      .subscribe((invoice: InvoiceDto) => {
+        this.dialog.open(InvoiceSummaryComponent, {
+          data: { invoice },
+          width: '800px',
+          maxWidth: 'none'
+        });
+      });
   }
 
   canCancel(status?: BookingStatus | string): boolean {

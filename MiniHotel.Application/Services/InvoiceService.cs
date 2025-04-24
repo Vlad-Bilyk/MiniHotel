@@ -64,7 +64,7 @@ namespace MiniHotel.Application.Services
                 {
                     new InvoiceItem
                     {
-                        Description = $"Бронювання номеру {booking.Room.RoomNumber} - {nights} ночей",
+                        Description = $"Бронювання номеру {booking.Room.RoomNumber} ({booking.Room.RoomType.RoomCategory}) - {nights} ночей",
                         Quantity = nights,
                         UnitPrice = booking.Room.RoomType.PricePerNight,
                         ItemType = InvoiceItemType.RoomBooking,
@@ -163,7 +163,7 @@ namespace MiniHotel.Application.Services
                               ?? throw new InvalidOperationException("RoomBooking item is missing.");
             var nights = (invoice.Booking.EndDate.Date - invoice.Booking.StartDate.Date).Days;
 
-            bookingItem.Description = $"Бронювання номеру {invoice.Booking.Room.RoomNumber} - {nights} ночей";
+            bookingItem.Description = $"Бронювання номеру {invoice.Booking.Room.RoomNumber} ({invoice.Booking.Room.RoomType.RoomCategory}) - {nights} ночей";
             bookingItem.Quantity = nights;
             bookingItem.UnitPrice = invoice.Booking.Room.RoomType.PricePerNight;
 

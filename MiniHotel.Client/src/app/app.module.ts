@@ -14,6 +14,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
+import { InvoiceSummaryComponent } from './pages/my-bookings/invoice-summary/invoice-summary.component';
 
 import { RoomCategoryCardsComponent } from './pages/room-category-cards/room-category-cards.component';
 
@@ -29,6 +30,7 @@ import { ServicesFormDialogComponent } from './pages/admin/services/services-for
 
 import { BookingsComponent } from './pages/admin/bookings/bookings.component';
 import { BookingsOfflineDialogComponent } from './pages/admin/bookings/bookings-offline-dialog/bookings-offline-dialog.component';
+import { EditBookingDialogComponent } from './pages/admin/bookings/edit-booking-dialog/edit-booking-dialog.component';
 import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/booking-details.component';
 import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
 
@@ -63,7 +65,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { EditBookingDialogComponent } from './pages/admin/bookings/edit-booking-dialog/edit-booking-dialog.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -85,6 +87,7 @@ const MATERIAL_MODULES = [
   MatGridListModule,
   MatMenuModule,
   MatToolbarModule,
+  MatExpansionModule,
 ];
 
 @NgModule({
@@ -122,6 +125,7 @@ const MATERIAL_MODULES = [
     HasRoleDirective,
     RoomCategoryCardsComponent,
     EditBookingDialogComponent,
+    InvoiceSummaryComponent,
   ],
   imports: [
     // Angular core
