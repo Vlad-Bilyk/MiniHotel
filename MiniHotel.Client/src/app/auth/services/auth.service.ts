@@ -6,6 +6,7 @@ import {
   RegisterRequestDto,
 } from '../../api/models';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -16,10 +17,14 @@ export class AuthServiceWrapper {
   private userRoleSubject = new BehaviorSubject<string | null>(
     this.getUserRole()
   );
+
   public userRole$: Observable<string | null> =
     this.userRoleSubject.asObservable();
 
-  constructor(private apiAuthService: AuthService) { }
+  constructor(
+    private apiAuthService: AuthService,
+    private router: Router
+  ) { }
 
   login(loginData: LoginRequestDto): Observable<AuthenticationResultDto> {
     return this.apiAuthService
@@ -42,6 +47,7 @@ export class AuthServiceWrapper {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     this.userRoleSubject.next(null);
+    this.router.navigate(['auth/login']);
   }
 
   hasRole(role: string): boolean {

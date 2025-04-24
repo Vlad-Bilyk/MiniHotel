@@ -66,6 +66,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { authExpirationInterceptor } from './core/interceptors/auth-expiration.interceptor';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -141,7 +142,9 @@ const MATERIAL_MODULES = [
     // Material
     ...MATERIAL_MODULES,
   ],
-  providers: [provideHttpClient(withInterceptors([jwtInterceptor]))],
+  providers: [
+    provideHttpClient(withInterceptors([jwtInterceptor, authExpirationInterceptor]))
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
