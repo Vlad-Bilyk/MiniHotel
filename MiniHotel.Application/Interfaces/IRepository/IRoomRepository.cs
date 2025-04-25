@@ -3,7 +3,7 @@ using MiniHotel.Domain.Enums;
 
 namespace MiniHotel.Application.Interfaces.IRepository
 {
-    public interface IRoomRepository : IRepository<Room>
+    public interface IRoomRepository : IBaseRepository<Room>
     {
         Task CreateAsync(Room entity);
         Task<Room> UpdateAsync(Room entity);

@@ -28,10 +28,8 @@ export class MyBookingsComponent implements OnInit {
 
   loadBookings(): void {
     this.bookingsService.getUserBookings().subscribe({
-      next: (data) => {
-        this.bookings = data.sort((a, b) =>
-          new Date(b.startDate!).getTime() - new Date(a.startDate!).getTime()
-        );
+      next: (result) => {
+        this.bookings = result.items ?? [];
       },
       error: () => {
         this.toastr.error('Не вдалося завантажити ваші бронювання.');

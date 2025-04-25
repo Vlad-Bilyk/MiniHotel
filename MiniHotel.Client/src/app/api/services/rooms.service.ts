@@ -15,8 +15,6 @@ import { createRoom } from '../fn/rooms/create-room';
 import { CreateRoom$Params } from '../fn/rooms/create-room';
 import { createRoom$Plain } from '../fn/rooms/create-room-plain';
 import { CreateRoom$Plain$Params } from '../fn/rooms/create-room-plain';
-import { deleteRoom } from '../fn/rooms/delete-room';
-import { DeleteRoom$Params } from '../fn/rooms/delete-room';
 import { getAvailableRooms } from '../fn/rooms/get-available-rooms';
 import { GetAvailableRooms$Params } from '../fn/rooms/get-available-rooms';
 import { getAvailableRooms$Plain } from '../fn/rooms/get-available-rooms-plain';
@@ -229,39 +227,6 @@ export class RoomsService extends BaseService {
    */
   updateRoom(params: UpdateRoom$Params, context?: HttpContext): Observable<void> {
     return this.updateRoom$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
-  /** Path part for operation `deleteRoom()` */
-  static readonly DeleteRoomPath = '/api/Rooms/{id}';
-
-  /**
-   * Deletes a room by its unique identifier.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteRoom()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoom$Response(params: DeleteRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return deleteRoom(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Deletes a room by its unique identifier.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteRoom$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoom(params: DeleteRoom$Params, context?: HttpContext): Observable<void> {
-    return this.deleteRoom$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

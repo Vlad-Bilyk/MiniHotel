@@ -5,18 +5,18 @@ using System.Linq.Expressions;
 
 namespace MiniHotel.Infrastructure.Reposiitories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private readonly MiniHotelDbContext _context;
         internal DbSet<T> _dbSet;
 
-        public Repository(MiniHotelDbContext context)
+        public BaseRepository(MiniHotelDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = "")
+        public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = "")
         {
             IQueryable<T> query = _dbSet;
 
@@ -36,7 +36,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
             return await query.ToListAsync();
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = "")
+        public virtual async Task<T> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = "")
         {
             IQueryable<T> query = _dbSet;
 
@@ -47,7 +47,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
 
             if (!string.IsNullOrWhiteSpace(includeProperties))
             {
-                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var includeProp in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProp);
                 }

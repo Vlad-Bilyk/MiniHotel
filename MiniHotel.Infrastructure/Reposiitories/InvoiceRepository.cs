@@ -5,7 +5,7 @@ using MiniHotel.Infrastructure.Data;
 
 namespace MiniHotel.Infrastructure.Reposiitories
 {
-    public class InvoiceRepository : Repository<Invoice>, IInvoiceRepository
+    public class InvoiceRepository : BaseRepository<Invoice>, IInvoiceRepository
     {
         private readonly MiniHotelDbContext _context;
 

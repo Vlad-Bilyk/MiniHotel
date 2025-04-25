@@ -4,7 +4,7 @@ using MiniHotel.Infrastructure.Data;
 
 namespace MiniHotel.Infrastructure.Reposiitories
 {
-    public class RoomTypeRepository : Repository<RoomType>, IRoomTypeRepository
+    public class RoomTypeRepository : BaseRepository<RoomType>, IRoomTypeRepository
     {
         private readonly MiniHotelDbContext _context;
 

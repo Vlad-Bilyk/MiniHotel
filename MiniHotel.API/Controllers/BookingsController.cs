@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MiniHotel.Application.Common;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Constants;
@@ -26,24 +27,31 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Retrieves all bookings.
+        /// Retrieves a paginated list of bookings for administrative view.
         /// </summary>
-        /// <returns>A collection of booking data transfer objects.</returns>
+        /// <param name="pageNumber">The page number to retrieve (default is 1).</param>
+        /// <param name="pageSize">The number of records per page (default is 10).</param>
+        /// <param name="search">Optional search term to filter bookings by customer name, room number, or room type.</param>
+        /// <returns>A paginated result containing booking data transfer objects.</returns>
+        /// <response code="200">Returns the paginated list of bookings.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(Roles = Roles.AdminRoles)]
-        public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
+        public async Task<ActionResult<PagedResult<BookingDto>>> GetBookings([FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
         {
-            var bookings = await _bookingService.GetBookingsAsync();
-            return Ok(bookings);
+            var result = await _bookingService.GetBookingsAsync(pageNumber, pageSize, search);
+            return Ok(result);
         }
 
         /// <summary>
-        /// Gets all bookings made by the currently authenticated user.
+        /// Retrieves a paginated list of bookings specific to the currently authenticated user.
         /// </summary>
-        /// <returns>A list of <see cref="UserBookingsDto"/> representing the user's bookings.</returns>
-        /// <response code="200">Returns the list of bookings.</response>
-        /// <response code="400">If the user ID is not found in the token claims.</response>
+        /// <param name="pageNumber">The number of the page to retrieve (default is 1).</param>
+        /// <param name="pageSize">The number of bookings to include per page (default is 10).</param>
+        /// <returns>A paginated result containing <see cref="UserBookingsDto"/> items.</returns>
+        /// <response code="200">Returns the paginated list of user's bookings.</response>
+        /// <response code="400">Returned if the user ID could not be resolved from the token claims.</response>
         /// <response code="500">If an unexpected server error occurs.</response>
         [HttpGet("user")]
         [Authorize]
@@ -51,15 +59,22 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = Roles.Client)]
-        public async Task<ActionResult<IEnumerable<UserBookingsDto>>> GetUserBookings()
+        public async Task<ActionResult<PagedResult<UserBookingsDto>>> GetUserBookings([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User not found");
             }
-            var bookings = await _bookingService.GetUserBookingsAsync(userId);
-            return Ok(bookings);
+
+            var result = await _bookingService.GetUserBookingsAsync(pageNumber, pageSize, userId);
+            return Ok(new PagedResult<UserBookingsDto>
+            {
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                Items = result.Items
+            });
         }
 
         /// <summary>

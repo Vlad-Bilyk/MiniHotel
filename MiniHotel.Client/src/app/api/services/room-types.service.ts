@@ -15,8 +15,6 @@ import { createRoomType } from '../fn/room-types/create-room-type';
 import { CreateRoomType$Params } from '../fn/room-types/create-room-type';
 import { createRoomType$Plain } from '../fn/room-types/create-room-type-plain';
 import { CreateRoomType$Plain$Params } from '../fn/room-types/create-room-type-plain';
-import { deleteRoomType } from '../fn/room-types/delete-room-type';
-import { DeleteRoomType$Params } from '../fn/room-types/delete-room-type';
 import { getRoomType } from '../fn/room-types/get-room-type';
 import { GetRoomType$Params } from '../fn/room-types/get-room-type';
 import { getRoomTypes } from '../fn/room-types/get-room-types';
@@ -221,39 +219,6 @@ export class RoomTypesService extends BaseService {
    */
   updateRoomType(params: UpdateRoomType$Params, context?: HttpContext): Observable<void> {
     return this.updateRoomType$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
-  /** Path part for operation `deleteRoomType()` */
-  static readonly DeleteRoomTypePath = '/api/RoomTypes/{id}';
-
-  /**
-   * Deletes a room type by its unique identifier.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteRoomType()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoomType$Response(params: DeleteRoomType$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return deleteRoomType(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Deletes a room type by its unique identifier.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteRoomType$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoomType(params: DeleteRoomType$Params, context?: HttpContext): Observable<void> {
-    return this.deleteRoomType$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

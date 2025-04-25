@@ -12,6 +12,7 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { BookingDto } from '../models/booking-dto';
+import { BookingDtoPagedResult } from '../models/booking-dto-paged-result';
 import { cancelBooking } from '../fn/bookings/cancel-booking';
 import { CancelBooking$Params } from '../fn/bookings/cancel-booking';
 import { cancelBooking$Plain } from '../fn/bookings/cancel-booking-plain';
@@ -50,7 +51,7 @@ import { getUserBookings$Plain } from '../fn/bookings/get-user-bookings-plain';
 import { GetUserBookings$Plain$Params } from '../fn/bookings/get-user-bookings-plain';
 import { updateBooking } from '../fn/bookings/update-booking';
 import { UpdateBooking$Params } from '../fn/bookings/update-booking';
-import { UserBookingsDto } from '../models/user-bookings-dto';
+import { UserBookingsDtoPagedResult } from '../models/user-bookings-dto-paged-result';
 
 @Injectable({ providedIn: 'root' })
 export class BookingsService extends BaseService {
@@ -62,7 +63,7 @@ export class BookingsService extends BaseService {
   static readonly GetBookingsPath = '/api/Bookings';
 
   /**
-   * Retrieves all bookings.
+   * Retrieves a paginated list of bookings for administrative view.
    *
    *
    *
@@ -71,12 +72,12 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBookings$Plain$Response(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
+  getBookings$Plain$Response(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDtoPagedResult>> {
     return getBookings$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Retrieves all bookings.
+   * Retrieves a paginated list of bookings for administrative view.
    *
    *
    *
@@ -85,14 +86,14 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBookings$Plain(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<Array<BookingDto>> {
+  getBookings$Plain(params?: GetBookings$Plain$Params, context?: HttpContext): Observable<BookingDtoPagedResult> {
     return this.getBookings$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<BookingDto>>): Array<BookingDto> => r.body)
+      map((r: StrictHttpResponse<BookingDtoPagedResult>): BookingDtoPagedResult => r.body)
     );
   }
 
   /**
-   * Retrieves all bookings.
+   * Retrieves a paginated list of bookings for administrative view.
    *
    *
    *
@@ -101,12 +102,12 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBookings$Response(params?: GetBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<BookingDto>>> {
+  getBookings$Response(params?: GetBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDtoPagedResult>> {
     return getBookings(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Retrieves all bookings.
+   * Retrieves a paginated list of bookings for administrative view.
    *
    *
    *
@@ -115,9 +116,9 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBookings(params?: GetBookings$Params, context?: HttpContext): Observable<Array<BookingDto>> {
+  getBookings(params?: GetBookings$Params, context?: HttpContext): Observable<BookingDtoPagedResult> {
     return this.getBookings$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<BookingDto>>): Array<BookingDto> => r.body)
+      map((r: StrictHttpResponse<BookingDtoPagedResult>): BookingDtoPagedResult => r.body)
     );
   }
 
@@ -188,7 +189,7 @@ export class BookingsService extends BaseService {
   static readonly GetUserBookingsPath = '/api/Bookings/user';
 
   /**
-   * Gets all bookings made by the currently authenticated user.
+   * Retrieves a paginated list of bookings specific to the currently authenticated user.
    *
    *
    *
@@ -197,12 +198,12 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUserBookings$Plain$Response(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserBookingsDto>>> {
+  getUserBookings$Plain$Response(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<UserBookingsDtoPagedResult>> {
     return getUserBookings$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Gets all bookings made by the currently authenticated user.
+   * Retrieves a paginated list of bookings specific to the currently authenticated user.
    *
    *
    *
@@ -211,14 +212,14 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUserBookings$Plain(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<Array<UserBookingsDto>> {
+  getUserBookings$Plain(params?: GetUserBookings$Plain$Params, context?: HttpContext): Observable<UserBookingsDtoPagedResult> {
     return this.getUserBookings$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<UserBookingsDto>>): Array<UserBookingsDto> => r.body)
+      map((r: StrictHttpResponse<UserBookingsDtoPagedResult>): UserBookingsDtoPagedResult => r.body)
     );
   }
 
   /**
-   * Gets all bookings made by the currently authenticated user.
+   * Retrieves a paginated list of bookings specific to the currently authenticated user.
    *
    *
    *
@@ -227,12 +228,12 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUserBookings$Response(params?: GetUserBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserBookingsDto>>> {
+  getUserBookings$Response(params?: GetUserBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<UserBookingsDtoPagedResult>> {
     return getUserBookings(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Gets all bookings made by the currently authenticated user.
+   * Retrieves a paginated list of bookings specific to the currently authenticated user.
    *
    *
    *
@@ -241,9 +242,9 @@ export class BookingsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUserBookings(params?: GetUserBookings$Params, context?: HttpContext): Observable<Array<UserBookingsDto>> {
+  getUserBookings(params?: GetUserBookings$Params, context?: HttpContext): Observable<UserBookingsDtoPagedResult> {
     return this.getUserBookings$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<UserBookingsDto>>): Array<UserBookingsDto> => r.body)
+      map((r: StrictHttpResponse<UserBookingsDtoPagedResult>): UserBookingsDtoPagedResult => r.body)
     );
   }
 

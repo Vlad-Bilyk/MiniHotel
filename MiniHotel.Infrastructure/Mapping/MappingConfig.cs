@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MiniHotel.Application.Common;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Identity;
@@ -35,6 +36,8 @@ namespace MiniHotel.Infrastructure.Mapping
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room.RoomNumber))
                 .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.Room.RoomType.RoomCategory))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Invoice.TotalAmount));
+
+            CreateMap(typeof(PagedResult<>), typeof(PagedResult<>));
 
             CreateMap<Booking, BookingCreateDto>().ReverseMap();
             CreateMap<Booking, BookingCreateByReceptionDto>().ReverseMap();

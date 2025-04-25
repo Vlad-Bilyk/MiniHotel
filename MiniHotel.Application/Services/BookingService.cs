@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using MiniHotel.Application.Common;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
+using System.Globalization;
 using System.Linq.Expressions;
 
 namespace MiniHotel.Application.Services
@@ -101,17 +103,25 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<BookingDto>(booking);
         }
 
-        public async Task<IEnumerable<BookingDto>> GetBookingsAsync(Expression<Func<Booking, bool>>? filter = null)
+        public async Task<PagedResult<BookingDto>> GetBookingsAsync(int pageNumber, int pageSize, string? search = null)
         {
-            var bookings = await _bookingRepository.GetAllAsync(filter, IncludeProperties);
-            return _mapper.Map<IEnumerable<BookingDto>>(bookings);
+            Expression<Func<Booking, bool>>? filter = null;
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var dateFilter = BuildDateFilter(search);
+                var textFilter = BuildTextFilter(search);
+                filter = CombineFilters(textFilter, dateFilter);
+            }
+
+            var result = await _bookingRepository.GetPagedAsync(pageNumber, pageSize, filter, IncludeProperties);
+            return _mapper.Map<PagedResult<BookingDto>>(result);
         }
 
-        public async Task<IEnumerable<UserBookingsDto>> GetUserBookingsAsync(string userId)
+        public async Task<PagedResult<UserBookingsDto>> GetUserBookingsAsync(int pageNumber, int pageSize, string userId)
         {
-            var bookings = await _bookingRepository.GetAllAsync(b => b.UserId == userId, IncludeProperties);
-
-            return _mapper.Map<IEnumerable<UserBookingsDto>>(bookings);
+            var bookings = await _bookingRepository.GetPagedAsync(pageNumber, pageSize, b => b.UserId == userId, IncludeProperties);
+            return _mapper.Map<PagedResult<UserBookingsDto>>(bookings);
         }
 
         public async Task<BookingDto> UpdateBookingAsync(int bookingId, BookingUpdateDto updateDto)
@@ -171,6 +181,55 @@ namespace MiniHotel.Application.Services
                 throw new ArgumentException("Room is not available for the selected dates");
             }
             return room;
+        }
+
+        private static Expression<Func<Booking, bool>>? BuildDateFilter(string search)
+        {
+            var formats = new[] { "dd.MM.yyyy", "MM.yyyy", "yyyy", "dd.MM", "MM" };
+            if (!DateTime.TryParseExact(search.Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                return null;
+
+            return search.Trim().Length switch
+            {
+                10 => b => b.StartDate.Date == date.Date || b.EndDate.Date == date.Date,
+                7 => b => (b.StartDate.Month == date.Month && b.StartDate.Year == date.Year)
+                         || (b.EndDate.Month == date.Month && b.EndDate.Year == date.Year),
+                5 => b => b.StartDate.Day == date.Day && b.StartDate.Month == date.Month
+                         || b.EndDate.Day == date.Day && b.EndDate.Month == date.Month,
+                4 => b => b.StartDate.Year == date.Year || b.EndDate.Year == date.Year,
+                2 => b => b.StartDate.Month == date.Month || b.EndDate.Month == date.Month,
+                _ => null
+            };
+        }
+
+        private static Expression<Func<Booking, bool>> BuildTextFilter(string search)
+        {
+            var normalized = search.ToLower();
+
+            return b =>
+                (
+                    b.FullName != null
+                        ? b.FullName.ToLower().Contains(normalized)
+                        : (b.User.FirstName.ToLower().Contains(normalized) ||
+                           b.User.LastName.ToLower().Contains(normalized))
+                )
+                || b.Room.RoomNumber.ToLower().Contains(normalized)
+                || b.Room.RoomType.RoomCategory.ToLower().Contains(normalized);
+        }
+
+        private static Expression<Func<Booking, bool>> CombineFilters(
+            Expression<Func<Booking, bool>> filter1,
+            Expression<Func<Booking, bool>>? filter2)
+        {
+            if (filter2 is null) return filter1;
+
+            var param = Expression.Parameter(typeof(Booking), "b");
+
+            var body1 = Expression.Invoke(filter1, param);
+            var body2 = Expression.Invoke(filter2, param);
+
+            var bodyCombined = Expression.OrElse(body1, body2);
+            return Expression.Lambda<Func<Booking, bool>>(bodyCombined, param);
         }
     }
 }

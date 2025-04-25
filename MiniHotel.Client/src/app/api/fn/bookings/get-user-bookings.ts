@@ -8,14 +8,26 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserBookingsDto } from '../../models/user-bookings-dto';
+import { UserBookingsDtoPagedResult } from '../../models/user-bookings-dto-paged-result';
 
 export interface GetUserBookings$Params {
+
+/**
+ * The number of the page to retrieve (default is 1).
+ */
+  pageNumber?: number;
+
+/**
+ * The number of bookings to include per page (default is 10).
+ */
+  pageSize?: number;
 }
 
-export function getUserBookings(http: HttpClient, rootUrl: string, params?: GetUserBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserBookingsDto>>> {
+export function getUserBookings(http: HttpClient, rootUrl: string, params?: GetUserBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<UserBookingsDtoPagedResult>> {
   const rb = new RequestBuilder(rootUrl, getUserBookings.PATH, 'get');
   if (params) {
+    rb.query('pageNumber', params.pageNumber, {});
+    rb.query('pageSize', params.pageSize, {});
   }
 
   return http.request(
@@ -23,7 +35,7 @@ export function getUserBookings(http: HttpClient, rootUrl: string, params?: GetU
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<UserBookingsDto>>;
+      return r as StrictHttpResponse<UserBookingsDtoPagedResult>;
     })
   );
 }

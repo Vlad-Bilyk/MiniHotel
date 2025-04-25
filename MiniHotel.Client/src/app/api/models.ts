@@ -6,6 +6,7 @@ export type { AuthenticationResultDto } from './models/authentication-result-dto
 export type { BookingCreateByReceptionDto } from './models/booking-create-by-reception-dto';
 export type { BookingCreateDto } from './models/booking-create-dto';
 export type { BookingDto } from './models/booking-dto';
+export type { BookingDtoPagedResult } from './models/booking-dto-paged-result';
 export { BookingStatus } from './models/booking-status';
 export type { BookingUpdateDto } from './models/booking-update-dto';
 export type { InvoiceDto } from './models/invoice-dto';
@@ -26,6 +27,7 @@ export type { RoomUpsertDto } from './models/room-upsert-dto';
 export type { ServiceDto } from './models/service-dto';
 export type { ServiceUpsertDto } from './models/service-upsert-dto';
 export type { UserBookingsDto } from './models/user-bookings-dto';
+export type { UserBookingsDtoPagedResult } from './models/user-bookings-dto-paged-result';
 export type { UserDto } from './models/user-dto';
 export { UserRole } from './models/user-role';
 export type { UserUpdateDto } from './models/user-update-dto';

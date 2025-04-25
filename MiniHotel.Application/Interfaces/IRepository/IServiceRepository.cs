@@ -2,7 +2,7 @@
 
 namespace MiniHotel.Application.Interfaces.IRepository
 {
-    public interface IServiceRepository : IRepository<Service>
+    public interface IServiceRepository : IBaseRepository<Service>
     {
         Task CreateAsync(Service entity);
         Task<Service> UpdateAsync(Service entity);
