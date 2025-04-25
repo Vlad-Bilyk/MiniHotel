@@ -25,5 +25,19 @@ namespace MiniHotel.Infrastructure.Reposiitories
             await SaveAsync();
             return entity;
         }
+
+        public Task Deactivate(int id)
+            => SetAvailability(id, false);
+
+        public Task Reactivate(int id)
+            => SetAvailability(id, true);
+
+        private async Task SetAvailability(int id, bool isAvailable)
+        {
+            var service = await _context.Services.FindAsync(id)
+                          ?? throw new KeyNotFoundException("Service not found");
+            service.IsAvailable = isAvailable;
+            await SaveAsync();
+        }
     }
 }

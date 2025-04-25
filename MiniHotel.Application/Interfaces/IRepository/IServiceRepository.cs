@@ -6,5 +6,7 @@ namespace MiniHotel.Application.Interfaces.IRepository
     {
         Task CreateAsync(Service entity);
         Task<Service> UpdateAsync(Service entity);
+        Task Deactivate(int id);
+        Task Reactivate(int id);
     }
 }

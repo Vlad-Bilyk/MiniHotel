@@ -55,22 +55,6 @@ export class RoomTypesComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
-
-  deleteRoomType(id: number): void {
-    if (!confirm('Ви впевнені що хочете видалити цей запис?')) return;
-
-    this.roomTypesService.deleteRoomType({ id }).subscribe({
-      next: () => {
-        this.toastr.success('Запис видалено');
-        this.loadRoomTypes();
-      },
-      error: (err) => {
-        this.toastr.error('Сталася помилка під час видалення');
-        console.error(err);
-      },
-    });
-  }
-
   editRoomType(rt: RoomTypeDto): void {
     const dialogData: RoomTypeFormData = {
       isEdit: true,

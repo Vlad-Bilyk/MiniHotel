@@ -9,16 +9,16 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DeleteService$Params {
+export interface Deactivate$Params {
 
 /**
- * The unique identifier of the service to delete.
+ * The unique identifier of the service to deactivate.
  */
   id: number;
 }
 
-export function deleteService(http: HttpClient, rootUrl: string, params: DeleteService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, deleteService.PATH, 'delete');
+export function deactivate(http: HttpClient, rootUrl: string, params: Deactivate$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, deactivate.PATH, 'patch');
   if (params) {
     rb.path('id', params.id, {});
   }
@@ -33,4 +33,4 @@ export function deleteService(http: HttpClient, rootUrl: string, params: DeleteS
   );
 }
 
-deleteService.PATH = '/api/Services/{id}';
+deactivate.PATH = '/api/Services/{id}/deactivate';

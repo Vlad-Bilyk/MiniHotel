@@ -53,16 +53,22 @@ export class ServicesComponent implements OnInit {
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  deleteService(id: number): void {
-    if (!confirm('Ви впевнені, що хочете видалити цей номер')) return;
+  toggleServiceStatus(service: ServiceDto): void {
+    const action = service.isAvailable ? 'деактивувати' : 'активувати';
 
-    this.hotelService.deleteService({ id }).subscribe({
+    if (!confirm(`Ви впевнені, що хочете ${action} цю послугу?`)) return;
+
+    const request$ = service.isAvailable
+      ? this.hotelService.deactivate({ id: service.serviceId! })
+      : this.hotelService.reactivate({ id: service.serviceId! });
+
+    request$.subscribe({
       next: () => {
-        this.toastr.success('Послугу видалено');
+        this.toastr.success(`Послугу успішно ${action}о`);
         this.loadServices();
       },
       error: (err) => {
-        this.toastr.error('Сталася помилка під час видалення');
+        this.toastr.error(`Сталася помилка під час спроби ${action} послугу`);
         console.error(err);
       },
     });

@@ -1,0 +1,19 @@
+.btn-error {
+  --mdc-filled-button-container-color: var(--mat-sys-error);
+  --mdc-filled-button-label-text-color: var(--mat-sys-on-error);
+}
+
+.btn-error:hover {
+  --mdc-filled-button-container-color: var(--mat-sys-error-container);
+  --mdc-filled-button-label-text-color: var(--mat-sys-on-error-container);
+}
+
+.btn-status-error mat-icon {
+  color: var(--mat-sys-error) !important;
+}
+.btn-status-primary mat-icon {
+  color: var(--mat-sys-primary) !important;
+}
+.btn-status-neutral mat-icon {
+  color: var(--mat-sys-neutral) !important;
+}

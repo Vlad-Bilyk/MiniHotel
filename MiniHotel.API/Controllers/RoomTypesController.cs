@@ -102,28 +102,5 @@ namespace MiniHotel.API.Controllers
             await _roomTypeRepository.UpdateAsync(existingRoomType);
             return NoContent();
         }
-
-        /// <summary>
-        /// Deletes a room type by its unique identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the room type to delete.</param>
-        /// <returns>No content if the deletion is successful.</returns>
-        /// <response code="204">Room type deleted successfully.</response>
-        /// <response code="404">If the room type is not found.</response>
-        /// <response code="400">If the request is invalid.</response>
-        [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteRoomType(int id)
-        {
-            RoomType roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id);
-            if (roomType == null)
-            {
-                return NotFound();
-            }
-            await _roomTypeRepository.RemoveAsync(roomType);
-            return NoContent();
-        }
     }
 }

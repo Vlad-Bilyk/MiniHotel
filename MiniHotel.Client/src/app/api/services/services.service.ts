@@ -15,14 +15,16 @@ import { createService } from '../fn/services/create-service';
 import { CreateService$Params } from '../fn/services/create-service';
 import { createService$Plain } from '../fn/services/create-service-plain';
 import { CreateService$Plain$Params } from '../fn/services/create-service-plain';
-import { deleteService } from '../fn/services/delete-service';
-import { DeleteService$Params } from '../fn/services/delete-service';
+import { deactivate } from '../fn/services/deactivate';
+import { Deactivate$Params } from '../fn/services/deactivate';
 import { getServiceById } from '../fn/services/get-service-by-id';
 import { GetServiceById$Params } from '../fn/services/get-service-by-id';
 import { getServices } from '../fn/services/get-services';
 import { GetServices$Params } from '../fn/services/get-services';
 import { getServices$Plain } from '../fn/services/get-services-plain';
 import { GetServices$Plain$Params } from '../fn/services/get-services-plain';
+import { reactivate } from '../fn/services/reactivate';
+import { Reactivate$Params } from '../fn/services/reactivate';
 import { ServiceDto } from '../models/service-dto';
 import { updateService } from '../fn/services/update-service';
 import { UpdateService$Params } from '../fn/services/update-service';
@@ -225,35 +227,68 @@ export class ServicesService extends BaseService {
     );
   }
 
-  /** Path part for operation `deleteService()` */
-  static readonly DeleteServicePath = '/api/Services/{id}';
+  /** Path part for operation `deactivate()` */
+  static readonly DeactivatePath = '/api/Services/{id}/deactivate';
 
   /**
-   * Deletes a service by its unique identifier.
+   * Deactivates the service specified by the given id.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteService()` instead.
+   * To access only the response body, use `deactivate()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteService$Response(params: DeleteService$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return deleteService(this.http, this.rootUrl, params, context);
+  deactivate$Response(params: Deactivate$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deactivate(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Deletes a service by its unique identifier.
+   * Deactivates the service specified by the given id.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteService$Response()` instead.
+   * To access the full response (for headers, for example), `deactivate$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteService(params: DeleteService$Params, context?: HttpContext): Observable<void> {
-    return this.deleteService$Response(params, context).pipe(
+  deactivate(params: Deactivate$Params, context?: HttpContext): Observable<void> {
+    return this.deactivate$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `reactivate()` */
+  static readonly ReactivatePath = '/api/Services/{id}/reactivate';
+
+  /**
+   * Reactivates the service specified by the given id.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `reactivate()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reactivate$Response(params: Reactivate$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return reactivate(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Reactivates the service specified by the given id.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `reactivate$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reactivate(params: Reactivate$Params, context?: HttpContext): Observable<void> {
+    return this.reactivate$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

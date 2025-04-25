@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RoomDto, RoomUpsertDto } from '../../../api/models';
+import { RoomDto, RoomStatus, RoomUpsertDto } from '../../../api/models';
 import { RoomsService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import {
@@ -19,6 +19,7 @@ import { MatPaginator } from '@angular/material/paginator';
 export class RoomsComponent implements OnInit {
   displayedColumns = ['number', 'category', 'price', 'status', 'actions'];
 
+  RoomStatus = RoomStatus;
   dataSource = new MatTableDataSource<RoomDto>([]);
   loading = true;
   searchValue = '';
@@ -55,16 +56,22 @@ export class RoomsComponent implements OnInit {
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  deleteRoom(id: number): void {
-    if (!confirm('Ви впевнені, що хочете видалити цей номер')) return;
+  toggleRoomStatus(room: RoomDto): void {
+    const action = room.roomStatus ? 'деактивувати' : 'активувати';
 
-    this.roomsService.deleteRoom({ id }).subscribe({
+    if (!confirm(`Ви впевнені, що хочете ${action} цей номер?`)) return;
+
+    const request$ = room.roomStatus === RoomStatus.Available
+      ? this.roomsService.updateRoomStatus({ id: room.roomId!, newStatus: RoomStatus.UnderMaintenance })
+      : this.roomsService.updateRoomStatus({ id: room.roomId!, newStatus: RoomStatus.Available });
+
+    request$.subscribe({
       next: () => {
-        this.toastr.success('Номер видалено');
+        this.toastr.success(`Послугу успішно ${action}о`);
         this.loadRooms();
       },
       error: (err) => {
-        this.toastr.error('сталася помилка під час видалення');
+        this.toastr.error(`Сталася помилка під час спроби ${action} номер`);
         console.error(err);
       },
     });

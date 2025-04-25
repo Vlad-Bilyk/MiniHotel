@@ -68,13 +68,16 @@
                     <button mat-icon-button matTooltip="Редагувати" (click)="editService(s)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button matTooltip="Видалити" (click)="deleteService(s.serviceId!)">
-                        <mat-icon>delete</mat-icon>
+                    <button mat-icon-button [matTooltip]="s.isAvailable ? 'Деактивувати' : 'Активувати'"
+                        (click)="toggleServiceStatus(s)"
+                        [class]="s.isAvailable ? 'btn-status-error' : 'btn-status-primary'">
+                        <mat-icon>{{ s.isAvailable ? 'block' :
+                            'check_circle' }}</mat-icon>
                     </button>
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef=" displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
 

@@ -62,8 +62,12 @@
                 <button mat-icon-button color="primary" matTooltip="Редагувати" (click)="editRoom(r)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" matTooltip="Видалити" (click)="deleteRoom(r.roomId!)">
-                    <mat-icon>delete</mat-icon>
+                <button mat-icon-button
+                    [matTooltip]="r.roomStatus === RoomStatus.Available ? 'Деактивувати' : 'Активувати'"
+                    (click)="toggleRoomStatus(r)"
+                    [class]="r.roomStatus === RoomStatus.Available ? 'btn-status-error' : 'btn-status-primary'">
+                    <mat-icon>{{ r.roomStatus === RoomStatus.Available ? 'block' :
+                        'check_circle' }}</mat-icon>
                 </button>
             </td>
         </ng-container>

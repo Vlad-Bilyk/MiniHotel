@@ -109,26 +109,34 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Deletes a service by its unique identifier.
+        /// Deactivates the service specified by the given <paramref name="id"/>.
         /// </summary>
-        /// <param name="id">The unique identifier of the service to delete.</param>
-        /// <returns>No content if the deletion is successful.</returns>
-        /// <response code="204">Service deleted successfully.</response>
-        /// <response code="404">If the service is not found.</response>
-        /// <response code="400">If the request is invalid.</response>
-        [HttpDelete("{id:int}")]
+        /// <param name="id">The unique identifier of the service to deactivate.</param>
+        /// <returns>No content if the service was successfully deactivated.</returns>
+        /// <response code="204">Service deactivated successfully.</response>
+        /// <response code="404">Service with the specified ID was not found.</response>
+        [HttpPatch("{id:int}/deactivate")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> DeleteService(int id)
+        public async Task<IActionResult> Deactivate(int id)
         {
-            Service service = await _serviceRepository.GetAsync(r => r.ServiceId == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-            await _serviceRepository.RemoveAsync(service);
+            await _serviceRepository.Deactivate(id);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Reactivates the service specified by the given <paramref name="id"/>.
+        /// </summary>
+        /// <param name="id">The unique identifier of the service to reactivate.</param>
+        /// <returns>No content if the service was successfully reactivated.</returns>
+        /// <response code="204">Service reactivated successfully.</response>
+        /// <response code="404">Service with the specified ID was not found.</response>
+        [HttpPatch("{id:int}/reactivate")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Reactivate(int id)
+        {
+            await _serviceRepository.Reactivate(id);
             return NoContent();
         }
     }

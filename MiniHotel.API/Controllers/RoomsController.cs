@@ -126,30 +126,6 @@ namespace MiniHotel.API.Controllers
         }
 
         /// <summary>
-        /// Deletes a room by its unique identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the room to delete.</param>
-        /// <returns>No content if the deletion is successful.</returns>
-        /// <response code="204">Room deleted successfully.</response>
-        /// <response code="404">If the room is not found.</response>
-        /// <response code="400">If the request is invalid.</response>
-        [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> DeleteRoom(int id)
-        {
-            Room room = await _roomRepository.GetAsync(r => r.RoomId == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-            await _roomRepository.RemoveAsync(room);
-            return NoContent();
-        }
-
-        /// <summary>
         /// Retrieves available rooms for the specified date range.
         /// </summary>
         /// <param name="startDate">The start date of the desired booking period.</param>
@@ -197,15 +173,8 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Manager)]
         public async Task<ActionResult<RoomDto>> UpdateRoomStatus(int id, RoomStatus newStatus)
         {
-            try
-            {
-                var roomDto = await _roomRepository.UpdateStatusAsync(id, newStatus);
-                return Ok(roomDto);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Room not found");
-            }
+            var roomDto = await _roomRepository.UpdateStatusAsync(id, newStatus);
+            return Ok(roomDto);
         }
     }
 }
