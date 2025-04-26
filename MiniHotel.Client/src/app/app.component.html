@@ -1,9 +1,9 @@
 <div class="page-wrapper d-flex flex-column min-vh-100">
     <app-navbar></app-navbar>
 
-    <body class="flex-fill py-5" [ngClass]="{'py-5': !isHomeRoute }">
+    <div class="main-content flex-fill" [ngClass]="{'py-5': !isHomeRoute }">
         <router-outlet></router-outlet>
-    </body>
+    </div>
     <footer class="footer mt-auto py-3 text-center bg-dark text-white">
         <div class="container">
             <span>&copy; Mini Hotel. All rights reserved.</span>

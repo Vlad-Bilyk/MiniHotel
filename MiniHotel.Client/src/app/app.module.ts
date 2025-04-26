@@ -68,6 +68,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ContactPageComponent } from './pages/contact-page/contact-page.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -128,6 +129,7 @@ const MATERIAL_MODULES = [
     RoomCategoryCardsComponent,
     EditBookingDialogComponent,
     InvoiceSummaryComponent,
+    ContactPageComponent,
   ],
   imports: [
     // Angular core

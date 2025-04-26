@@ -16,6 +16,7 @@ import { roleGuard } from './core/guards/role.guard';
 import { UserRole } from './api/models';
 import { RoomCategoryCardsComponent } from './pages/room-category-cards/room-category-cards.component';
 import { BookingSearchComponent } from './pages/booking-search/booking-search.component';
+import { ContactPageComponent } from './pages/contact-page/contact-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'room-categories', component: RoomCategoryCardsComponent },
   { path: 'room-categories/:roomTypeId', component: RoomCategoryCardsComponent },
   { path: 'booking-search', component: BookingSearchComponent },
+  { path: 'contacts', component: ContactPageComponent },
   { path: 'booking-confirmation', component: BookingConfirmationComponent, canActivate: [authGuard, roleGuard([UserRole.Client])] },
   { path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard, roleGuard([UserRole.Client])] },
   { path: 'admin/room-types', component: RoomTypesComponent, canActivate: [authGuard, roleGuard([UserRole.Manager])] },
