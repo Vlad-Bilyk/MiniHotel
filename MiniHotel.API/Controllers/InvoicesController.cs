@@ -68,7 +68,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<InvoiceDto>> AddInvoiceItem(int invoiceId, InvoiceItemCreateDto createItem)
         {
             var invoice = await _invoiceService.AddItemAsync(invoiceId, createItem);
-            await _invoiceService.RecalculateAsync(invoice.InvoiceId);
             return Ok(invoice);
         }
 

@@ -45,6 +45,7 @@ namespace MiniHotel.Application.Services
             };
 
             var updatedInvoice = await _invoiceRepository.AddItemAsync(item);
+            await RecalculateAsync(invoiceId);
             return _mapper.Map<InvoiceDto>(updatedInvoice);
         }
 
@@ -79,7 +80,7 @@ namespace MiniHotel.Application.Services
 
         public async Task RecalculateAsync(int invoiceId)
         {
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
+            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, IncludeProperties)
                           ?? throw new KeyNotFoundException("Invoice not found");
 
             InvoiceStatus newStatus;
