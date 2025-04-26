@@ -21,6 +21,11 @@ export interface GetAvailableRooms$Plain$Params {
  * The end date of the desired booking period.
  */
   endDate: string;
+
+/**
+ * Optional. Booking ID to ignore when checking room availability (used for editing existing bookings).
+ */
+  ignoreBookingId?: number;
 }
 
 export function getAvailableRooms$Plain(http: HttpClient, rootUrl: string, params: GetAvailableRooms$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RoomDto>>> {
@@ -28,6 +33,7 @@ export function getAvailableRooms$Plain(http: HttpClient, rootUrl: string, param
   if (params) {
     rb.path('startDate', params.startDate, {});
     rb.path('endDate', params.endDate, {});
+    rb.query('ignoreBookingId', params.ignoreBookingId, {});
   }
 
   return http.request(

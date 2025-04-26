@@ -99,6 +99,7 @@ export class BookingsComponent implements OnInit {
       .openEntityDialog<BookingEditFormData, BookingUpdateDto>(
         EditBookingDialogComponent,
         {
+          bookingId: booking.bookingId!,
           formData: {
             roomNumber: booking.roomNumber!,
             startDate: booking.startDate!,

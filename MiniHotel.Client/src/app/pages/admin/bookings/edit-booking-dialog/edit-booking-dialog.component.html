@@ -40,7 +40,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-button (click)="onCancel()">Скасувати</button>
-    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
+    <button mat-flat-button color="primary" [disabled]="form.invalid || form.pristine" (click)="onSubmit()">
         Зберегти
     </button>
 </mat-dialog-actions>

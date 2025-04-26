@@ -8,7 +8,7 @@ import { ServicesService } from '../../../../../api/services';
   selector: 'app-add-invoice-item-dialog',
   standalone: false,
   templateUrl: './add-invoice-item-dialog.component.html',
-  styleUrl: './add-invoice-item-dialog.component.css'
+  styleUrl: './add-invoice-item-dialog.component.css',
 })
 export class AddInvoiceItemDialogComponent implements OnInit {
   form: FormGroup;
@@ -17,18 +17,19 @@ export class AddInvoiceItemDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddInvoiceItemDialogComponent>,
     private hotelServices: ServicesService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.form = this.fb.group({
       serviceName: ['', Validators.required],
       description: ['', Validators.maxLength(200)],
-      quantity: [1, [Validators.required, Validators.min(1)]]
-    })
+      quantity: [1, [Validators.required, Validators.min(1)]],
+    });
   }
 
   ngOnInit(): void {
-    this.hotelServices.getServices()
-      .subscribe(s => this.services = s)
+    this.hotelServices.getServices().subscribe((services) => {
+      this.services = services.filter((s) => s.isAvailable);
+    });
   }
 
   submit(): void {

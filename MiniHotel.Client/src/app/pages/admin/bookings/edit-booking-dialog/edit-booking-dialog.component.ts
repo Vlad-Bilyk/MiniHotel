@@ -7,6 +7,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { dateRangeValidator } from '../../../../shared/validators/date-range.validator';
 
 export interface BookingEditFormData {
+  bookingId: number;
   formData?: BookingUpdateDto;
 }
 
@@ -34,7 +35,7 @@ export class EditBookingDialogComponent {
   }
 
   buildForm(initialData: BookingUpdateDto): void {
-    const initialRoom = initialData?.roomNumber;
+    const initialRoom = initialData.roomNumber;
     const canSelect = !this.loadingRooms && this.availableRooms.length > 0;
 
     const parsedStartDate = new Date(initialData?.startDate ?? '');
@@ -42,10 +43,13 @@ export class EditBookingDialogComponent {
 
     this.form = this.fb.group(
       {
-        roomNumber: [{
-          value: initialRoom ?? '',
-          disabled: !canSelect
-        }, [Validators.required]],
+        roomNumber: [
+          {
+            value: initialRoom ?? '',
+            disabled: !canSelect,
+          },
+          [Validators.required],
+        ],
         startDate: [parsedStartDate, [Validators.required]],
         endDate: [parsedEndDate, [Validators.required]],
       },
@@ -53,6 +57,8 @@ export class EditBookingDialogComponent {
         validators: dateRangeValidator,
       }
     );
+
+    this.loadAvailableRooms(parsedStartDate, parsedEndDate);
   }
 
   onSubmit(): void {
@@ -80,6 +86,7 @@ export class EditBookingDialogComponent {
       .getAvailableRooms({
         startDate: start.toDateString(),
         endDate: end.toDateString(),
+        ignoreBookingId: this.data.bookingId,
       })
       .pipe(
         finalize(() => (this.loadingRooms = false)),

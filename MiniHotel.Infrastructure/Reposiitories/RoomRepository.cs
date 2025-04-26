@@ -21,18 +21,25 @@ namespace MiniHotel.Infrastructure.Reposiitories
             await SaveAsync();
         }
 
-        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
-            var boookedRooms = await _context.Bookings
+            var boookedRoomsQuery = _context.Bookings
                 .Where(b => !(b.EndDate <= startDate || b.StartDate >= endDate)
-                       && b.BookingStatus != BookingStatus.Cancelled)
+                       && b.BookingStatus != BookingStatus.Cancelled);
+
+            if (ignoreBookingId.HasValue)
+            {
+                boookedRoomsQuery = boookedRoomsQuery.Where(b => b.BookingId != ignoreBookingId.Value);
+            }
+
+            var bookedRooms = await boookedRoomsQuery
                 .Select(b => b.RoomId)
                 .Distinct()
                 .ToListAsync();
 
             return await _context.Rooms
-                .Include("RoomType")
-                .Where(r => !boookedRooms.Contains(r.RoomId)
+                .Include(r => r.RoomType)
+                .Where(r => !bookedRooms.Contains(r.RoomId)
                        && r.RoomStatus != RoomStatus.UnderMaintenance)
                 .ToListAsync();
         }

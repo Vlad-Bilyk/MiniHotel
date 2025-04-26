@@ -130,6 +130,7 @@ namespace MiniHotel.API.Controllers
         /// </summary>
         /// <param name="startDate">The start date of the desired booking period.</param>
         /// <param name="endDate">The end date of the desired booking period.</param>
+        /// <param name="ignoreBookingId">Optional. Booking ID to ignore when checking room availability (used for editing existing bookings).</param>
         /// <returns>A collection of available room DTOs.</returns>
         /// <response code="200">Returns the list of available rooms.</response>
         /// <response code="400">If the date range is invalid.</response>
@@ -139,7 +140,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
             if (endDate < startDate)
             {
@@ -149,7 +150,7 @@ namespace MiniHotel.API.Controllers
             startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
             endDate = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
 
-            IEnumerable<Room> rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
+            var rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate, ignoreBookingId);
             if (rooms == null || !rooms.Any())
             {
                 return NotFound("No available rooms found.");

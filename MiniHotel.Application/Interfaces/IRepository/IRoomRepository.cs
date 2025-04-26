@@ -8,7 +8,7 @@ namespace MiniHotel.Application.Interfaces.IRepository
         Task CreateAsync(Room entity);
         Task<Room> UpdateAsync(Room entity);
         Task<Room> UpdateStatusAsync(int id, RoomStatus status);
-        Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate, int? ignoreBookingId = null);
         Task<bool> IsRoomAvailableAsync(int roomId, DateTime startDate, DateTime endDate);
     }
 }
