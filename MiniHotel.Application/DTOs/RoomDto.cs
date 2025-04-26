@@ -10,5 +10,6 @@ namespace MiniHotel.Application.DTOs
         public int RoomTypeId { get; set; }
         public decimal PricePerDay { get; set; }
         public RoomStatus RoomStatus { get; set; }
+        public RoomTypeDto RoomType { get; set; } = default!;
     }
 }

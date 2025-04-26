@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +43,8 @@ import { HasRoleDirective } from './shared/directives/has-role.directive';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { authExpirationInterceptor } from './core/interceptors/auth-expiration.interceptor';
+
 import { ToastrModule } from 'ngx-toastr';
 
 /* Angular Material modules */
@@ -66,7 +68,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { authExpirationInterceptor } from './core/interceptors/auth-expiration.interceptor';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -143,7 +144,8 @@ const MATERIAL_MODULES = [
     ...MATERIAL_MODULES,
   ],
   providers: [
-    provideHttpClient(withInterceptors([jwtInterceptor, authExpirationInterceptor]))
+    provideHttpClient(withInterceptors([jwtInterceptor, authExpirationInterceptor])),
+    { provide: LOCALE_ID, useValue: 'uk-UA' },
   ],
   bootstrap: [AppComponent],
 })

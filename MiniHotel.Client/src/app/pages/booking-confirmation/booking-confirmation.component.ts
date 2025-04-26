@@ -131,7 +131,7 @@ export class BookingConfirmationComponent implements OnInit {
     if (method === 'online' || method === 'partial') {
       this.redirectToPayment(booking.invoiceId!);
     } else {
-      this.toastr.info('Очікуємо оплату готівкою при заселенні.');
+      this.toastr.info('Очікуємо оплату при заселенні.');
       this.router.navigate(['/my-bookings']);
     }
   }

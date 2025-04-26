@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { RoomDto } from '../../api/models';
 import { RoomsService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { dateRangeValidator } from '../../shared/validators/date-range.validator';
 
 @Component({
   selector: 'app-booking-search',
@@ -31,17 +30,23 @@ export class BookingSearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     this.searchForm = this.fb.group(
       {
-        startDate: [this.defaultStartDate(), Validators.required],
-        endDate: [this.defaultEndDate(), Validators.required],
+        startDate: [today, Validators.required],
+        endDate: [tomorrow, Validators.required],
       },
-      { validators: this.dateRangeValidator }
+      { validators: dateRangeValidator }
     );
   }
 
   onSearch(): void {
     this.searchPerformed = false;
+    this.groupedRooms.clear();
+    this.roomCategoriesData = [];
 
     if (this.searchForm.invalid) {
       this.searchForm.markAllAsTouched();
@@ -50,19 +55,24 @@ export class BookingSearchComponent implements OnInit {
     }
 
     const { startDate, endDate } = this.searchForm.value;
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
 
-    this.roomService.getAvailableRooms({ startDate, endDate }).subscribe({
+    this.roomService.getAvailableRooms({ startDate: formattedStartDate, endDate: formattedEndDate }).subscribe({
       next: (rooms) => {
         this.searchPerformed = true;
-        this.groupedRooms = this.groupByCategory(rooms);
         if (rooms.length === 0) {
           this.toastr.info(
             'Вибачте, на запитуваний період немає вільних номерів.'
           );
+          return;
         }
+        this.groupedRooms = this.groupByCategory(rooms);
+        this.roomCategoriesData = Array.from(this.groupedRooms.entries());
       },
       error: (err) => {
         this.toastr.error('Не вдалося завантажити номери. Спробуйте пізніше');
+        this.searchPerformed = true;
         console.log(err);
       },
     });
@@ -89,40 +99,16 @@ export class BookingSearchComponent implements OnInit {
     const map = new Map<string, { rooms: RoomDto[]; total: number }>();
     for (const room of rooms) {
       const key = room.roomCategory!;
-      if (key === undefined) {
-        this.toastr.error('Room type is undefined. Please contact support.');
-        console.error(
-          'Room type is undefined for room with ID: ' + room.roomId
-        );
+      if (!key) {
+        console.error(`Room with ID ${room.roomId} has no category`);
         continue;
       }
-
       if (!map.has(key)) {
         map.set(key, { rooms: [], total: 0 });
       }
-
       map.get(key)!.rooms.push(room);
       map.get(key)!.total++;
     }
-
-    this.roomCategoriesData = Array.from(map.entries());
-
     return map;
   }
-
-  private defaultStartDate(): string {
-    return new Date().toISOString().split('T')[0];
-  }
-
-  private defaultEndDate(): string {
-    const tommorow = new Date();
-    tommorow.setDate(tommorow.getDate() + 1);
-    return tommorow.toISOString().split('T')[0];
-  }
-
-  private dateRangeValidator: ValidatorFn = (group: AbstractControl) => {
-    const start = group.get('startDate')?.value;
-    const end = group.get('endDate')?.value;
-    return start && end && start >= end ? { indvalidRange: true } : null;
-  };
 }

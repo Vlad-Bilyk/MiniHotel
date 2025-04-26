@@ -1,12 +1,31 @@
-.line-with-button {
-    hr {
-        border-top: 2px solid #0d6efd;
-        z-index: 1;
-    }
+.search-btn {
+  height: 50px;
+  min-width: 200px;
+  font-size: 1rem;
+  padding: 0 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
 
-    .search-btn {
-        position: relative;
-        border-radius: 50rem;
-        z-index: 2;
-    }
+.search-btn mat-icon {
+  font-size: 24px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1976d2;
+}
+
+mat-card {
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid #cfd8dc;
+  border-radius: 1rem;
+  box-shadow: none; /* мінімальна тінь або взагалі без тіні */
 }

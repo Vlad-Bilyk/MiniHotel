@@ -1,17 +1,29 @@
-<div class="card h-100 shadow-sm">
-    <!-- Place for image -->
-    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
-        <span class="text-muted">[Фото номера]</span>
-    </div>
+<mat-card @fadeIn class="room-card mat-elevation-z2">
+    <!-- Image -->
+    <img mat-card-image [src]="roomType.imageUrl || 'https://fakeimg.pl/400x250'" alt="Фото номера" />
 
-    <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{ roomType.roomCategory }}</h5>
-        <p class="card-text text-muted small">Доступно номерів: {{ totalAvailable }}</p>
-        <p class="card-text">{{ roomType.description || 'Опис відсутній.' }}</p>
+    <!-- Content -->
+    <mat-card-content class="d-flex flex-column h-100 pt-3">
+        <h4 class="mat-headline mb-2">{{ roomType.roomCategory }}</h4>
 
-        <div class="mt-auto">
-            <p class="fw-bold text-end">{{ roomType.pricePerNight | currency: 'UAH ':'symbol':'1.0-0' }}</p>
-            <button class="btn btn-primary w-100" (click)="bookRoom()">Забронювати</button>
+        <p class="text-muted small mb-2">Доступно номерів: {{ totalAvailable }}</p>
+
+        <div class="room-description mb-3">
+            {{ roomType.description ? (roomType.description | slice:0:180) + '...' : 'Опис відсутній.' }}
         </div>
-    </div>
-</div>
+
+        <div class="mt-auto d-flex flex-column pt-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <a *ngIf="roomType.description" [routerLink]="['/room-categories', roomType.roomTypeId]"
+                    class="details-link">
+                    Детальніше
+                </a>
+                <p class="room-price m-0">{{ roomType.pricePerNight | currency:'UAH':'symbol':'1.0-0' }} / ніч</p>
+            </div>
+
+            <button mat-flat-button color="primary" class="w-100" (click)="bookRoom()">
+                Забронювати
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>

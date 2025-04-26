@@ -134,11 +134,9 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of available room DTOs.</returns>
         /// <response code="200">Returns the list of available rooms.</response>
         /// <response code="400">If the date range is invalid.</response>
-        /// <response code="404">If no available rooms are found.</response>
         [HttpGet("available/{startDate:datetime}/{endDate:datetime}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
@@ -151,10 +149,6 @@ namespace MiniHotel.API.Controllers
             endDate = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
 
             var rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate, ignoreBookingId);
-            if (rooms == null || !rooms.Any())
-            {
-                return NotFound("No available rooms found.");
-            }
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
         }
 

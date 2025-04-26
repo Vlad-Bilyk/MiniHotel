@@ -1,39 +1,55 @@
-<div class="container pt-5">
+<div class="app-container pt-5">
     <!-- Search panel -->
-    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="row g-3 align-items-center justify-content-center border-bottom pb-3 mx-1 mx-md-0">
-            <div class="col-auto">
-                <label class="form-label mb-1">Приїзд</label>
-                <input type="date" class="form-control" formControlName="startDate" />
-            </div>
-            <div class="col-auto">
-                <label class="form-label mb-1">Виїзд</label>
-                <input type="date" class="form-control" formControlName="endDate" />
-            </div>
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 pb-4">
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Приїзд</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Виїзд</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
         </div>
 
-        <div class="position-relative text-center my-5 line-with-button">
-            <hr class="position-absolute top-50 start-0 w-100 translate-middle-y m-0">
-            <button class="btn btn-primary btn-lg px-5 search-btn" type="submit">
-                <i class="bi bi-search me-2"></i>Шукати
+        <div class="position-relative text-center mb-5">
+            <hr class="position-absolute top-50 start-0 w-100 translate-middle-y m-0" />
+            <button mat-raised-button class="search-btn" type="submit">
+                <mat-icon class="me-2">search</mat-icon>Шукати
             </button>
         </div>
     </form>
 
-
     <!-- Not found rooms for chosen dates -->
-    <div *ngIf="searchPerformed && groupedRooms.size === 0" class="text-center text-muted mt-5">
-        Номери за вибраними датами не знайдені.
+    <div *ngIf="searchPerformed && groupedRooms.size === 0" class="d-flex justify-content-center mt-5">
+        <mat-card class="w-100 p-4 text-center" style="max-width: none;">
+            <h5 class="mb-3">Вибачте, на запитуваний період немає вільних номерів.</h5>
+            <p class="mb-2">
+                Ви можете спробувати інші дати, використовуючи форму пошуку вище або залишити запит у листі очікування.
+            </p>
+            <p class="mb-2">
+                Ми із задоволенням допоможемо підібрати інші варіанти розміщення зручним для вас способом:
+            </p>
+            <p class="fw-semibold mb-1">
+                Телефон: <a href="tel:+380555555555">+380 55 555 5555</a>
+            </p>
+            <p class="fw-semibold">
+                E-mail: <a href="mailto:mini_hotel@hotel.com">mini_hotel&#64;hotel.com</a>
+            </p>
+        </mat-card>
     </div>
 
     <!-- Show result -->
-    <div class="row" *ngIf="groupedRooms.size > 0">
+    <div class="row" *ngIf="searchPerformed && groupedRooms.size > 0">
         <div class="col-md-6 col-lg-4 mb-4" *ngFor="let entry of roomCategoriesData">
-            <!-- get first available room -->
-            <app-room-type-card [roomType]="entry[1].rooms[0]" [categoryName]="entry[0]"
+            <app-room-type-card [roomType]="entry[1].rooms[0].roomType!" [room]="entry[1].rooms[0]"
                 [totalAvailable]="entry[1].total" (book)="onBook($event)">
             </app-room-type-card>
         </div>
     </div>
-
 </div>

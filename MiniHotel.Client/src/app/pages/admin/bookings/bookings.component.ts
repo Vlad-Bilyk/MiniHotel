@@ -9,7 +9,7 @@ import {
 import { BookingsService } from '../../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { BookingsOfflineDialogComponent } from './bookings-offline-dialog/bookings-offline-dialog.component';
 import { DialogService } from '../../../shared/services/dialog.service';
 import {
