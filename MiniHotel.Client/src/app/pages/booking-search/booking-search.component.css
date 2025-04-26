@@ -27,5 +27,4 @@ mat-card {
   background-color: var(--mat-sys-surface-container-low);
   border: 1px solid #cfd8dc;
   border-radius: 1rem;
-  box-shadow: none; /* мінімальна тінь або взагалі без тіні */
 }

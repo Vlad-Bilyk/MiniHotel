@@ -77,7 +77,9 @@ export class UsersComponent implements OnInit {
   }
 
   // TODO: implement this dialog
-  openEditDialog(user: UserUpdateDto) { }
+  openEditDialog(user: UserUpdateDto) {
+    this.toastr.info('На даний момент функція не доступна')
+  }
 
   applyGlobalFilter(value: string) {
     this.searchValue = value;

@@ -19,7 +19,6 @@ import { RoomDto, RoomTypeDto } from '../../../api/models';
 export class RoomTypeCardComponent {
   @Input() roomType!: RoomTypeDto;
   @Input() room!: RoomDto;
-  @Input() totalAvailable: number = 0;
 
   @Output() book = new EventEmitter<RoomTypeDto>();
 

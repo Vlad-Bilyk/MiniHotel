@@ -31,7 +31,7 @@ namespace MiniHotel.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomTypeDto>>> GetRoomTypes()
         {
-            IEnumerable<RoomType> roomTypes = await _roomTypeRepository.GetAllAsync();
+            IEnumerable<RoomType> roomTypes = await _roomTypeRepository.GetAllAsync(includeProperties: "Rooms");
             return Ok(_mapper.Map<List<RoomTypeDto>>(roomTypes));
         }
 
@@ -49,7 +49,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetRoomType(int id)
         {
-            RoomType roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id);
+            RoomType roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id, includeProperties: "Rooms");
             if (roomType == null)
             {
                 return NotFound();

@@ -20,12 +20,6 @@
                         <label class="btn btn-outline-primary" for="payOnsite">
                             <i class="bi bi-cash me-1"></i> На місці
                         </label>
-
-                        <input type="radio" class="btn-check" id="payPartial" value="partial"
-                            formControlName="selectedPayment" autocomplete="off" />
-                        <label class="btn btn-outline-primary" for="payPartial">
-                            <i class="bi bi-percent me-1"></i> Часткова
-                        </label>
                     </div>
                     <div *ngIf="paymentForm.get('selectedPayment')?.touched && paymentForm.get('selectedPayment')?.invalid"
                         class="text-danger mb-3">

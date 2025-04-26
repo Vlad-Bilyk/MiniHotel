@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MiniHotel.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniHotel.Domain.Entities
@@ -18,5 +19,10 @@ namespace MiniHotel.Domain.Entities
         public required string Description { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        [NotMapped]
+        public int RoomCount => Rooms.Count(r => r.RoomStatus != RoomStatus.UnderMaintenance);
+
+        public ICollection<Room> Rooms { get; set; } = default!;
     }
 }

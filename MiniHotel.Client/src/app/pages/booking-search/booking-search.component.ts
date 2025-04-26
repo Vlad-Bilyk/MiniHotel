@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RoomDto } from '../../api/models';
 import { RoomsService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
@@ -18,9 +14,9 @@ import { dateRangeValidator } from '../../shared/validators/date-range.validator
 })
 export class BookingSearchComponent implements OnInit {
   searchForm!: FormGroup;
-  groupedRooms: Map<string, { rooms: RoomDto[]; total: number }> = new Map();
+  groupedRooms: Map<string, { rooms: RoomDto[] }> = new Map();
   searchPerformed = false;
-  roomCategoriesData: Array<[string, { rooms: RoomDto[]; total: number }]> = [];
+  roomCategoriesData: Array<[string, { rooms: RoomDto[] }]> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -58,24 +54,26 @@ export class BookingSearchComponent implements OnInit {
     const formattedStartDate = startDate.toISOString().split('T')[0];
     const formattedEndDate = endDate.toISOString().split('T')[0];
 
-    this.roomService.getAvailableRooms({ startDate: formattedStartDate, endDate: formattedEndDate }).subscribe({
-      next: (rooms) => {
-        this.searchPerformed = true;
-        if (rooms.length === 0) {
-          this.toastr.info(
-            'Вибачте, на запитуваний період немає вільних номерів.'
-          );
-          return;
-        }
-        this.groupedRooms = this.groupByCategory(rooms);
-        this.roomCategoriesData = Array.from(this.groupedRooms.entries());
-      },
-      error: (err) => {
-        this.toastr.error('Не вдалося завантажити номери. Спробуйте пізніше');
-        this.searchPerformed = true;
-        console.log(err);
-      },
-    });
+    this.roomService
+      .getAvailableRooms({
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      })
+      .subscribe({
+        next: (rooms) => {
+          this.searchPerformed = true;
+          if (rooms.length === 0) {
+            return;
+          }
+          this.groupedRooms = this.groupByCategory(rooms);
+          this.roomCategoriesData = Array.from(this.groupedRooms.entries());
+        },
+        error: (err) => {
+          this.toastr.error('Не вдалося завантажити номери. Спробуйте пізніше');
+          this.searchPerformed = true;
+          console.log(err);
+        },
+      });
   }
 
   onBook(room: RoomDto): void {
@@ -93,10 +91,8 @@ export class BookingSearchComponent implements OnInit {
     this.router.navigate(['/booking-confirmation']);
   }
 
-  private groupByCategory(
-    rooms: RoomDto[]
-  ): Map<string, { rooms: RoomDto[]; total: number }> {
-    const map = new Map<string, { rooms: RoomDto[]; total: number }>();
+  private groupByCategory(rooms: RoomDto[]): Map<string, { rooms: RoomDto[] }> {
+    const map = new Map<string, { rooms: RoomDto[] }>();
     for (const room of rooms) {
       const key = room.roomCategory!;
       if (!key) {
@@ -104,10 +100,9 @@ export class BookingSearchComponent implements OnInit {
         continue;
       }
       if (!map.has(key)) {
-        map.set(key, { rooms: [], total: 0 });
+        map.set(key, { rooms: [] });
       }
       map.get(key)!.rooms.push(room);
-      map.get(key)!.total++;
     }
     return map;
   }

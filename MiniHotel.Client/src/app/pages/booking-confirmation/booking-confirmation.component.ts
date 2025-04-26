@@ -40,7 +40,6 @@ export class BookingConfirmationComponent implements OnInit {
   // Map radio selection to enum
   private paymentMap: Record<string, PaymentMethod> = {
     online: PaymentMethod.Online,
-    partial: PaymentMethod.Online, // replace with real partian method
     onsite: PaymentMethod.OnSite,
   };
 

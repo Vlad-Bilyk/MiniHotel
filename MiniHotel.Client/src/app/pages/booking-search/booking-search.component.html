@@ -4,14 +4,14 @@
         <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 pb-4">
             <mat-form-field appearance="outline" class="search-field">
                 <mat-label>Приїзд</mat-label>
-                <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+                <input matInput [matDatepicker]="startPicker" [readonly]="true" formControlName="startDate" />
                 <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                 <mat-datepicker #startPicker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="search-field">
                 <mat-label>Виїзд</mat-label>
-                <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+                <input matInput [matDatepicker]="endPicker" [readonly]="true" formControlName="endDate" />
                 <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
                 <mat-datepicker #endPicker></mat-datepicker>
             </mat-form-field>
@@ -48,7 +48,7 @@
     <div class="row" *ngIf="searchPerformed && groupedRooms.size > 0">
         <div class="col-md-6 col-lg-4 mb-4" *ngFor="let entry of roomCategoriesData">
             <app-room-type-card [roomType]="entry[1].rooms[0].roomType!" [room]="entry[1].rooms[0]"
-                [totalAvailable]="entry[1].total" (book)="onBook($event)">
+                (book)="onBook($event)">
             </app-room-type-card>
         </div>
     </div>

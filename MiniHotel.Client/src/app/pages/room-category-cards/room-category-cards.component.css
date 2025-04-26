@@ -23,6 +23,10 @@ mat-card-title {
   color: var(--mat-sys-on-surface);
 }
 
+mat-card-actions {
+  padding: 0;
+}
+
 .room-card__content {
   flex: 1 1 auto;
   overflow-wrap: break-word;

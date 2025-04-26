@@ -1,6 +1,4 @@
-<!-- room-category-cards.component.html -->
-
-<!-- Спінер під час завантаження -->
+<!-- Loading -->
 <div *ngIf="loading" class="d-flex justify-content-center">
     <mat-progress-spinner mode="indeterminate" diameter="48" color="primary"></mat-progress-spinner>
 </div>
@@ -10,25 +8,26 @@
     <h2 class="mb-4 text-center mat-display-medium">Категорії номерів</h2>
 
     <div class="row g-4">
-        <div class="col-12" *ngFor="let room of roomTypes">
-            <mat-card class="room-card mat-elevation-z2" appearance="outlined">
+        <div class="col-12" *ngFor="let roomType of roomTypes">
+            <mat-card [attr.id]="'room-' + roomType.roomTypeId" class="room-card mat-elevation-z2"
+                appearance="outlined">
                 <div class="room-card__content d-flex flex-column flex-lg-row align-items-stretch">
-                    <!-- Опис -->
+                    <!-- Description -->
                     <div class="room-card__info flex-fill pe-lg-4">
-                        <mat-card-title>{{ room.roomCategory }}</mat-card-title>
+                        <mat-card-title>{{ roomType.roomCategory }}</mat-card-title>
                         <div class="room-card_description">
-                            {{ room.description || 'Опис відсутній.' }}
+                            {{ roomType.description || 'Опис відсутній.' }}
                         </div>
                         <div class="room-card_price">
-                            {{ room.pricePerNight | currency: 'UAH':'symbol' }} / ніч
+                            {{ roomType.pricePerNight | currency: 'UAH':'symbol' }} / ніч
                         </div>
                         <mat-card-actions>
-                            <button mat-flat-button color="primary">Забронювати</button>
+                            <button mat-flat-button color="primary" (click)="onBook()">Забронювати</button>
                         </mat-card-actions>
                     </div>
-                    <!-- Фото -->
+                    <!-- Photo -->
                     <div class="room-card__image ms-lg-4 mt-4 mt-lg-0">
-                        <img [src]="room.imageUrl || 'https://fakeimg.pl/600x400'" [alt]="room.roomCategory" />
+                        <img [src]="roomType.imageUrl || 'https://fakeimg.pl/600x400'" [alt]="roomType.roomCategory" />
                     </div>
                 </div>
             </mat-card>
