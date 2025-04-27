@@ -53,7 +53,8 @@ namespace MiniHotel.Infrastructure.Reposiitories
                 }
             }
 
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync()
+                ?? throw new KeyNotFoundException("Not found");
         }
 
         public async Task RemoveAsync(T entity)

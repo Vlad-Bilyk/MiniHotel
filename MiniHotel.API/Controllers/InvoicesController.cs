@@ -48,10 +48,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<InvoiceDto>> GetInvoiceByBookingId(int bookingId)
         {
             var invoice = await _invoiceService.GetInvoiceByBookingIdAsync(bookingId);
-            if (invoice == null)
-            {
-                return NotFound();
-            }
             return Ok(invoice);
         }
 

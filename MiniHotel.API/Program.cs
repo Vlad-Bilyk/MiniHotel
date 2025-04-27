@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MiniHotel.API;
 using MiniHotel.API.Configuration;
+using MiniHotel.API.Middlewares;
 using MiniHotel.Application.Interfaces;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
@@ -87,6 +87,8 @@ builder.Services.AddTransient<ISeeder, InvoiceSeeder>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -140,9 +142,9 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-app.UseCors();
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseCors();
 
 // Migrate the database
 using var scope = app.Services.CreateScope();

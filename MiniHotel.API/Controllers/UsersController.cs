@@ -52,10 +52,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetUserById(string id)
         {
             HotelUser user = await _userRepository.GetAsync(r => r.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
             return Ok(_mapper.Map<UserDto>(user));
         }
 
@@ -72,17 +68,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto updateDto)
         {
-            if (updateDto == null)
-            {
-                return BadRequest();
-            }
-
             var existingUser = await _userRepository.GetAsync(r => r.UserId == id);
-            if (existingUser == null)
-            {
-                return NotFound();
-            }
-
             _mapper.Map(updateDto, existingUser);
             await _userRepository.UpdateAsync(existingUser);
             return NoContent();

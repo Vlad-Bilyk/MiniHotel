@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
@@ -106,7 +107,6 @@ namespace MiniHotel.Application.Services
             var invoices = await _invoiceRepository.GetAllAsync(includeProperties: IncludeProperties);
             var invoiceDtoList = _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
 
-            // Refactor this later
             invoiceDtoList
                 .Where(i => i.Payments.Any())
                 .ToList()
@@ -161,7 +161,7 @@ namespace MiniHotel.Application.Services
                                 ?? throw new KeyNotFoundException("Invoice not found");
 
             var bookingItem = invoice.InvoiceItems.SingleOrDefault(i => i.ItemType == InvoiceItemType.RoomBooking)
-                              ?? throw new InvalidOperationException("RoomBooking item is missing.");
+                              ?? throw new BadRequestException("RoomBooking item is missing.");
             var nights = (invoice.Booking.EndDate.Date - invoice.Booking.StartDate.Date).Days;
 
             bookingItem.Description = $"Бронювання номеру {invoice.Booking.Room.RoomNumber} ({invoice.Booking.Room.RoomType.RoomCategory}) - {nights} ночей";

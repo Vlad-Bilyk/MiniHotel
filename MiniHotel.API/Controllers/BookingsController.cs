@@ -52,21 +52,15 @@ namespace MiniHotel.API.Controllers
         /// <param name="pageSize">The number of bookings to include per page (default is 10).</param>
         /// <returns>A paginated result containing <see cref="UserBookingsDto"/> items.</returns>
         /// <response code="200">Returns the paginated list of user's bookings.</response>
-        /// <response code="400">Returned if the user ID could not be resolved from the token claims.</response>
-        /// <response code="500">If an unexpected server error occurs.</response>
+        /// <response code="401">Returned if the user ID could not be resolved from the token claims.</response>
         [HttpGet("user")]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(Roles = Roles.Client)]
         public async Task<ActionResult<PagedResult<UserBookingsDto>>> GetUserBookings([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return BadRequest("User not found");
-            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException("User not authorized");
 
             var result = await _bookingService.GetUserBookingsAsync(pageNumber, pageSize, userId);
             return Ok(new PagedResult<UserBookingsDto>
@@ -91,20 +85,8 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<BookingDto>> GetBookingById(int id)
         {
-            try
-            {
-                var bookingDto = await _bookingService.GetBookingAsync(b => b.BookingId == id);
-                if (bookingDto == null)
-                {
-                    return NotFound("Booking not found.");
-                }
-
-                return Ok(bookingDto);
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
+            var bookingDto = await _bookingService.GetBookingAsync(b => b.BookingId == id);
+            return Ok(bookingDto);
         }
 
         /// <summary>
@@ -120,71 +102,32 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Client)]
         public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] BookingCreateDto createDto)
         {
-            if (createDto == null)
-            {
-                return BadRequest("Bad data for booking");
-            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new BadHttpRequestException("User not authenticated");
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return BadRequest("User not found");
-            }
-
-            Console.WriteLine(userId);
-
-            try
-            {
-                var bookingDto = await _bookingService.CreateBookingAsync(createDto, userId);
-                return CreatedAtRoute(nameof(GetBookingById), new { id = bookingDto.BookingId }, bookingDto);
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
+            var bookingDto = await _bookingService.CreateBookingAsync(createDto, userId);
+            return CreatedAtRoute(nameof(GetBookingById), new { id = bookingDto.BookingId }, bookingDto);
         }
 
         [HttpPost("admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<BookingDto>> CreateBookingByReception([FromBody] BookingCreateByReceptionDto createDto)
         {
-            try
-            {
-                var result = await _bookingService.CreateOfflineBookingAsync(createDto);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
+            var result = await _bookingService.CreateOfflineBookingAsync(createDto);
+            return Ok(result);
         }
 
         [HttpPatch("{id:int}/update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingUpdateDto updateDto)
         {
-            try
-            {
-                await _bookingService.UpdateBookingAsync(id, updateDto);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
+            await _bookingService.UpdateBookingAsync(id, updateDto);
+            return NoContent();
         }
 
         /// <summary>
@@ -255,35 +198,8 @@ namespace MiniHotel.API.Controllers
         /// <returns>The updated booking data transfer object.</returns>
         private async Task<ActionResult<BookingDto>> UpdateStatusAsync(int id, BookingStatus newStatus)
         {
-            try
-            {
-                var bookingDto = await _bookingService.UpdateBookingStatusAsync(id, newStatus);
-                return Ok(bookingDto);
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Handles exceptions thrown during booking operations and returns appropriate HTTP responses.
-        /// </summary>
-        /// <param name="ex">The exception that was thrown.</param>
-        /// <returns>An <see cref="ActionResult"/> representing the HTTP response.</returns>
-        private ActionResult HandleException(Exception ex)
-        {
-            _logger.LogError(ex.Message);
-            switch (ex)
-            {
-                case KeyNotFoundException:
-                    return NotFound(ex.Message);
-                case InvalidOperationException:
-                    return BadRequest("Invalid operation: " + ex.Message);
-                default:
-                    _logger.LogError(ex, "Unhandled error.");
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error.");
-            }
+            var bookingDto = await _bookingService.UpdateBookingStatusAsync(id, newStatus);
+            return Ok(bookingDto);
         }
     }
 }

@@ -31,17 +31,13 @@ namespace MiniHotel.Infrastructure.Reposiitories
 
         public async Task<int> RemoveItemAsync(int invoiceItemId)
         {
-            var item = await _context.InvoiceItems.FindAsync(invoiceItemId);
-
-            if (item == null)
-            {
-                throw new KeyNotFoundException("Invoice item not found");
-            }
+            var item = await _context.InvoiceItems.FindAsync(invoiceItemId)
+                ?? throw new KeyNotFoundException("Invoice item not found");
 
             var invoiceId = item.InvoiceId;
             _context.InvoiceItems.Remove(item);
             await SaveAsync();
-            return invoiceId;
+            return invoiceId; // Returns the invoice ID to allow recalculation after removing an item
         }
 
         public async Task UpdateAsync(Invoice invoice)

@@ -2,11 +2,11 @@
 using MiniHotel.Application.Common;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Exceptions;
+using MiniHotel.Application.Filters;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
-using System.Globalization;
 using System.Linq.Expressions;
 
 namespace MiniHotel.Application.Services
@@ -58,7 +58,7 @@ namespace MiniHotel.Application.Services
                 var room = await ValidateAndGetRoomAsync(createDto.RoomNumber, createDto.StartDate, createDto.EndDate);
 
                 var offlineUser = await _userRepository.GetAsync(u => u.Email == "offline_client@hotel.local")
-                    ?? throw new ArgumentException("Offline user not found");
+                    ?? throw new InvalidOperationException("System misconfiguration: offline client not found.");
 
                 var booking = new Booking
                 {
@@ -99,7 +99,8 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)
         {
-            var booking = await _bookingRepository.GetAsync(filter, IncludeProperties);
+            var booking = await _bookingRepository.GetAsync(filter, IncludeProperties)
+                ?? throw new KeyNotFoundException("Booking not found");
             return _mapper.Map<BookingDto>(booking);
         }
 
@@ -109,16 +110,17 @@ namespace MiniHotel.Application.Services
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                var dateFilter = BuildDateFilter(search);
-                var textFilter = BuildTextFilter(search);
-                filter = CombineFilters(textFilter, dateFilter, false);
+                var dateFilter = BookingFilterBuilder.BuildDateFilter(search);
+                var textFilter = BookingFilterBuilder.BuildTextFilter(search);
+                filter = BookingFilterBuilder.CombineFilters(textFilter, dateFilter, false);
             }
 
             if (status.HasValue)
             {
-                Expression<Func<Booking, bool>> statusFilter = b => b.BookingStatus == status.Value;
-
-                filter = filter is null ? statusFilter : CombineFilters(filter, statusFilter, true);
+                var statusFilter = BookingFilterBuilder.BuildStatusFilter(status.Value);
+                filter = filter is null
+                    ? statusFilter
+                    : BookingFilterBuilder.CombineFilters(filter, statusFilter, true);
             }
 
             var result = await _bookingRepository.GetPagedAsync(pageNumber, pageSize, filter, IncludeProperties);
@@ -140,12 +142,12 @@ namespace MiniHotel.Application.Services
 
             if (booking.PaymentMethod == PaymentMethod.Online)
             {
-                throw new InvalidOperationException("Online-paid bookings cannot be edited; please cancel and rebook.");
+                throw new BadRequestException("Online-paid bookings cannot be edited; please cancel and rebook.");
             }
 
             if (booking.BookingStatus is BookingStatus.CheckedIn or BookingStatus.CheckedOut or BookingStatus.Cancelled)
             {
-                throw new InvalidOperationException("This booking cannot be edited in its current status.");
+                throw new BadRequestException("This booking cannot be edited in its current status.");
             }
 
             booking.RoomId = room.RoomId;
@@ -185,57 +187,9 @@ namespace MiniHotel.Application.Services
             var available = await _roomRepository.IsRoomAvailableAsync(room.RoomId, startDate, endDate, ignoreBookingId);
             if (!available)
             {
-                throw new ArgumentException("Room is not available for the selected dates");
+                throw new BadRequestException("Room is not available for the selected dates");
             }
             return room;
-        }
-
-        private static Expression<Func<Booking, bool>> BuildDateFilter(string search)
-        {
-            var formats = new[] { "dd.MM.yyyy", "dd.MM", "MM" };
-            if (!DateTime.TryParseExact(search.Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
-                return b => false;
-
-            return search.Trim().Length switch
-            {
-                10 => b => b.StartDate.Date == date.Date || b.EndDate.Date == date.Date,
-                5 => b => b.StartDate.Day == date.Day && b.StartDate.Month == date.Month
-                         || b.EndDate.Day == date.Day && b.EndDate.Month == date.Month,
-                2 => b => b.StartDate.Month == date.Month || b.EndDate.Month == date.Month,
-                _ => b => false
-            };
-        }
-
-        private static Expression<Func<Booking, bool>> BuildTextFilter(string search)
-        {
-            var normalized = search.ToLower();
-
-            return b =>
-                (
-                    b.FullName != null
-                        ? b.FullName.ToLower().Contains(normalized)
-                        : (b.User.FirstName.ToLower().Contains(normalized) ||
-                           b.User.LastName.ToLower().Contains(normalized))
-                )
-                || b.Room.RoomNumber.ToLower().Contains(normalized)
-                || b.Room.RoomType.RoomCategory.ToLower().Contains(normalized);
-        }
-
-        private static Expression<Func<Booking, bool>> CombineFilters(
-            Expression<Func<Booking, bool>> filter1,
-            Expression<Func<Booking, bool>> filter2,
-            bool useAnd)
-        {
-            var param = Expression.Parameter(typeof(Booking), "b");
-
-            var invoked1 = Expression.Invoke(filter1, param);
-            var invoked2 = Expression.Invoke(filter2, param);
-
-            var body = useAnd
-                ? Expression.AndAlso(invoked1, invoked2)
-                : Expression.OrElse(invoked1, invoked2);
-
-            return Expression.Lambda<Func<Booking, bool>>(body, param);
         }
     }
 }

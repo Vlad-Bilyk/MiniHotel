@@ -58,10 +58,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetRoomById(int id)
         {
             Room room = await _roomRepository.GetAsync(r => r.RoomId == id, includeProperties: "RoomType");
-            if (room == null)
-            {
-                return NotFound();
-            }
             return Ok(_mapper.Map<RoomDto>(room));
         }
 
@@ -81,10 +77,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomUpsertDto createDto)
         {
             var roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == createDto.RoomTypeId);
-            if (roomType is null)
-            {
-                return BadRequest("Room type not found.");
-            }
 
             var room = new Room
             {
@@ -114,11 +106,6 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomUpsertDto updateDto)
         {
-            if (updateDto == null)
-            {
-                return BadRequest();
-            }
-
             var existingRoom = await _roomRepository.GetAsync(r => r.RoomId == id);
             _mapper.Map(updateDto, existingRoom);
             await _roomRepository.UpdateAsync(existingRoom);
@@ -137,12 +124,12 @@ namespace MiniHotel.API.Controllers
         [HttpGet("available/{startDate:datetime}/{endDate:datetime}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetAvailableRooms(DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
             if (endDate < startDate)
             {
-                return BadRequest("End date must be greater than start date.");
+                throw new BadHttpRequestException("End date must be greater than start date.");
             }
 
             var rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate, ignoreBookingId);

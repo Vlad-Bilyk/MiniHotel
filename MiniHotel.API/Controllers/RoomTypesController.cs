@@ -50,10 +50,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetRoomType(int id)
         {
             RoomType roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id, includeProperties: "Rooms");
-            if (roomType == null)
-            {
-                return NotFound();
-            }
             return Ok(_mapper.Map<RoomTypeDto>(roomType));
         }
 
@@ -92,11 +88,6 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateRoomType(int id, [FromBody] RoomTypeUpsertDto updateDto)
         {
-            if (updateDto == null)
-            {
-                return BadRequest();
-            }
-
             var existingRoomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id);
             _mapper.Map(updateDto, existingRoomType);
             await _roomTypeRepository.UpdateAsync(existingRoomType);

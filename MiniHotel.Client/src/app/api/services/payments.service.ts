@@ -22,10 +22,6 @@ import { payOnline } from '../fn/payments/pay-online';
 import { PayOnline$Params } from '../fn/payments/pay-online';
 import { payOnline$Plain } from '../fn/payments/pay-online-plain';
 import { PayOnline$Plain$Params } from '../fn/payments/pay-online-plain';
-import { refund } from '../fn/payments/refund';
-import { Refund$Params } from '../fn/payments/refund';
-import { refund$Plain } from '../fn/payments/refund-plain';
-import { Refund$Plain$Params } from '../fn/payments/refund-plain';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsService extends BaseService {
@@ -189,69 +185,6 @@ export class PaymentsService extends BaseService {
   callback(params?: Callback$Params, context?: HttpContext): Observable<void> {
     return this.callback$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
-  /** Path part for operation `refund()` */
-  static readonly RefundPath = '/api/Payments/{invoiceId}/refund';
-
-  /**
-   * Processes a refund request for a specific invoice.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `refund$Plain()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  refund$Plain$Response(params: Refund$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return refund$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Processes a refund request for a specific invoice.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `refund$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  refund$Plain(params: Refund$Plain$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.refund$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
-    );
-  }
-
-  /**
-   * Processes a refund request for a specific invoice.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `refund()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  refund$Response(params: Refund$Params, context?: HttpContext): Observable<StrictHttpResponse<InvoiceDto>> {
-    return refund(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Processes a refund request for a specific invoice.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `refund$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  refund(params: Refund$Params, context?: HttpContext): Observable<InvoiceDto> {
-    return this.refund$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InvoiceDto>): InvoiceDto => r.body)
     );
   }
 

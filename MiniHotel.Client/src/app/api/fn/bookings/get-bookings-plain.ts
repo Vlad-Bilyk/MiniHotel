@@ -27,6 +27,10 @@ export interface GetBookings$Plain$Params {
  * Optional search term to filter bookings by customer name, room number, or room type.
  */
   search?: string;
+
+/**
+ * Booking status for filtering (optional).
+ */
   status?: BookingStatus;
 }
 

@@ -32,7 +32,7 @@ namespace MiniHotel.API.Controllers
         /// <returns>A collection of service DTOs.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = Roles.AdminRoles)]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetServices()
         {
             IEnumerable<Service> services = await _serviceRepository.GetAllAsync();
@@ -55,10 +55,6 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult> GetServiceById(int id)
         {
             Service service = await _serviceRepository.GetAsync(r => r.ServiceId == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
             return Ok(_mapper.Map<ServiceDto>(service));
         }
 
@@ -97,11 +93,6 @@ namespace MiniHotel.API.Controllers
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateService(int id, [FromBody] ServiceUpsertDto updateDto)
         {
-            if (updateDto == null)
-            {
-                return BadRequest();
-            }
-
             var existingService = await _serviceRepository.GetAsync(r => r.ServiceId == id);
             _mapper.Map(updateDto, existingService);
             await _serviceRepository.UpdateAsync(existingService);

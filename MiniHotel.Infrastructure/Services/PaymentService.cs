@@ -2,6 +2,7 @@
 using LiqPay.SDK;
 using LiqPay.SDK.Dto;
 using LiqPay.SDK.Dto.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MiniHotel.Application.DTOs;
@@ -47,7 +48,7 @@ namespace MiniHotel.Infrastructure.Services
 
             if (invoice.Status == InvoiceStatus.Paid)
             {
-                throw new InvalidOperationException("Рахунок уже оплачено");
+                throw new BadHttpRequestException("Рахунок уже оплачено");
             }
 
             var request = new LiqPayRequest
