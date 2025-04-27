@@ -1,43 +1,72 @@
 .main-section {
-    background-image: url('../../../assets/images/home-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    position: relative;
+  background-image: url("../../../assets/images/home-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
 }
 
 .main-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .main-section .overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    position: relative;
-    z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .carousel-item img {
-    height: 400px;
-    object-fit: cover;
+  height: 400px;
+  object-fit: cover;
 }
 
 .custom-rooms-btn {
-    border-radius: 0;
-    border: 2px solid #fff;
-    text-transform: uppercase;
-    font-weight: 600;
-    padding: 0.75rem 2rem;
-    transition: background-color 0.3s ease;
+  border-radius: 0;
+  border: 2px solid #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.additional-service-card {
+  height: 100%;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.additional-service-title {
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+mat-card-content p {
+  color: #455a64;
+  text-align: justify;
+  font-size: 0.95rem;
+}
+
+.empty-icon {
+  font-size: 80px;
+  color: #b0bec5;
+}
+
+.description-wrapper {
+  transition: height 0.3s ease;
 }
