@@ -38,7 +38,7 @@
                     <td>
                         <ng-container *ngIf="booking.bookingStatus as status">
                             <span [ngClass]="getStatusClass(status)" class="badge rounded-pill px-3 py-2">
-                                {{ status }}
+                                {{ status | bookingStatus }}
                             </span>
                         </ng-container>
                         <ng-container *ngIf="!booking.bookingStatus">

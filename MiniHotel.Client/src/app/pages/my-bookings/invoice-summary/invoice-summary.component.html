@@ -9,7 +9,7 @@
         <mat-card-subtitle class="mat-caption">
             {{ invoice.createdAt | date:'dd.MM.yyyy HH:mm' }}
             • <span [ngClass]="statusClass(invoice.status!)" class="status-badge">
-                {{ invoice.status }}
+                {{ invoice.status! | invoiceStatus }}
             </span>
         </mat-card-subtitle>
     </mat-card-header>

@@ -59,8 +59,7 @@
             <ng-container matColumnDef="payment">
                 <th mat-header-cell *matHeaderCellDef>Оплата</th>
                 <td mat-cell *matCellDef="let b">
-                    <span *ngIf="b.paymentMethod === PaymentMethod.Online">Онлайн</span>
-                    <span *ngIf="b.paymentMethod === PaymentMethod.OnSite">На місці</span>
+                    {{ b.paymentMethod | paymentMethod }}
                 </td>
             </ng-container>
 
@@ -75,7 +74,7 @@
                     'bg-secondary': b.bookingStatus === 'CheckedOut',
                     'bg-danger': b.bookingStatus === 'Cancelled'
                   }">
-                        {{ b.bookingStatus }}
+                        {{ b.bookingStatus | bookingStatus }}
                     </span>
                 </td>
             </ng-container>

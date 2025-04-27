@@ -64,7 +64,7 @@
 
                     <div class="detail-item">
                         <dt class="mat-subtitle-2">Спосіб оплати</dt>
-                        <dd class="mat-body-1">{{ booking.paymentMethod }}</dd>
+                        <dd class="mat-body-1">{{ booking.paymentMethod! | paymentMethod }}</dd>
                     </div>
 
                     <div class="detail-item">
@@ -85,7 +85,7 @@
                     <div class="detail-item">
                         <dt class="mat-subtitle-2">Статус</dt>
                         <dd class="mat-body-1">
-                            {{ booking.bookingStatus }}
+                            {{ booking.bookingStatus! | bookingStatus }}
                         </dd>
                     </div>
                 </dl>
@@ -98,7 +98,7 @@
                 <mat-card-title>Рахунок #{{invoice.invoiceId}}</mat-card-title>
                 <mat-card-subtitle>
                     Створено: {{invoice.createdAt | date:'dd.MM.yyyy HH:mm'}} •
-                    Статус: <mat-chip color="primary" selected>{{invoice.status}}</mat-chip>
+                    Статус: <mat-chip color="primary" selected>{{invoice.status! | invoiceStatus}}</mat-chip>
                 </mat-card-subtitle>
             </mat-card-header>
             <mat-divider></mat-divider>
@@ -144,7 +144,7 @@
                     <ng-container matColumnDef="price">
                         <th mat-header-cell *matHeaderCellDef>Ціна</th>
                         <td mat-cell *matCellDef="let i">
-                            {{ i.unitPrice }}
+                            {{ i.unitPrice | currency:'UAH':'symbol' }}
                         </td>
                     </ng-container>
 
@@ -152,7 +152,7 @@
                     <ng-container matColumnDef="total">
                         <th mat-header-cell *matHeaderCellDef class="text-right">Сума</th>
                         <td mat-cell *matCellDef="let i" class="text-right">
-                            {{ (i.quantity * i.unitPrice) }}
+                            {{ (i.quantity * i.unitPrice) | currency:'UAH':'symbol' }}
                         </td>
                     </ng-container>
 

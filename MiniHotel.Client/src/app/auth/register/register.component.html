@@ -52,7 +52,7 @@
                 <label class="form-label">Роль</label>
                 <select formControlName="role" class="form-select"
                     [class.is-invalid]="formControls['role'].touched && formControls['role'].invalid">
-                    <option *ngFor="let r of roleOptions" [value]="r">{{ r }}</option>
+                    <option *ngFor="let r of roleOptions" [value]="r">{{ r | userRole }}</option>
                 </select>
                 <div class="invalid-feedback">Виберіть роль</div>
             </div>

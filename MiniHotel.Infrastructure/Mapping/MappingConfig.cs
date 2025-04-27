@@ -48,7 +48,9 @@ namespace MiniHotel.Infrastructure.Mapping
             CreateMap<InvoiceItem, InvoiceItemDto>().ReverseMap();
             CreateMap<InvoiceItem, InvoiceItemCreateDto>().ReverseMap();
 
-            CreateMap<RoomType, RoomTypeDto>().ReverseMap();
+            CreateMap<RoomType, RoomTypeDto>()
+                .ForMember(dest => dest.RoomCount, opt => opt.MapFrom(src => src.RoomCount))
+                .ReverseMap();
             CreateMap<RoomType, RoomTypeUpsertDto>().ReverseMap();
 
             CreateMap<Payment, PaymentDto>();

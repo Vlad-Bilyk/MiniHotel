@@ -69,6 +69,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ContactPageComponent } from './pages/contact-page/contact-page.component';
+import { InvoiceStatusPipe } from './shared/pipes/labelPipes/statusPipes/invoice-status.pipe';
+import { BookingStatusPipe } from './shared/pipes/labelPipes/statusPipes/booking-status.pipe';
+import { RoomStatusPipe } from './shared/pipes/labelPipes/statusPipes/room-status.pipe';
+import { UserRolePipe } from './shared/pipes/labelPipes/statusPipes/user-role.pipe';
+import { PaymentMethodPipe } from './shared/pipes/labelPipes/statusPipes/payment-method.pipe';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -130,6 +135,11 @@ const MATERIAL_MODULES = [
     EditBookingDialogComponent,
     InvoiceSummaryComponent,
     ContactPageComponent,
+    InvoiceStatusPipe,
+    BookingStatusPipe,
+    RoomStatusPipe,
+    UserRolePipe,
+    PaymentMethodPipe,
   ],
   imports: [
     // Angular core
