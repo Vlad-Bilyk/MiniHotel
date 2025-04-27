@@ -4,6 +4,8 @@ import { BookingsService, InvoicesService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import { InvoiceSummaryComponent } from './invoice-summary/invoice-summary.component';
 import { MatDialog } from '@angular/material/dialog';
+import { StatusStyleService } from '../../shared/services/status-style.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-my-bookings',
@@ -12,14 +14,21 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './my-bookings.component.css'
 })
 export class MyBookingsComponent implements OnInit {
+  displayedColumns: string[] = ['roomCategory', 'startDate', 'endDate', 'amount', 'status', 'actions'];
+
   bookings: UserBookingsDto[] = [];
   bookingStatusEnum = BookingStatus;
 
+  totalCount = 0;
+  pageSize = 10;
+  pageIndex = 0;
+
   constructor(
+    private statusStyleService: StatusStyleService,
     private bookingsService: BookingsService,
     private invoiceService: InvoicesService,
     private toastr: ToastrService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -27,11 +36,16 @@ export class MyBookingsComponent implements OnInit {
   }
 
   loadBookings(): void {
-    this.bookingsService.getUserBookings().subscribe({
+    this.bookingsService.getUserBookings({
+      pageNumber: this.pageIndex + 1,
+      pageSize: this.pageSize
+    }).subscribe({
       next: (result) => {
         this.bookings = result.items ?? [];
+        this.totalCount = result.totalCount!;
       },
-      error: () => {
+      error: (err) => {
+        console.error(err);
         this.toastr.error('Не вдалося завантажити ваші бронювання.');
       },
     });
@@ -68,16 +82,13 @@ export class MyBookingsComponent implements OnInit {
     return status === this.bookingStatusEnum.Pending || status === this.bookingStatusEnum.Confirmed;
   }
 
-  getStatusClass(status: BookingStatus): string {
-    switch (status) {
-      case this.bookingStatusEnum.Pending:
-        return 'text-warning';
-      case this.bookingStatusEnum.Confirmed:
-        return 'text-success';
-      case this.bookingStatusEnum.Cancelled:
-        return 'text-danger';
-      default:
-        return 'badge bg-light text-muted';
-    }
+  getBookingChipClass(status: BookingStatus | string): string {
+    return this.statusStyleService.getBookingStatusClass(status);
+  }
+
+  pageChanged(e: PageEvent): void {
+    this.pageIndex = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.loadBookings();
   }
 }

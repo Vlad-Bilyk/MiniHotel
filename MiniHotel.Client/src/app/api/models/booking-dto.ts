@@ -5,7 +5,6 @@
 import { BookingStatus } from '../models/booking-status';
 import { PaymentMethod } from '../models/payment-method';
 export interface BookingDto {
-  amount?: number;
   bookingId?: number;
   bookingStatus?: BookingStatus;
   endDate?: string;

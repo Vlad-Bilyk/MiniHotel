@@ -16,6 +16,7 @@ import {
   BookingEditFormData,
   EditBookingDialogComponent,
 } from './edit-booking-dialog/edit-booking-dialog.component';
+import { StatusStyleService } from '../../../shared/services/status-style.service';
 
 @Component({
   selector: 'app-bookings',
@@ -46,6 +47,7 @@ export class BookingsComponent implements OnInit {
   loading = true;
 
   constructor(
+    private statusStyleService: StatusStyleService,
     private bookingsService: BookingsService,
     private toastr: ToastrService,
     private router: Router,
@@ -138,5 +140,9 @@ export class BookingsComponent implements OnInit {
       b.bookingStatus === this.BookingStatus.Pending ||
       b.bookingStatus === this.BookingStatus.Confirmed;
     return offline && goodStatus;
+  }
+
+  getBookingChipClass(status: BookingStatus | string): string {
+    return this.statusStyleService.getBookingStatusClass(status);
   }
 }

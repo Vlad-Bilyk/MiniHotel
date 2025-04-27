@@ -1,5 +1,5 @@
 <mat-card class="invoice-card">
-    <mat-card-header>
+    <mat-card-header class="mb-2">
         <div mat-card-avatar class="invoice-icon">
             <mat-icon>receipt_long</mat-icon>
         </div>
@@ -8,9 +8,9 @@
         </mat-card-title>
         <mat-card-subtitle class="mat-caption">
             {{ invoice.createdAt | date:'dd.MM.yyyy HH:mm' }}
-            • <span [ngClass]="statusClass(invoice.status!)" class="status-badge">
-                {{ invoice.status! | invoiceStatus }}
-            </span>
+            <mat-chip [ngClass]="getInvoiceChipClass(invoice.status!)" selected>
+                {{ invoice.status!| invoiceStatus }}
+            </mat-chip>
         </mat-card-subtitle>
     </mat-card-header>
 

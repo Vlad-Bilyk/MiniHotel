@@ -19,6 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError, EMPTY, finalize, Observable, of, tap } from 'rxjs';
 import { DialogService } from '../../../../shared/services/dialog.service';
 import { AddInvoiceItemDialogComponent } from './add-invoice-item-dialog/add-invoice-item-dialog.component';
+import { StatusStyleService } from '../../../../shared/services/status-style.service';
 
 @Component({
   selector: 'app-booking-details',
@@ -42,6 +43,7 @@ export class BookingDetailsComponent implements OnInit {
   bookingId!: number;
 
   constructor(
+    private statusStyleService: StatusStyleService,
     private router: Router,
     private route: ActivatedRoute,
     private bookingsService: BookingsService,
@@ -138,6 +140,14 @@ export class BookingDetailsComponent implements OnInit {
           console.error(err);
         },
       });
+  }
+
+  getBookingChipClass(status: BookingStatus | string): string {
+    return this.statusStyleService.getBookingStatusClass(status);
+  }
+
+  getInvoiceChipClass(status: InvoiceStatus | string): string {
+    return this.statusStyleService.getInvoiceStatusClass(status);
   }
 
   private loadData(): void {

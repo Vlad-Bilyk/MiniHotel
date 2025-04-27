@@ -12,7 +12,6 @@ namespace MiniHotel.Application.DTOs
         public string PhoneNumber { get; set; } = default!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public decimal Amount { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public BookingStatus BookingStatus { get; set; }
     }

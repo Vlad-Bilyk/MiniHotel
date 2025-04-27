@@ -11,6 +11,11 @@
 .btn-status-error mat-icon {
   color: var(--mat-sys-error) !important;
 }
+
+.btn-status-error:disabled mat-icon {
+  color: var(--mat-sys-neutral) !important;
+}
+
 .btn-status-primary mat-icon {
   color: var(--mat-sys-primary) !important;
 }

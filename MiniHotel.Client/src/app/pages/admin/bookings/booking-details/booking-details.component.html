@@ -85,7 +85,9 @@
                     <div class="detail-item">
                         <dt class="mat-subtitle-2">Статус</dt>
                         <dd class="mat-body-1">
-                            {{ booking.bookingStatus! | bookingStatus }}
+                            <mat-chip [ngClass]="getBookingChipClass(booking.bookingStatus!)" selected>
+                                {{ booking.bookingStatus! | bookingStatus }}
+                            </mat-chip>
                         </dd>
                     </div>
                 </dl>
@@ -98,7 +100,10 @@
                 <mat-card-title>Рахунок #{{invoice.invoiceId}}</mat-card-title>
                 <mat-card-subtitle>
                     Створено: {{invoice.createdAt | date:'dd.MM.yyyy HH:mm'}} •
-                    Статус: <mat-chip color="primary" selected>{{invoice.status! | invoiceStatus}}</mat-chip>
+                    Статус:
+                    <mat-chip [ngClass]="getInvoiceChipClass(invoice.status!)" selected>
+                        {{ invoice.status!| invoiceStatus }}
+                    </mat-chip>
                 </mat-card-subtitle>
             </mat-card-header>
             <mat-divider></mat-divider>
