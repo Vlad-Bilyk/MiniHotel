@@ -145,9 +145,6 @@ namespace MiniHotel.API.Controllers
                 return BadRequest("End date must be greater than start date.");
             }
 
-            startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-            endDate = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
-
             var rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate, ignoreBookingId);
             return Ok(_mapper.Map<List<RoomDto>>(rooms));
         }

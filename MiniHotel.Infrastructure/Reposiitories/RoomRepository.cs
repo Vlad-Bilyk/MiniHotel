@@ -44,13 +44,17 @@ namespace MiniHotel.Infrastructure.Reposiitories
                 .ToListAsync();
         }
 
-        public Task<bool> IsRoomAvailableAsync(int roomId, DateTime startDate, DateTime endDate)
+        public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
-            return _context.Bookings.AnyAsync(b => b.RoomId == roomId
-                    && b.BookingStatus != BookingStatus.Cancelled
-                    && startDate < b.EndDate
-                    && endDate > b.StartDate)
-                    .ContinueWith(t => !t.Result);
+            var conflictExists = await _context.Bookings.AnyAsync(b =>
+                   b.RoomId == roomId
+                   && b.BookingStatus != BookingStatus.Cancelled
+                   && (!ignoreBookingId.HasValue || b.BookingId != ignoreBookingId.Value)
+                   && startDate < b.EndDate
+                   && endDate > b.StartDate
+            );
+
+            return !conflictExists;
         }
 
         public async Task<Room> UpdateAsync(Room entity)

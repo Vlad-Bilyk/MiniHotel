@@ -103,7 +103,7 @@ namespace MiniHotel.Application.Services
             return _mapper.Map<BookingDto>(booking);
         }
 
-        public async Task<PagedResult<BookingDto>> GetBookingsAsync(int pageNumber, int pageSize, string? search = null)
+        public async Task<PagedResult<BookingDto>> GetBookingsAsync(int pageNumber, int pageSize, string? search = null, BookingStatus? status = null)
         {
             Expression<Func<Booking, bool>>? filter = null;
 
@@ -111,7 +111,14 @@ namespace MiniHotel.Application.Services
             {
                 var dateFilter = BuildDateFilter(search);
                 var textFilter = BuildTextFilter(search);
-                filter = CombineFilters(textFilter, dateFilter);
+                filter = CombineFilters(textFilter, dateFilter, false);
+            }
+
+            if (status.HasValue)
+            {
+                Expression<Func<Booking, bool>> statusFilter = b => b.BookingStatus == status.Value;
+
+                filter = filter is null ? statusFilter : CombineFilters(filter, statusFilter, true);
             }
 
             var result = await _bookingRepository.GetPagedAsync(pageNumber, pageSize, filter, IncludeProperties);
@@ -126,7 +133,7 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> UpdateBookingAsync(int bookingId, BookingUpdateDto updateDto)
         {
-            var room = await ValidateAndGetRoomAsync(updateDto.RoomNumber, updateDto.StartDate, updateDto.EndDate);
+            var room = await ValidateAndGetRoomAsync(updateDto.RoomNumber, updateDto.StartDate, updateDto.EndDate, bookingId);
 
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, "Room")
                 ?? throw new KeyNotFoundException("Booking not found");
@@ -170,12 +177,12 @@ namespace MiniHotel.Application.Services
             }
         }
 
-        private async Task<Room> ValidateAndGetRoomAsync(string roomNumber, DateTime startDate, DateTime endDate)
+        private async Task<Room> ValidateAndGetRoomAsync(string roomNumber, DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
             var room = await _roomRepository
                 .GetAsync(r => r.RoomNumber == roomNumber)
                 ?? throw new KeyNotFoundException("Room number not found");
-            var available = await _roomRepository.IsRoomAvailableAsync(room.RoomId, startDate, endDate);
+            var available = await _roomRepository.IsRoomAvailableAsync(room.RoomId, startDate, endDate, ignoreBookingId);
             if (!available)
             {
                 throw new ArgumentException("Room is not available for the selected dates");
@@ -183,22 +190,19 @@ namespace MiniHotel.Application.Services
             return room;
         }
 
-        private static Expression<Func<Booking, bool>>? BuildDateFilter(string search)
+        private static Expression<Func<Booking, bool>> BuildDateFilter(string search)
         {
-            var formats = new[] { "dd.MM.yyyy", "MM.yyyy", "yyyy", "dd.MM", "MM" };
+            var formats = new[] { "dd.MM.yyyy", "dd.MM", "MM" };
             if (!DateTime.TryParseExact(search.Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
-                return null;
+                return b => false;
 
             return search.Trim().Length switch
             {
                 10 => b => b.StartDate.Date == date.Date || b.EndDate.Date == date.Date,
-                7 => b => (b.StartDate.Month == date.Month && b.StartDate.Year == date.Year)
-                         || (b.EndDate.Month == date.Month && b.EndDate.Year == date.Year),
                 5 => b => b.StartDate.Day == date.Day && b.StartDate.Month == date.Month
                          || b.EndDate.Day == date.Day && b.EndDate.Month == date.Month,
-                4 => b => b.StartDate.Year == date.Year || b.EndDate.Year == date.Year,
                 2 => b => b.StartDate.Month == date.Month || b.EndDate.Month == date.Month,
-                _ => null
+                _ => b => false
             };
         }
 
@@ -219,17 +223,19 @@ namespace MiniHotel.Application.Services
 
         private static Expression<Func<Booking, bool>> CombineFilters(
             Expression<Func<Booking, bool>> filter1,
-            Expression<Func<Booking, bool>>? filter2)
+            Expression<Func<Booking, bool>> filter2,
+            bool useAnd)
         {
-            if (filter2 is null) return filter1;
-
             var param = Expression.Parameter(typeof(Booking), "b");
 
-            var body1 = Expression.Invoke(filter1, param);
-            var body2 = Expression.Invoke(filter2, param);
+            var invoked1 = Expression.Invoke(filter1, param);
+            var invoked2 = Expression.Invoke(filter2, param);
 
-            var bodyCombined = Expression.OrElse(body1, body2);
-            return Expression.Lambda<Func<Booking, bool>>(bodyCombined, param);
+            var body = useAnd
+                ? Expression.AndAlso(invoked1, invoked2)
+                : Expression.OrElse(invoked1, invoked2);
+
+            return Expression.Lambda<Func<Booking, bool>>(body, param);
         }
     }
 }

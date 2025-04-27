@@ -12,17 +12,15 @@
         <!-- Toolbar: filters on the left, add-button on the right -->
         <div class="table-toolbar">
             <!-- Actions group: add-user button -->
-            <div class="toolbar-group actions">
-                <button mat-flat-button color="primary" (click)="goToRegister()">
-                    <mat-icon class="me-1">person_add</mat-icon>
-                    Додати користувача
-                </button>
-            </div>
+            <button mat-flat-button color="primary" (click)="goToRegister()">
+                <mat-icon class="me-1">person_add</mat-icon>
+                Додати користувача
+            </button>
 
             <!-- Filters group: role filter + global search -->
-            <div class="toolbar-group filters">
+            <div class="filters">
                 <!-- Role filter -->
-                <mat-form-field appearance="fill" class="filter-item">
+                <mat-form-field appearance="fill">
                     <mat-label>Роль</mat-label>
                     <mat-select (selectionChange)="applyRoleFilter($event.value)">
                         <mat-option value="">Усі</mat-option>
@@ -31,7 +29,7 @@
                 </mat-form-field>
 
                 <!-- Global search input -->
-                <mat-form-field appearance="outline" class="filter-item search-field">
+                <mat-form-field appearance="outline">
                     <mat-label>Пошук</mat-label>
                     <input #searchInput matInput (keyup)="applyGlobalFilter(searchInput.value)"
                         placeholder="Імʼя, email…">

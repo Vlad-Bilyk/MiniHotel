@@ -36,6 +36,7 @@ export class BookingsComponent implements OnInit {
   ];
 
   BookingStatus = BookingStatus;
+  statusOptions = Object.values(BookingStatus);
   PaymentMethod = PaymentMethod;
   bookings: BookingDto[] = [];
 
@@ -44,6 +45,7 @@ export class BookingsComponent implements OnInit {
   pageIndex = 0;
 
   searchTerm = '';
+  selectedStatus?: BookingStatus;
   loading = true;
 
   constructor(
@@ -66,6 +68,7 @@ export class BookingsComponent implements OnInit {
         pageNumber: this.pageIndex + 1,
         pageSize: this.pageSize,
         search: this.searchTerm.trim(),
+        status: this.selectedStatus
       })
       .subscribe({
         next: (result) => {
@@ -84,6 +87,11 @@ export class BookingsComponent implements OnInit {
   pageChanged(e: PageEvent): void {
     this.pageIndex = e.pageIndex;
     this.pageSize = e.pageSize;
+    this.loadBookings();
+  }
+
+  onStatusChange(status: BookingStatus | undefined): void {
+    this.selectedStatus = status;
     this.loadBookings();
   }
 

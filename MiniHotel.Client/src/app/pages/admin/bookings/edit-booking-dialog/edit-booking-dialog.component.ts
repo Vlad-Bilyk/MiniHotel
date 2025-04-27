@@ -58,11 +58,12 @@ export class EditBookingDialogComponent {
       }
     );
 
-    this.loadAvailableRooms(parsedStartDate, parsedEndDate);
+    this.loadAvailableRooms(initialData.startDate, initialData.endDate);
   }
 
   onSubmit(): void {
     if (this.form.valid) {
+      this.form.normalizeDates(['startDate', 'endDate']);
       this.dialogRef.close(this.form.value as BookingUpdateDto);
     }
   }
@@ -72,20 +73,21 @@ export class EditBookingDialogComponent {
   }
 
   onDatesChange(): void {
+    this.form.normalizeDates(['startDate', 'endDate']);
     const { startDate, endDate } = this.form.value;
     if (this.form.get('startDate')!.valid && this.form.get('endDate')!.valid) {
       this.loadAvailableRooms(startDate, endDate);
     }
   }
 
-  loadAvailableRooms(start: Date, end: Date): void {
+  loadAvailableRooms(start: string, end: string): void {
     this.loadingRooms = true;
     this.form.get('roomNumber')?.disable();
 
     this.roomsService
       .getAvailableRooms({
-        startDate: start.toDateString(),
-        endDate: end.toDateString(),
+        startDate: start,
+        endDate: end,
         ignoreBookingId: this.data.bookingId,
       })
       .pipe(

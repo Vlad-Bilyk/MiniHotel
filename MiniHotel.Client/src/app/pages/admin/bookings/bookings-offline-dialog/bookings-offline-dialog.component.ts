@@ -47,6 +47,7 @@ export class BookingsOfflineDialogComponent implements OnInit {
 
   submit(): void {
     if (this.form.valid) {
+      this.form.normalizeDates(['startDate', 'endDate']);
       this.dialogRef.close(this.form.value as BookingCreateByReceptionDto);
     }
   }
@@ -56,15 +57,16 @@ export class BookingsOfflineDialogComponent implements OnInit {
   }
 
   onDatesChange(): void {
+    this.form.normalizeDates(['startDate', 'endDate']);
     const { startDate, endDate } = this.form.value;
     if (this.form.get('startDate')!.valid && this.form.get('endDate')!.valid) {
       this.loadAvailableRooms(startDate, endDate);
     }
   }
 
-  loadAvailableRooms(start: Date, end: Date): void {
+  loadAvailableRooms(start: string, end: string): void {
     this.loadingRooms = true;
-    this.roomsService.getAvailableRooms({ startDate: start.toDateString(), endDate: end.toDateString() })
+    this.roomsService.getAvailableRooms({ startDate: start, endDate: end })
       .pipe(finalize(() => this.loadingRooms = false),
         takeUntil(this.destroy$)
       )

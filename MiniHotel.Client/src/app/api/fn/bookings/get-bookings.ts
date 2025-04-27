@@ -9,6 +9,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { BookingDtoPagedResult } from '../../models/booking-dto-paged-result';
+import { BookingStatus } from '../../models/booking-status';
 
 export interface GetBookings$Params {
 
@@ -26,6 +27,7 @@ export interface GetBookings$Params {
  * Optional search term to filter bookings by customer name, room number, or room type.
  */
   search?: string;
+  status?: BookingStatus;
 }
 
 export function getBookings(http: HttpClient, rootUrl: string, params?: GetBookings$Params, context?: HttpContext): Observable<StrictHttpResponse<BookingDtoPagedResult>> {
@@ -34,6 +36,7 @@ export function getBookings(http: HttpClient, rootUrl: string, params?: GetBooki
     rb.query('pageNumber', params.pageNumber, {});
     rb.query('pageSize', params.pageSize, {});
     rb.query('search', params.search, {});
+    rb.query('status', params.status, {});
   }
 
   return http.request(

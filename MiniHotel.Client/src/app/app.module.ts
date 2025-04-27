@@ -46,6 +46,7 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { authExpirationInterceptor } from './core/interceptors/auth-expiration.interceptor';
 
 import { ToastrModule } from 'ngx-toastr';
+import './shared/extensions/form-group.extensions'
 
 /* Angular Material modules */
 import { MatButtonModule } from '@angular/material/button';

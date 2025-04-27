@@ -32,15 +32,16 @@ namespace MiniHotel.API.Controllers
         /// <param name="pageNumber">The page number to retrieve (default is 1).</param>
         /// <param name="pageSize">The number of records per page (default is 10).</param>
         /// <param name="search">Optional search term to filter bookings by customer name, room number, or room type.</param>
+        /// <param name="status">Booking status for filtering (optional).</param>
         /// <returns>A paginated result containing booking data transfer objects.</returns>
         /// <response code="200">Returns the paginated list of bookings.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(Roles = Roles.AdminRoles)]
         public async Task<ActionResult<PagedResult<BookingDto>>> GetBookings([FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+            [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] BookingStatus? status = null)
         {
-            var result = await _bookingService.GetBookingsAsync(pageNumber, pageSize, search);
+            var result = await _bookingService.GetBookingsAsync(pageNumber, pageSize, search, status);
             return Ok(result);
         }
 

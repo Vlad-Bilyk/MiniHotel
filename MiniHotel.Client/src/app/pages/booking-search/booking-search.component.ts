@@ -5,6 +5,7 @@ import { RoomsService } from '../../api/services';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { dateRangeValidator } from '../../shared/validators/date-range.validator';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-booking-search',
@@ -50,14 +51,13 @@ export class BookingSearchComponent implements OnInit {
       return;
     }
 
+    this.searchForm.normalizeDates(['startDate', 'endDate']);
     const { startDate, endDate } = this.searchForm.value;
-    const formattedStartDate = startDate.toISOString().split('T')[0];
-    const formattedEndDate = endDate.toISOString().split('T')[0];
 
     this.roomService
       .getAvailableRooms({
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
+        startDate,
+        endDate
       })
       .subscribe({
         next: (rooms) => {
@@ -77,6 +77,7 @@ export class BookingSearchComponent implements OnInit {
   }
 
   onBook(room: RoomDto): void {
+    this.searchForm.normalizeDates(['startDate', 'endDate']);
     const { startDate, endDate } = this.searchForm.value;
 
     const stateStore = {
@@ -84,7 +85,7 @@ export class BookingSearchComponent implements OnInit {
       roomNumber: room.roomNumber,
       pricePerDay: room.pricePerDay,
       startDate,
-      endDate,
+      endDate
     };
 
     localStorage.setItem('bookingData', JSON.stringify(stateStore));
