@@ -149,6 +149,33 @@ app.UseCors();
 
 app.UseStaticFiles();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
+{
+    app.UseExceptionHandler("/error");
+    app.UseHsts();
+}
+
+// If the path is not found - return index.html (for SPA routes)
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 404 &&
+        !Path.HasExtension(context.Request.Path.Value) &&
+        !context.Request.Path.Value.StartsWith("/api"))
+    {
+        context.Request.Path = "/index.html";
+        context.Response.StatusCode = 200;
+        await next();
+    }
+});
+
 // Migrate the database
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<MiniHotelDbContext>();
@@ -159,14 +186,6 @@ var seeders = scope.ServiceProvider.GetServices<ISeeder>();
 foreach (var seeder in seeders)
 {
     await seeder.SeedAsync();
-}
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
