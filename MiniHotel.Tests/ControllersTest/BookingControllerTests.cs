@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MiniHotel.API.Controllers;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IService;
@@ -11,14 +10,12 @@ namespace MiniHotel.Tests.ControllersTest
     public class BookingControllerTests
     {
         private readonly Mock<IBookingService> _bookingServiceMock;
-        private readonly Mock<ILogger<BookingsController>> _loggerMock;
         private readonly BookingsController _controller;
 
         public BookingControllerTests()
         {
             _bookingServiceMock = new Mock<IBookingService>();
-            _loggerMock = new Mock<ILogger<BookingsController>>();
-            _controller = new BookingsController(_bookingServiceMock.Object, _loggerMock.Object);
+            _controller = new BookingsController(_bookingServiceMock.Object);
         }
 
         [Fact]

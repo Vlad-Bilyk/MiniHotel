@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniHotel.Infrastructure.Migrations
 {
     [DbContext(typeof(MiniHotelDbContext))]
-    [Migration("20250417190855_AddPaymentsTable")]
-    partial class AddPaymentsTable
+    [Migration("20250428220258_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,9 +195,10 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     b.HasKey("BookingId");
 
-                    b.HasIndex("RoomId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("RoomId", "StartDate", "EndDate", "BookingStatus")
+                        .HasDatabaseName("IX_Booking_RoomId_StartDate_EndDate_Status");
 
                     b.ToTable("Bookings", t =>
                         {
@@ -274,9 +275,12 @@ namespace MiniHotel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceItemId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
@@ -324,7 +328,7 @@ namespace MiniHotel.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("PaiddAt")
+                    b.Property<DateTime>("PaidAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("PaymentId");
@@ -373,8 +377,12 @@ namespace MiniHotel.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoomTypeId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(18, 2)");
@@ -611,7 +619,7 @@ namespace MiniHotel.Infrastructure.Migrations
             modelBuilder.Entity("MiniHotel.Domain.Entities.Room", b =>
                 {
                     b.HasOne("MiniHotel.Domain.Entities.RoomType", "RoomType")
-                        .WithMany()
+                        .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -640,6 +648,11 @@ namespace MiniHotel.Infrastructure.Migrations
             modelBuilder.Entity("MiniHotel.Domain.Entities.Room", b =>
                 {
                     b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("MiniHotel.Domain.Entities.RoomType", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("MiniHotel.Domain.Entities.Service", b =>
