@@ -3,3 +3,16 @@ td.mat-column-description {
   overflow: hidden;
   text-align: justify;
 }
+
+.roomtype-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.no-image {
+  font-size: 0.8rem;
+  color: #888;
+}

@@ -35,17 +35,20 @@ mat-card-actions {
 
 .room-card__image {
   flex-shrink: 0; /* do not let the image block shrink */
-  margin-top: 1rem; /* to have an indent on the mobile under the text */
+  width: 600px;
+  height: 400px;
+  overflow: hidden;
 
-  @media (min-width: 768px) {
-    margin-top: 0;
-    margin-left: 1rem;
+  @media (max-width: 767px) {
+    width: 100%;
+    height: 200px;
+    margin-top: 1rem;
   }
 
   img {
-    display: block;
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 4px;
   }
 }

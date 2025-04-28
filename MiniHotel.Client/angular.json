@@ -34,7 +34,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "src/assets",
+                "output": "assets"
               }
             ],
             "styles": [
@@ -90,7 +91,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 52352
+            "port": 52352,
+            "proxyConfig": "proxy.conf.json"
           }
         },
         "extract-i18n": {
@@ -106,8 +108,9 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
-                "glob": "**/*",
-                "input": "public"
+                 "glob": "**/*",
+                 "input": "src/assets",
+                 "output": "assets"
               }
             ],
             "styles": [

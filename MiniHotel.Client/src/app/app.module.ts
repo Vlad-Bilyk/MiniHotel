@@ -75,6 +75,8 @@ import { BookingStatusPipe } from './shared/pipes/labelPipes/statusPipes/booking
 import { RoomStatusPipe } from './shared/pipes/labelPipes/statusPipes/room-status.pipe';
 import { UserRolePipe } from './shared/pipes/labelPipes/statusPipes/user-role.pipe';
 import { PaymentMethodPipe } from './shared/pipes/labelPipes/statusPipes/payment-method.pipe';
+import { UploadRoomTypeImageDialogComponent } from './pages/admin/room-types/upload-room-type-image-dialog/upload-room-type-image-dialog.component';
+import { ImagePreviewDialogComponent } from './shared/dialogs/image-preview-dialog/image-preview-dialog.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -141,6 +143,8 @@ const MATERIAL_MODULES = [
     RoomStatusPipe,
     UserRolePipe,
     PaymentMethodPipe,
+    UploadRoomTypeImageDialogComponent,
+    ImagePreviewDialogComponent,
   ],
   imports: [
     // Angular core

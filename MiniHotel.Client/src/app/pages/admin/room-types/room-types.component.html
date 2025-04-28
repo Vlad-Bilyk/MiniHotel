@@ -40,6 +40,19 @@
             </td>
         </ng-container>
 
+        <!-- Image -->
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Фото </th>
+            <td mat-cell *matCellDef="let roomType">
+                <img *ngIf="roomType.imageUrl; else noImage" [src]="roomType.imageUrl" alt="Фото типу номеру"
+                    class="roomtype-image" (click)="openImagePreview(roomType.imageUrl!)" />
+                <ng-template #noImage>
+                    <div class="no-image">Немає фото</div>
+                </ng-template>
+            </td>
+        </ng-container>
+
+
         <!-- Description -->
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Опис</th>
@@ -54,6 +67,9 @@
             <td mat-cell *matCellDef="let r" class="text-center">
                 <button mat-icon-button color="primary" matTooltip="Edit" (click)="editRoomType(r)">
                     <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button ngClass="btn-status-primary" (click)="openUploadImageDialog(r)">
+                    <mat-icon>add_photo_alternate</mat-icon>
                 </button>
             </td>
         </ng-container>

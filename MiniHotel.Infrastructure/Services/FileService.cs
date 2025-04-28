@@ -31,7 +31,7 @@ namespace MiniHotel.Infrastructure.Services
 
             await WriteToFileAsync(stream, fullPath);
 
-            return Path.Combine(UploadsFolder, RoomTypesFolder, uniqueFileName).Replace('\\', '/');
+            return "/" + Path.Combine(UploadsFolder, RoomTypesFolder, uniqueFileName).Replace('\\', '/');
         }
 
         private static void ValidateInput(Stream stream, string roomCategory)

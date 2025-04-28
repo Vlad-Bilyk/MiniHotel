@@ -9,6 +9,9 @@ import {
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadRoomTypeImageDialogComponent } from './upload-room-type-image-dialog/upload-room-type-image-dialog.component';
+import { ImagePreviewDialogComponent } from '../../../shared/dialogs/image-preview-dialog/image-preview-dialog.component';
 
 @Component({
   selector: 'app-room-types',
@@ -17,7 +20,7 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrl: './room-types.component.scss',
 })
 export class RoomTypesComponent implements OnInit {
-  displayedColumns = ['category', 'price', 'description', 'actions'];
+  displayedColumns = ['category', 'price', 'image', 'description', 'actions'];
 
   dataSource = new MatTableDataSource<RoomTypeDto>([]);
   loading = false;
@@ -30,7 +33,8 @@ export class RoomTypesComponent implements OnInit {
   constructor(
     private roomTypesService: RoomTypesService,
     private dialogService: DialogService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -55,6 +59,7 @@ export class RoomTypesComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
   editRoomType(rt: RoomTypeDto): void {
     const dialogData: RoomTypeFormData = {
       isEdit: true,
@@ -99,5 +104,27 @@ export class RoomTypesComponent implements OnInit {
       .subscribe(() => {
         this.loadRoomTypes();
       });
+  }
+
+  openUploadImageDialog(roomType: RoomTypeDto): void {
+    const dialogRef = this.dialog.open(UploadRoomTypeImageDialogComponent, {
+      width: '400px',
+      data: roomType.roomTypeId
+    });
+
+    dialogRef.afterClosed().subscribe(success => {
+      if (success) {
+        this.loadRoomTypes();
+      }
+    });
+  }
+
+  openImagePreview(imageUrl: string): void {
+    this.dialog.open(ImagePreviewDialogComponent, {
+      data: { imageUrl: imageUrl },
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      panelClass: 'image-preview-dialog'
+    });
   }
 }
