@@ -103,10 +103,10 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "MiniHotel API", Version = "v1" });
 
-    options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
+    options.AddServer(new OpenApiServer
     {
-        Description = "Development server",
-        Url = "https://localhost:7252"
+        Description = "Default server",
+        Url = "/"
     });
 
     options.CustomOperationIds(apiDesc => $"{apiDesc.ActionDescriptor.RouteValues["action"]}");
@@ -148,6 +148,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors();
 
 app.UseStaticFiles();
+
+app.UseRouting();
 
 if (app.Environment.IsDevelopment())
 {
@@ -194,5 +196,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

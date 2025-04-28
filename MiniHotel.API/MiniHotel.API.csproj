@@ -11,22 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\assets\images\contacts\contacts-image.webp" />
-    <Content Remove="wwwroot\assets\images\home\carousel\carousel-1.webp" />
-    <Content Remove="wwwroot\assets\images\home\carousel\carousel-2.webp" />
-    <Content Remove="wwwroot\assets\images\home\carousel\carousel-3.webp" />
-    <Content Remove="wwwroot\assets\images\home\home-background.jpg" />
-    <Content Remove="wwwroot\index.html" />
-    <Content Remove="wwwroot\main-YTIDSX4A.js" />
-    <Content Remove="wwwroot\media\bootstrap-icons-OCU552PF.woff" />
-    <Content Remove="wwwroot\media\bootstrap-icons-X6UQXWUS.woff2" />
-    <Content Remove="wwwroot\media\home-background-623PR34M.jpg" />
-    <Content Remove="wwwroot\polyfills-FFHMD2TL.js" />
-    <Content Remove="wwwroot\scripts-CV4GDUE4.js" />
-    <Content Remove="wwwroot\styles-ZX4HLV3H.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="LiqPay" Version="2024.4.908.5254" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
@@ -45,22 +29,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\roomtypes\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\assets\images\contacts\contacts-image.webp" />
-    <None Include="wwwroot\assets\images\home\carousel\carousel-1.webp" />
-    <None Include="wwwroot\assets\images\home\carousel\carousel-2.webp" />
-    <None Include="wwwroot\assets\images\home\carousel\carousel-3.webp" />
-    <None Include="wwwroot\assets\images\home\home-background.jpg" />
-    <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\main-YTIDSX4A.js" />
-    <None Include="wwwroot\media\bootstrap-icons-OCU552PF.woff" />
-    <None Include="wwwroot\media\bootstrap-icons-X6UQXWUS.woff2" />
-    <None Include="wwwroot\media\home-background-623PR34M.jpg" />
-    <None Include="wwwroot\polyfills-FFHMD2TL.js" />
-    <None Include="wwwroot\scripts-CV4GDUE4.js" />
-    <None Include="wwwroot\styles-ZX4HLV3H.css" />
   </ItemGroup>
 
 </Project>

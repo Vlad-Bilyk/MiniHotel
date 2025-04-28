@@ -77,6 +77,8 @@ import { UserRolePipe } from './shared/pipes/labelPipes/statusPipes/user-role.pi
 import { PaymentMethodPipe } from './shared/pipes/labelPipes/statusPipes/payment-method.pipe';
 import { UploadRoomTypeImageDialogComponent } from './pages/admin/room-types/upload-room-type-image-dialog/upload-room-type-image-dialog.component';
 import { ImagePreviewDialogComponent } from './shared/dialogs/image-preview-dialog/image-preview-dialog.component';
+import { environment } from '../environments/environment';
+import { ApiModule } from './api/api.module';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -156,6 +158,7 @@ const MATERIAL_MODULES = [
 
     // 3rd‑party
     ToastrModule.forRoot(),
+    ApiModule.forRoot({ rootUrl: environment.apiUrl }),
 
     // Material
     ...MATERIAL_MODULES,
