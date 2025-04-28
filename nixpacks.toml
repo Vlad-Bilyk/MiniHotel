@@ -1,5 +1,2 @@
-[phases.setup]
-nixPkgs = ["dotnet-sdk_8"]
-
-[variables]
-DOTNET_SDK_VERSION = "8.0.100"
+[build]
+builder = "Dockerfile"
