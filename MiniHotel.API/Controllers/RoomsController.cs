@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
@@ -129,7 +130,7 @@ namespace MiniHotel.API.Controllers
         {
             if (endDate < startDate)
             {
-                throw new BadHttpRequestException("End date must be greater than start date.");
+                throw new BadRequestException("End date must be greater than start date.");
             }
 
             var rooms = await _roomRepository.GetAvailableRoomsAsync(startDate, endDate, ignoreBookingId);

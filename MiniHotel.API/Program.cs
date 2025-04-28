@@ -76,6 +76,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddTransient<ISeeder, RoleSeeder>();
 builder.Services.AddTransient<ISeeder, HotelUserSeeder>();
@@ -145,6 +146,8 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors();
+
+app.UseStaticFiles();
 
 // Migrate the database
 using var scope = app.Services.CreateScope();

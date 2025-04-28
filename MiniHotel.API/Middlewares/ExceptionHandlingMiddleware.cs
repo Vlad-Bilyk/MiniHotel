@@ -36,7 +36,6 @@ namespace MiniHotel.API.Middlewares
             var (statusCode, typeUri, title, message) = exception switch
             {
                 BadRequestException e => ((int)HttpStatusCode.BadRequest, "Bad Request", "Invalid request", e.Message),
-                BadHttpRequestException e => ((int)HttpStatusCode.BadRequest, "Bad Request", "Invalid request", e.Message),
                 KeyNotFoundException e => ((int)HttpStatusCode.NotFound, "Not Found", "Resource not found", e.Message),
                 ValidationException e => (422, "Validation Error", "Validation failed", e.Message),
                 DbUpdateConcurrencyException e => (409, "Conflict", "Resource conflict", e.Message),

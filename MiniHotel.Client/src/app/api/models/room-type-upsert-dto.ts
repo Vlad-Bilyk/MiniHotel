@@ -4,7 +4,6 @@
 
 export interface RoomTypeUpsertDto {
   description: string;
-  imageUrl?: string | null;
   pricePerNight?: number;
   roomCategory: string;
 }

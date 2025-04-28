@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.Common;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Enums;
@@ -18,12 +19,10 @@ namespace MiniHotel.API.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
-        private readonly ILogger<BookingsController> _logger;
 
-        public BookingsController(IBookingService bookingService, ILogger<BookingsController> logger)
+        public BookingsController(IBookingService bookingService)
         {
             _bookingService = bookingService;
-            _logger = logger;
         }
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace MiniHotel.API.Controllers
         public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] BookingCreateDto createDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new BadHttpRequestException("User not authenticated");
+                ?? throw new BadRequestException("User not authenticated");
 
             var bookingDto = await _bookingService.CreateBookingAsync(createDto, userId);
             return CreatedAtRoute(nameof(GetBookingById), new { id = bookingDto.BookingId }, bookingDto);

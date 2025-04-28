@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Constants;
 
@@ -78,7 +79,7 @@ namespace MiniHotel.API.Controllers
             if (dto is null || string.IsNullOrWhiteSpace(dto.Data) || string.IsNullOrWhiteSpace(dto.Signature))
             {
                 _logger.LogWarning("Invalid callback data received from LiqPay");
-                throw new BadHttpRequestException("Invalid callback data format");
+                throw new BadRequestException("Invalid callback data format");
             }
 
             await _paymentService.ProcessCallbackAsync(dto);

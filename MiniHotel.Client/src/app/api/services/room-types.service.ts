@@ -24,6 +24,8 @@ import { GetRoomTypes$Plain$Params } from '../fn/room-types/get-room-types-plain
 import { RoomTypeDto } from '../models/room-type-dto';
 import { updateRoomType } from '../fn/room-types/update-room-type';
 import { UpdateRoomType$Params } from '../fn/room-types/update-room-type';
+import { uploadImage } from '../fn/room-types/upload-image';
+import { UploadImage$Params } from '../fn/room-types/upload-image';
 
 @Injectable({ providedIn: 'root' })
 export class RoomTypesService extends BaseService {
@@ -219,6 +221,39 @@ export class RoomTypesService extends BaseService {
    */
   updateRoomType(params: UpdateRoomType$Params, context?: HttpContext): Observable<void> {
     return this.updateRoomType$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `uploadImage()` */
+  static readonly UploadImagePath = '/api/RoomTypes/{id}/upload-image';
+
+  /**
+   * Uploads and replaces the image associated with a specific room type.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `uploadImage()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  uploadImage$Response(params: UploadImage$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return uploadImage(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Uploads and replaces the image associated with a specific room type.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `uploadImage$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  uploadImage(params: UploadImage$Params, context?: HttpContext): Observable<void> {
+    return this.uploadImage$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

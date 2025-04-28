@@ -13,7 +13,5 @@ namespace MiniHotel.Application.DTOs
 
         [Required, StringLength(500)]
         public string Description { get; set; } = default!;
-
-        public string? ImageUrl { get; set; }
     }
 }

@@ -15,10 +15,6 @@ namespace MiniHotel.API.Controllers
     {
         private readonly IAuthService _authService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthController"/> class.
-        /// </summary>
-        /// <param name="authService">Service handling authentication related operations.</param>
         public AuthController(IAuthService authService)
         {
             _authService = authService;

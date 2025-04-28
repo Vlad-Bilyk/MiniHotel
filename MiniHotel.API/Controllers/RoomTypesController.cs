@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MiniHotel.API.Helpers;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
+using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Constants;
 using MiniHotel.Domain.Entities;
 
@@ -14,11 +16,13 @@ namespace MiniHotel.API.Controllers
     public class RoomTypesController : ControllerBase
     {
         private readonly IRoomTypeRepository _roomTypeRepository;
+        private readonly IFileService fileService;
         private readonly IMapper _mapper;
 
-        public RoomTypesController(IRoomTypeRepository roomTypeRepository, IMapper mapper)
+        public RoomTypesController(IRoomTypeRepository roomTypeRepository, IFileService fileService, IMapper mapper)
         {
             _roomTypeRepository = roomTypeRepository;
+            this.fileService = fileService;
             _mapper = mapper;
         }
 
@@ -92,6 +96,33 @@ namespace MiniHotel.API.Controllers
             _mapper.Map(updateDto, existingRoomType);
             await _roomTypeRepository.UpdateAsync(existingRoomType);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Uploads and replaces the image associated with a specific room type.
+        /// </summary>
+        /// <param name="id">The unique identifier of the room type to update.</param>
+        /// <param name="file">The image file to upload (must be JPEG or PNG format).</param>
+        /// <response code="200">Image uploaded and room type updated successfully.</response>
+        /// <response code="400">Invalid file format, size, or missing file in the request.</response>
+        /// <response code="404">Specified room type not found.</response>
+        [HttpPost("{id:int}/upload-image")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            FileValidationHelper.ValidationImageFile(file);
+
+            var roomType = await _roomTypeRepository.GetAsync(rt => rt.RoomTypeId == id);
+
+            using var stream = file.OpenReadStream();
+            var imageUrl = await fileService.SaveRoomTypeImageAsync(stream, file.FileName, roomType.RoomCategory, roomType.ImageUrl);
+
+            roomType.ImageUrl = imageUrl;
+            await _roomTypeRepository.UpdateAsync(roomType);
+
+            return Ok(new { imageUrl });
         }
     }
 }
