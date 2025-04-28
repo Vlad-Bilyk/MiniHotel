@@ -19,7 +19,7 @@ namespace MiniHotel.Infrastructure.Data.Seed
             if (await _db.Bookings.AnyAsync()) return;
 
             var clients = await _db.HotelUsers
-                .Where(u => u.Role == UserRole.Client && u.Email != "offline_client@hotel.local")
+                .Where(u => u.Role == UserRole.Client && u.Email != "offline_client@hotel.local") // Exclude offline client
                 .ToListAsync();
 
             var rooms = await _db.Rooms
@@ -29,9 +29,10 @@ namespace MiniHotel.Infrastructure.Data.Seed
             var baseDate = DateTime.UtcNow.Date.AddDays(-14);
 
             var bookings = clients
-                .SelectMany(client => Enumerable.Range(0, 4)
+                .SelectMany(client => Enumerable.Range(0, 15) // 15 bookings per client
                     .Select(i =>
                     {
+                        // Hashing the UserId to get a pseudo-random number for room selection
                         var raw = client.UserId.GetHashCode() + i;
                         var index = Math.Abs(raw) % rooms.Count;
                         var room = rooms[index];

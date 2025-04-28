@@ -18,10 +18,48 @@ namespace MiniHotel.Infrastructure.Data.Seed
 
             var services = new[]
             {
-                new Service { Name = "Сніданок", Description = "Континентальний сніданок: кава або чай, свіжі булочки з маслом та джемом, натуральний йогурт, сезонні фрукти.", Price = 100, IsAvailable = true },
-                new Service { Name = "Доступ в спа", Description = "Повний спа-центр", Price = 300, IsAvailable = false },
-                new Service { Name = "Трансфер до аеропорту", Description = "Таксі до аеропорту", Price = 200, IsAvailable = true },
-                new Service { Name = "Прання", Description = "Прання та прасування одягу з доставкою в номер", Price = 150, IsAvailable = true }
+                new Service
+                {
+                    Name = "Сніданок",
+                    Description = "Континентальний сніданок: кава або чай, свіжі булочки з маслом та джемом, натуральний йогурт, сезонні фрукти.",
+                    Price = 100m,
+                    IsAvailable = true
+                },
+                new Service
+                {
+                    Name = "Парковка",
+                    Description = "Охоронювана парковка на території готелю з цілодобовим відеоспостереженням для вашого автомобіля.",
+                    Price = 80m,
+                    IsAvailable = true
+                },
+                new Service
+                {
+                    Name = "Трансфер до аеропорту",
+                    Description = "Зручний трансфер з готелю до найближчого аеропорту або залізничного вокзалу, включаючи допомогу з багажем.",
+                    Price = 250m,
+                    IsAvailable = true
+                },
+                new Service
+                {
+                    Name = "Пізній виїзд",
+                    Description = "Можливість залишитися в номері до 16:00 за додаткову оплату (при наявності доступності).",
+                    Price = 150m,
+                    IsAvailable = true
+                },
+                new Service
+                {
+                    Name = "Прибирання на вимогу",
+                    Description = "Додаткове прибирання номеру за запитом під час перебування, включаючи зміну рушників та постільної білизни.",
+                    Price = 120m,
+                    IsAvailable = true
+                },
+                new Service
+                {
+                    Name = "Оренда дитячого ліжечка",
+                    Description = "Надання дитячого ліжечка для найменших гостей, із безпечною конструкцією та чистою білизною.",
+                    Price = 70m,
+                    IsAvailable = true
+                }
             };
 
             _db.Services.AddRange(services);
