@@ -7,7 +7,6 @@ namespace MiniHotel.Application.Interfaces.IService
     {
         Task<string> CreatePaymentUrlAsync(int invoiceId, string description);
         Task<InvoiceDto> PayOfflineAsync(int invoiceId);
-        Task<InvoiceDto> MarkRefundAsync(int invoiceId);
         Task ProcessCallbackAsync(LiqPayCallbackDto dto);
         Task<InvoiceDto> AddPaymentAsync(int invoiceId, decimal amount, PaymentMethod method, string? externalId = null);
     }

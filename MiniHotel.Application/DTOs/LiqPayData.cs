@@ -14,6 +14,6 @@ namespace MiniHotel.Application.DTOs
         public decimal Amount { get; set; }
 
         [JsonProperty("payment_id")]
-        public int PaymentId { get; set; }
+        public long PaymentId { get; set; }
     }
 }

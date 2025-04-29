@@ -13,7 +13,7 @@ namespace MiniHotel.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [AllowAnonymous]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;

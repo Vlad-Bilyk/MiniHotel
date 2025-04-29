@@ -51,6 +51,8 @@ namespace MiniHotel.Infrastructure.Services
                 throw new BadRequestException("Рахунок уже оплачено");
             }
 
+            var orderId = $"{invoiceId}-{DateTime.UtcNow}";
+
             var request = new LiqPayRequest
             {
                 Version = 3,
@@ -59,7 +61,7 @@ namespace MiniHotel.Infrastructure.Services
                 Amount = Convert.ToDouble(invoice.AmountDue),
                 Currency = "UAH",
                 Description = description,
-                OrderId = invoiceId.ToString(),
+                OrderId = orderId,
                 ServerUrl = _configuration["LiqPay:ServerUrl"],
                 ResultUrl = _configuration["LiqPay:ResultUrl"],
                 IsSandbox = true
@@ -83,19 +85,18 @@ namespace MiniHotel.Infrastructure.Services
             Console.WriteLine(expectedSign);
 
             if (!expectedSign.Equals(dto.Signature.Trim(), StringComparison.Ordinal))
-                throw new InvalidOperationException($"Invalid LiqPay signature (expected={expectedSign})");
+                throw new BadRequestException($"Invalid LiqPay signature (expected={expectedSign})");
 
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(dto.Data));
             Console.WriteLine(json);
-            var response = JsonConvert.DeserializeObject<LiqPayData>(json);
 
-            if (response is null)
-            {
-                throw new InvalidOperationException("Invalid callback data");
-            }
+            var response = JsonConvert.DeserializeObject<LiqPayData>(json)
+                ?? throw new BadRequestException("Invalid callback data");
 
-            if (!int.TryParse(response.OrderId, out var invoiceId))
-                throw new InvalidOperationException("Invalid OrderId in callback");
+            var orderParts = response.OrderId.Split('-');
+
+            if (orderParts.Length < 2 || !int.TryParse(orderParts[0], out var invoiceId))
+                throw new BadRequestException("Invalid OrderId in callback");
 
             if (response.Status.Equals(LiqPayResponseStatus.Success.ToString(), StringComparison.OrdinalIgnoreCase))
             {
@@ -111,22 +112,6 @@ namespace MiniHotel.Infrastructure.Services
             _logger.LogInformation("LiqPay callback received for Invoice {InvoiceId}: status={Status}", invoiceId, response.Status);
         }
 
-        public async Task<InvoiceDto> MarkRefundAsync(int invoiceId)
-        {
-            var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
-                          ?? throw new KeyNotFoundException("Invoice not found");
-
-            if (invoice.Status != InvoiceStatus.Paid)
-            {
-                throw new InvalidOperationException("Рахунок ще не оплачено");
-            }
-
-            _logger.LogInformation("Refunding Invoice {InvoiceId}", invoiceId);
-            invoice.Status = InvoiceStatus.Refunded;
-            await _invoiceRepository.UpdateAsync(invoice);
-            return _mapper.Map<InvoiceDto>(invoice);
-        }
-
         public async Task<InvoiceDto> AddPaymentAsync(int invoiceId, decimal amount, PaymentMethod method, string? externalId = null)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps + ",Payments")
@@ -134,7 +119,7 @@ namespace MiniHotel.Infrastructure.Services
 
             if (amount <= 0 || amount > invoice.AmountDue)
             {
-                throw new InvalidOperationException("Invalid payment amount");
+                throw new BadRequestException("Invalid payment amount");
             }
 
             invoice.Payments.Add(new Payment
