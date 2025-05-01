@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/MiniHotel.Infrastructure/InfrastructureDiagram.cd
+/MiniHotel.Domain/DomainDiagram.cd
+/MiniHotel.Application/ApiDiagram.cd
+/MiniHotel.Application/ApplicationDiagram.cd
