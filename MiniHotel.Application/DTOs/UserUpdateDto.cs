@@ -1,13 +1,19 @@
-﻿using MiniHotel.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MiniHotel.Application.DTOs
 {
     public class UserUpdateDto
     {
-        public string FirstName { get; set; } = default!;
-        public string LastName { get; set; } = default!;
-        public string Email { get; set; } = default!;
-        public string PhoneNumber { get; set; } = default!;
-        public UserRole Role { get; set; }
+        [Required]
+        public required string FirstName { get; set; }
+
+        [Required]
+        public required string LastName { get; set; }
+
+        [Required]
+        public required string Email { get; set; }
+
+        [Required]
+        public required string PhoneNumber { get; set; }
     }
 }

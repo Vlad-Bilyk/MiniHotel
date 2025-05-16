@@ -7,6 +7,6 @@
         PartiallyPaid,
         Cancelled,
         Refunded,
-        Undefiend
+        Undefined
     }
 }

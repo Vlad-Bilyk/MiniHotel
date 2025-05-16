@@ -107,7 +107,6 @@ namespace MiniHotel.API.Controllers
         /// <response code="400">Invalid file format, size, or missing file in the request.</response>
         /// <response code="404">Specified room type not found.</response>
         [HttpPost("{id:int}/upload-image")]
-        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
