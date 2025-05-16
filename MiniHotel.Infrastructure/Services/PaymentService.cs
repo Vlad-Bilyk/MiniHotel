@@ -22,13 +22,16 @@ namespace MiniHotel.Infrastructure.Services
         private readonly LiqPayClient _liqPayClient;
         private readonly IConfiguration _configuration;
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IBookingRepository _bookingRepository;
         private readonly IInvoiceService _invoiceService;
         private readonly ILogger<PaymentService> _logger;
         private readonly IMapper _mapper;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IConfiguration configuration,
-                              IMapper mapper, IInvoiceService invoiceService, ILogger<PaymentService> logger)
+                              IMapper mapper, IInvoiceService invoiceService,
+                              ILogger<PaymentService> logger, IBookingRepository bookingRepository)
         {
+            _bookingRepository = bookingRepository;
             _invoiceRepository = invoiceRepository;
             _invoiceService = invoiceService;
             _configuration = configuration;
@@ -82,13 +85,11 @@ namespace MiniHotel.Infrastructure.Services
         public async Task ProcessCallbackAsync(LiqPayCallbackDto dto)
         {
             string expectedSign = _liqPayClient.CreateSignature(dto.Data);
-            Console.WriteLine(expectedSign);
 
             if (!expectedSign.Equals(dto.Signature.Trim(), StringComparison.Ordinal))
                 throw new BadRequestException($"Invalid LiqPay signature (expected={expectedSign})");
 
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(dto.Data));
-            Console.WriteLine(json);
 
             var response = JsonConvert.DeserializeObject<LiqPayData>(json)
                 ?? throw new BadRequestException("Invalid callback data");
@@ -101,8 +102,16 @@ namespace MiniHotel.Infrastructure.Services
             if (response.Status.Equals(LiqPayResponseStatus.Success.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 await AddPaymentAsync(
-                    invoiceId, Convert.ToDecimal(response.Amount),
-                    PaymentMethod.Online, response.PaymentId.ToString());
+                    invoiceId,
+                    Convert.ToDecimal(response.Amount),
+                    PaymentMethod.Online,
+                    response.PaymentId.ToString());
+
+                var booking = await _bookingRepository.GetAsync(b => b.Invoice.InvoiceId == invoiceId, "Invoice")
+                    ?? throw new KeyNotFoundException("Booking not found");
+
+                booking.BookingStatus = BookingStatus.Confirmed;
+                await _bookingRepository.UpdateAsync(booking);
             }
             else
             {
