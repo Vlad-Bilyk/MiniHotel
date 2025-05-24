@@ -2,7 +2,7 @@
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Data;
 
-namespace MiniHotel.Infrastructure.Reposiitories
+namespace MiniHotel.Infrastructure.Repositories
 {
     public class RoomTypeRepository : BaseRepository<RoomType>, IRoomTypeRepository
     {

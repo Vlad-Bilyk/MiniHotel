@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 using MiniHotel.Infrastructure.Data;
 
-namespace MiniHotel.Infrastructure.Reposiitories
+namespace MiniHotel.Infrastructure.Repositories
 {
     public class RoomRepository : BaseRepository<Room>, IRoomRepository
     {
@@ -23,16 +24,16 @@ namespace MiniHotel.Infrastructure.Reposiitories
 
         public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate, int? ignoreBookingId = null)
         {
-            var boookedRoomsQuery = _context.Bookings
+            var bookedRoomsQuery = _context.Bookings
                 .Where(b => !(b.EndDate <= startDate || b.StartDate >= endDate)
                        && b.BookingStatus != BookingStatus.Cancelled);
 
             if (ignoreBookingId.HasValue)
             {
-                boookedRoomsQuery = boookedRoomsQuery.Where(b => b.BookingId != ignoreBookingId.Value);
+                bookedRoomsQuery = bookedRoomsQuery.Where(b => b.BookingId != ignoreBookingId.Value);
             }
 
-            var bookedRooms = await boookedRoomsQuery
+            var bookedRooms = await bookedRoomsQuery
                 .Select(b => b.RoomId)
                 .Distinct()
                 .ToListAsync();
@@ -66,12 +67,8 @@ namespace MiniHotel.Infrastructure.Reposiitories
 
         public async Task<Room> UpdateStatusAsync(int id, RoomStatus status)
         {
-            var room = await GetAsync(r => r.RoomId == id);
-            if (room == null)
-            {
-                throw new KeyNotFoundException("Room not found");
-            }
-
+            var room = await GetAsync(r => r.RoomId == id)
+                ?? throw new NotFoundException("Room not found");
             room.RoomStatus = status;
             return await UpdateAsync(room);
         }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Data;
 
-namespace MiniHotel.Infrastructure.Reposiitories
+namespace MiniHotel.Infrastructure.Repositories
 {
     public class InvoiceRepository : BaseRepository<Invoice>, IInvoiceRepository
     {
@@ -32,7 +33,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
         public async Task<int> RemoveItemAsync(int invoiceItemId)
         {
             var item = await _context.InvoiceItems.FindAsync(invoiceItemId)
-                ?? throw new KeyNotFoundException("Invoice item not found");
+                ?? throw new NotFoundException("Invoice item not found");
 
             var invoiceId = item.InvoiceId;
             _context.InvoiceItems.Remove(item);

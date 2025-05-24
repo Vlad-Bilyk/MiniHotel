@@ -6,7 +6,7 @@ using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Data;
 using System.Linq.Expressions;
 
-namespace MiniHotel.Infrastructure.Reposiitories
+namespace MiniHotel.Infrastructure.Repositories
 {
     public class BookingRepository : BaseRepository<Booking>, IBookingRepository
     {

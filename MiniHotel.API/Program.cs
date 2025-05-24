@@ -13,7 +13,7 @@ using MiniHotel.Infrastructure.Data;
 using MiniHotel.Infrastructure.Data.Seed;
 using MiniHotel.Infrastructure.Identity;
 using MiniHotel.Infrastructure.Mapping;
-using MiniHotel.Infrastructure.Reposiitories;
+using MiniHotel.Infrastructure.Repositories;
 using MiniHotel.Infrastructure.Services;
 using System.Reflection;
 using System.Text;

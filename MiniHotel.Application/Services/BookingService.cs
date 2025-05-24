@@ -83,7 +83,7 @@ namespace MiniHotel.Application.Services
 
             if (booking.BookingStatus == BookingStatus.Cancelled || booking.BookingStatus == BookingStatus.CheckedOut)
             {
-                throw new InvalidOperationException("Cannot update status of cancelled or checkedOut booking.");
+                throw new BadRequestException("Cannot update status of cancelled or checkedOut booking.");
             }
 
             if (newStatus == BookingStatus.Cancelled)

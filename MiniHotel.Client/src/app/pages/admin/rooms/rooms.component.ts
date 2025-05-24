@@ -67,7 +67,7 @@ export class RoomsComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        this.toastr.success(`Послугу успішно ${action}о`);
+        this.toastr.success(`Номер успішно ${action}о`);
         this.loadRooms();
       },
       error: (err) => {

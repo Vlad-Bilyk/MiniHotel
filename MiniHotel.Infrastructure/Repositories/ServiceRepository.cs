@@ -1,8 +1,9 @@
-﻿using MiniHotel.Application.Interfaces.IRepository;
+﻿using MiniHotel.Application.Exceptions;
+using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Infrastructure.Data;
 
-namespace MiniHotel.Infrastructure.Reposiitories
+namespace MiniHotel.Infrastructure.Repositories
 {
     public class ServiceRepository : BaseRepository<Service>, IServiceRepository
     {
@@ -35,7 +36,7 @@ namespace MiniHotel.Infrastructure.Reposiitories
         private async Task SetAvailability(int id, bool isAvailable)
         {
             var service = await _context.Services.FindAsync(id)
-                          ?? throw new KeyNotFoundException("Service not found");
+                          ?? throw new NotFoundException("Service not found");
             service.IsAvailable = isAvailable;
             await SaveAsync();
         }
