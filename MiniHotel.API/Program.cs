@@ -97,7 +97,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.Configure<LiqPayOptions>(builder.Configuration.GetSection("LiqPay"));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -143,59 +143,43 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Migrate and seed the database
+using (var scope = app.Services.CreateScope())
+{
+    // Migrate
+    var db = scope.ServiceProvider.GetRequiredService<MiniHotelDbContext>();
+    await db.Database.MigrateAsync();
+
+    // Seed
+    var seeders = scope.ServiceProvider.GetServices<ISeeder>();
+    foreach (var seeder in seeders)
+    {
+        await seeder.SeedAsync();
+    }
+}
+
+// Configure the HTTP request pipeline.
+app.UseRouting();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors();
-
 app.UseStaticFiles();
-
-app.UseRouting();
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    app.UseExceptionHandler("/error");
-    app.UseHsts();
-}
 
-// If the path is not found - return index.html (for SPA routes)
-app.Use(async (context, next) =>
-{
-    await next();
-
-    if (context.Response.StatusCode == 404 &&
-        !Path.HasExtension(context.Request.Path.Value) &&
-        !context.Request.Path.Value.StartsWith("/api"))
-    {
-        context.Request.Path = "/index.html";
-        context.Response.StatusCode = 200;
-        await next();
-    }
-});
-
-// Migrate the database
-using var scope = app.Services.CreateScope();
-var db = scope.ServiceProvider.GetRequiredService<MiniHotelDbContext>();
-await db.Database.MigrateAsync();
-
-// Seed the database
-var seeders = scope.ServiceProvider.GetServices<ISeeder>();
-foreach (var seeder in seeders)
-{
-    await seeder.SeedAsync();
-}
-
-app.UseHttpsRedirection();
+app.UseHsts();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

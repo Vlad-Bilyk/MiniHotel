@@ -79,7 +79,7 @@ namespace MiniHotel.Application.Services
         public async Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
         {
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, includeProperties: "Invoice")
-                ?? throw new KeyNotFoundException("Booking not found");
+                ?? throw new NotFoundException("Booking not found");
 
             if (booking.BookingStatus == BookingStatus.Cancelled || booking.BookingStatus == BookingStatus.CheckedOut)
             {
@@ -100,7 +100,7 @@ namespace MiniHotel.Application.Services
         public async Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter)
         {
             var booking = await _bookingRepository.GetAsync(filter, IncludeProperties)
-                ?? throw new KeyNotFoundException("Booking not found");
+                ?? throw new NotFoundException("Booking not found");
             return _mapper.Map<BookingDto>(booking);
         }
 
@@ -138,7 +138,7 @@ namespace MiniHotel.Application.Services
             var room = await ValidateAndGetRoomAsync(updateDto.RoomNumber, updateDto.StartDate, updateDto.EndDate, bookingId);
 
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, "Room")
-                ?? throw new KeyNotFoundException("Booking not found");
+                ?? throw new NotFoundException("Booking not found");
 
             if (booking.PaymentMethod == PaymentMethod.Online)
             {
@@ -183,7 +183,7 @@ namespace MiniHotel.Application.Services
         {
             var room = await _roomRepository
                 .GetAsync(r => r.RoomNumber == roomNumber)
-                ?? throw new KeyNotFoundException("Room number not found");
+                ?? throw new NotFoundException("Room number not found");
             var available = await _roomRepository.IsRoomAvailableAsync(room.RoomId, startDate, endDate, ignoreBookingId);
             if (!available)
             {

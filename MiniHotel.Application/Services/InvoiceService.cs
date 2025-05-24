@@ -29,10 +29,10 @@ namespace MiniHotel.Application.Services
         public async Task<InvoiceDto> AddItemAsync(int invoiceId, InvoiceItemCreateDto createItem)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
 
             var service = await _serviceRepository.GetAsync(s => s.Name == createItem.ServiceName)
-                            ?? throw new KeyNotFoundException("Service not found");
+                            ?? throw new NotFoundException("Service not found");
 
             var item = new InvoiceItem
             {
@@ -53,7 +53,7 @@ namespace MiniHotel.Application.Services
         public async Task<InvoiceDto> CreateInvoiceForBookingAsync(int bookingId)
         {
             var booking = await _bookingRepository.GetAsync(b => b.BookingId == bookingId, includeProperties: "Room,Room.RoomType")
-                          ?? throw new KeyNotFoundException("Booking not found");
+                          ?? throw new NotFoundException("Booking not found");
 
             var nights = (booking.EndDate.Date - booking.StartDate.Date).Days;
 
@@ -82,7 +82,7 @@ namespace MiniHotel.Application.Services
         public async Task RecalculateAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, IncludeProperties)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
 
             InvoiceStatus newStatus;
             if (invoice.PaidAmount == 0)
@@ -125,7 +125,7 @@ namespace MiniHotel.Application.Services
         public async Task<InvoiceDto> GetInvoiceByBookingIdAsync(int bookingId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.BookingId == bookingId, IncludeProperties)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
             var invoiceDto = _mapper.Map<InvoiceDto>(invoice);
 
             if (invoice.Payments.Any())
@@ -149,7 +149,7 @@ namespace MiniHotel.Application.Services
         public async Task<InvoiceDto> UpdateStatusAsync(int invoiceId, InvoiceStatus status)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
             invoice.Status = status;
             await _invoiceRepository.UpdateAsync(invoice);
             return _mapper.Map<InvoiceDto>(invoice);
@@ -158,7 +158,7 @@ namespace MiniHotel.Application.Services
         public async Task UpdateBookingTypeItemAsync(int bookingId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.BookingId == bookingId, includeProperties: "InvoiceItems,Booking,Booking.Room,Booking.Room.RoomType")
-                                ?? throw new KeyNotFoundException("Invoice not found");
+                                ?? throw new NotFoundException("Invoice not found");
 
             var bookingItem = invoice.InvoiceItems.SingleOrDefault(i => i.ItemType == InvoiceItemType.RoomBooking)
                               ?? throw new BadRequestException("RoomBooking item is missing.");

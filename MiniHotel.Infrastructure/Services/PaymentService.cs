@@ -47,7 +47,7 @@ namespace MiniHotel.Infrastructure.Services
         public async Task<string> CreatePaymentUrlAsync(int invoiceId, string description)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
 
             if (invoice.Status == InvoiceStatus.Paid)
             {
@@ -77,7 +77,7 @@ namespace MiniHotel.Infrastructure.Services
         public async Task<InvoiceDto> PayOfflineAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps)
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
 
             return await AddPaymentAsync(invoiceId, invoice.AmountDue, PaymentMethod.OnSite);
         }
@@ -108,7 +108,7 @@ namespace MiniHotel.Infrastructure.Services
                     response.PaymentId.ToString());
 
                 var booking = await _bookingRepository.GetAsync(b => b.Invoice.InvoiceId == invoiceId, "Invoice")
-                    ?? throw new KeyNotFoundException("Booking not found");
+                    ?? throw new NotFoundException("Booking not found");
 
                 booking.BookingStatus = BookingStatus.Confirmed;
                 await _bookingRepository.UpdateAsync(booking);
@@ -124,7 +124,7 @@ namespace MiniHotel.Infrastructure.Services
         public async Task<InvoiceDto> AddPaymentAsync(int invoiceId, decimal amount, PaymentMethod method, string? externalId = null)
         {
             var invoice = await _invoiceRepository.GetAsync(i => i.InvoiceId == invoiceId, includeProps + ",Payments")
-                          ?? throw new KeyNotFoundException("Invoice not found");
+                          ?? throw new NotFoundException("Invoice not found");
 
             if (amount <= 0 || amount > invoice.AmountDue)
             {
