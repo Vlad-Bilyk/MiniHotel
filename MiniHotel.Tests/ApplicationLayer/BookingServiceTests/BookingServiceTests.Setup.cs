@@ -5,7 +5,7 @@ using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Application.Services;
 using Moq;
 
-namespace MiniHotel.Tests.Services.BookingServiceTests
+namespace MiniHotel.Tests.Unit.ApplicationLayer.BookingServiceTests
 {
     public partial class BookingServiceTests
     {

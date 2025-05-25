@@ -4,7 +4,7 @@ using Moq;
 using System.Linq.Expressions;
 using static Moq.It;
 
-namespace MiniHotel.Tests.Services.BookingServiceTests
+namespace MiniHotel.Tests.Unit.ApplicationLayer.BookingServiceTests
 {
     public partial class BookingServiceTests
     {

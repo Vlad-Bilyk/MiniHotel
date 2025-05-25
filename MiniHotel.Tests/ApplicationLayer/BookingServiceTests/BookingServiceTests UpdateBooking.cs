@@ -5,7 +5,7 @@ using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
 using Moq;
 
-namespace MiniHotel.Tests.Services.BookingServiceTests
+namespace MiniHotel.Tests.Unit.ApplicationLayer.BookingServiceTests
 {
     public partial class BookingServiceTests
     {
