@@ -53,12 +53,12 @@ namespace MiniHotel.Application.Services
 
         public async Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByReceptionDto createDto)
         {
+            var offlineUser = await _userRepository.GetAsync(u => u.Email == "offline_client@hotel.local")
+                              ?? throw new InvalidOperationException("System misconfiguration: offline client not found.");
+
             return await CreateBookingInternal(async () =>
             {
                 var room = await ValidateAndGetRoomAsync(createDto.RoomNumber, createDto.StartDate, createDto.EndDate);
-
-                var offlineUser = await _userRepository.GetAsync(u => u.Email == "offline_client@hotel.local")
-                    ?? throw new InvalidOperationException("System misconfiguration: offline client not found.");
 
                 var booking = new Booking
                 {
