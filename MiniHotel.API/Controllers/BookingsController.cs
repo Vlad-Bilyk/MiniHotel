@@ -93,16 +93,16 @@ namespace MiniHotel.API.Controllers
         /// </summary>
         /// <param name="createDto">The booking creation data transfer object.</param>
         /// <returns>The newly created booking data transfer object.</returns>
-        /// <response code="201">Returns the created booking.</response>
-        /// <response code="400">If provided data is invalid.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = Roles.Client)]
         public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] BookingCreateDto createDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new BadRequestException("User not authenticated");
+                ?? throw new NotFoundException("User not found");
 
             var bookingDto = await _bookingService.CreateBookingAsync(createDto, userId);
             return CreatedAtRoute(nameof(GetBookingById), new { id = bookingDto.BookingId }, bookingDto);

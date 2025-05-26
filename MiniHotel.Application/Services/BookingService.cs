@@ -31,35 +31,45 @@ namespace MiniHotel.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<BookingDto> CreateBookingAsync(BookingCreateDto bookingcreateDto, string userId)
+        public async Task<BookingDto> CreateBookingAsync(BookingCreateDto сreateDto, string userId)
         {
-            return await CreateBookingInternal(async () =>
+            if (сreateDto.StartDate >= сreateDto.EndDate)
             {
-                var room = await ValidateAndGetRoomAsync(bookingcreateDto.RoomNumber, bookingcreateDto.StartDate, bookingcreateDto.EndDate);
+                throw new BadRequestException("End date must be later than start date.");
+            }
 
+            var room = await ValidateAndGetRoomAsync(сreateDto.RoomNumber, сreateDto.StartDate, сreateDto.EndDate);
+
+            return await CreateBookingInternal(() =>
+            {
                 var booking = new Booking
                 {
                     UserId = userId,
                     RoomId = room.RoomId,
-                    StartDate = bookingcreateDto.StartDate,
-                    EndDate = bookingcreateDto.EndDate,
-                    PaymentMethod = bookingcreateDto.PaymentMethod,
+                    StartDate = сreateDto.StartDate,
+                    EndDate = сreateDto.EndDate,
+                    PaymentMethod = сreateDto.PaymentMethod,
                     BookingStatus = BookingStatus.Pending,
                 };
 
-                return booking;
+                return Task.FromResult(booking);
             });
         }
 
         public async Task<BookingDto> CreateOfflineBookingAsync(BookingCreateByReceptionDto createDto)
         {
+            if (createDto.StartDate >= createDto.EndDate)
+            {
+                throw new BadRequestException("End date must be later than start date.");
+            }
+
             var offlineUser = await _userRepository.GetAsync(u => u.Email == "offline_client@hotel.local")
                               ?? throw new InvalidOperationException("System misconfiguration: offline client not found.");
 
-            return await CreateBookingInternal(async () =>
-            {
-                var room = await ValidateAndGetRoomAsync(createDto.RoomNumber, createDto.StartDate, createDto.EndDate);
+            var room = await ValidateAndGetRoomAsync(createDto.RoomNumber, createDto.StartDate, createDto.EndDate);
 
+            return await CreateBookingInternal(() =>
+            {
                 var booking = new Booking
                 {
                     UserId = offlineUser.UserId,
@@ -72,7 +82,7 @@ namespace MiniHotel.Application.Services
                     BookingStatus = BookingStatus.Confirmed,
                 };
 
-                return booking;
+                return Task.FromResult(booking);
             });
         }
 

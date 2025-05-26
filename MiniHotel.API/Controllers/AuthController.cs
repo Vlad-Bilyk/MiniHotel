@@ -25,7 +25,9 @@ namespace MiniHotel.API.Controllers
         /// </summary>
         /// <param name="registerDto">The registration request data containing user information.</param>
         /// <returns>An <see cref="AuthenticationResultDto"/> indicating the success status and errors if any.</returns>
+        /// <response code="400">If the request data is invalid.</response>
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<AuthenticationResultDto> Register([FromBody] RegisterRequestDto registerDto)
         {
             return await _authService.RegisterAsync(registerDto);
@@ -41,11 +43,9 @@ namespace MiniHotel.API.Controllers
         /// <response code="200">Returns the authentication result with JWT token.</response>
         /// <response code="400">If the request data is invalid.</response>
         /// <response code="401">If authentication fails due to wrong credentials.</response>
-        /// <response code="500">If an internal server error occurs.</response>
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(AuthenticationResultDto), StatusCodes.Status200OK)]
         public async Task<AuthenticationResultDto> Login([FromBody] LoginRequestDto loginDto)
         {

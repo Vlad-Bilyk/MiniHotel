@@ -48,7 +48,19 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.toastr.error('Сталася помилка при вході');
+        switch (err.status) {
+          case 400:
+            this.toastr.error('Неправильний формат даних');
+            break;
+          case 401:
+            this.toastr.error('Неправильний логін або пароль');
+            break;
+          case 404:
+            this.toastr.error('Користувача з таким email не знайдено');
+            break;
+          default:
+            this.toastr.error('Сталася помилка при вході');
+        }
         console.error(err);
       },
     });

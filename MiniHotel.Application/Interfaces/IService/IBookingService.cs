@@ -8,7 +8,7 @@ namespace MiniHotel.Application.Interfaces.IService
 {
     public interface IBookingService
     {
-        Task<BookingDto> CreateBookingAsync(BookingCreateDto bookingcreateDto, string userId);
+        Task<BookingDto> CreateBookingAsync(BookingCreateDto сreateDto, string userId);
         Task<BookingDto> UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus);
         Task<BookingDto> GetBookingAsync(Expression<Func<Booking, bool>> filter);
         Task<PagedResult<BookingDto>> GetBookingsAsync(int pageNumber, int pageSize, string? search = null, BookingStatus? status = null);

@@ -34,6 +34,7 @@ namespace MiniHotel.API.Middlewares
             var problem = exception switch
             {
                 BadRequestException e => CreateProblem(400, "bad-request", e.Message),
+                UnauthorizedAccessException e => CreateProblem(401, "unauthorized", e.Message),
                 NotFoundException e => CreateProblem(404, "not-found", e.Message),
                 ValidationException e => CreateProblem(422, "validation-error", e.Message),
                 DbUpdateConcurrencyException e => CreateProblem(409, "conflict", e.Message),

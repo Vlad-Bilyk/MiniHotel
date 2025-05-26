@@ -183,3 +183,8 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync();
+
+public partial class Program
+{
+    // This partial class is used to allow the Program class to be extended in other files.
+}

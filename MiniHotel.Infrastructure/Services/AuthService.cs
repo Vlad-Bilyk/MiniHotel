@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MiniHotel.Application.DTOs;
+using MiniHotel.Application.Exceptions;
 using MiniHotel.Application.Interfaces.IService;
 using MiniHotel.Domain.Entities;
 using MiniHotel.Domain.Enums;
@@ -40,11 +41,7 @@ namespace MiniHotel.Infrastructure.Services
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser is not null)
             {
-                return new AuthenticationResultDto
-                {
-                    Success = false,
-                    Errors = new List<string> { "Користувач з таким email вже існує." }
-                };
+                throw new BadRequestException("User with this email already exists.");
             }
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -100,24 +97,13 @@ namespace MiniHotel.Infrastructure.Services
 
         public async Task<AuthenticationResultDto> LoginAsync(LoginRequestDto request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null)
-            {
-                return new AuthenticationResultDto
-                {
-                    Success = false,
-                    Errors = new List<string> { "Користувача з таким email не знайдено." }
-                };
-            }
+            var user = await _userManager.FindByEmailAsync(request.Email)
+                ?? throw new NotFoundException("User not found");
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!signInResult.Succeeded)
             {
-                return new AuthenticationResultDto
-                {
-                    Success = false,
-                    Errors = new List<string> { "Невірний пароль або email" }
-                };
+                throw new UnauthorizedAccessException("Wrong login or password");
             }
 
             var token = await GenerateJwtToken(user);
