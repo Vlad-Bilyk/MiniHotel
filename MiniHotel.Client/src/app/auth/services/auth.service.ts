@@ -34,10 +34,9 @@ export class AuthServiceWrapper {
 
   register(
     registerData: RegisterRequestDto
-  ): Observable<AuthenticationResultDto> {
+  ): Observable<void> {
     return this.apiAuthService
-      .register({ body: registerData })
-      .pipe(tap((result) => this.handleAuthSuccess(result)));
+      .register({ body: registerData });
   }
 
   isLoggedIn(): boolean {

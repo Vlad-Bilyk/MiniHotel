@@ -54,12 +54,8 @@ export class RegisterComponent implements OnInit {
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
         next: (res) => {
-          if (res.success && res.token) {
-            this.toastr.success('Реєстрація успішна!');
-            this.location.back();
-          } else {
-            this.toastr.error(res.errors?.[0] ?? 'Помилка при реєстрації');
-          }
+          this.toastr.success('Реєстрація успішна!');
+          this.location.back();
           this.isSubmitting = false;
         },
         error: (err) => {

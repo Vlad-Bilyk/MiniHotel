@@ -6,6 +6,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { AuthServiceWrapper } from '../../../auth/services/auth.service';
+import { DialogService } from '../../../shared/services/dialog.service';
+import {
+  UserFormData,
+  UsersUpdateDialogComponent,
+} from './users-update-dialog/users-update-dialog.component';
+import { RoomFormData } from '../rooms/room-form-dialog/room-form-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -29,7 +35,8 @@ export class UsersComponent implements OnInit {
     private usersService: UsersService,
     private authService: AuthServiceWrapper,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -73,12 +80,33 @@ export class UsersComponent implements OnInit {
 
   goToRegister(): void {
     const isManager = this.authService.hasRole(UserRole.Manager);
-    this.router.navigate(['/auth/register'], { queryParams: { isManager } })
+    this.router.navigate(['/auth/register'], { queryParams: { isManager } });
   }
 
-  // TODO: implement this dialog
-  openEditDialog(user: UserUpdateDto) {
-    this.toastr.info('На даний момент функція не доступна')
+  openEditDialog(user: UserDto) {
+    const dialogData: UserFormData = {
+      formData: {
+        firstName: user.firstName!,
+        lastName: user.lastName!,
+        email: user.email!,
+        phoneNumber: user.phoneNumber!,
+      },
+    };
+
+    this.dialogService
+      .openEntityDialog<UserFormData, UserUpdateDto>(
+        UsersUpdateDialogComponent,
+        dialogData,
+        (data) =>
+          this.usersService.updateUser({
+            id: user.userId!,
+            body: data,
+          }),
+        'Профіль оновлено'
+      )
+      .subscribe(() => {
+        this.loadUsers();
+      });
   }
 
   applyGlobalFilter(value: string) {

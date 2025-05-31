@@ -35,7 +35,7 @@ export class StatusStyleService {
         return 'chip-cancelled';
       case InvoiceStatus.Refunded:
         return 'chip-cancelled';
-      case InvoiceStatus.Undefiend:
+      case InvoiceStatus.Undefined:
         return 'chip-default';
       default:
         return 'chip-default';

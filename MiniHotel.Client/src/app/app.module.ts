@@ -35,6 +35,7 @@ import { BookingDetailsComponent } from './pages/admin/bookings/booking-details/
 import { AddInvoiceItemDialogComponent } from './pages/admin/bookings/booking-details/add-invoice-item-dialog/add-invoice-item-dialog.component';
 
 import { UsersComponent } from './pages/admin/users/users.component';
+import { UsersUpdateDialogComponent } from './pages/admin/users/users-update-dialog/users-update-dialog.component';
 
 import { NightsLabelPipe } from './shared/pipes/labelPipes/nights-label.pipe';
 import { RoomLabelPipe } from './shared/pipes/labelPipes/room-label.pipe';
@@ -147,6 +148,7 @@ const MATERIAL_MODULES = [
     PaymentMethodPipe,
     UploadRoomTypeImageDialogComponent,
     ImagePreviewDialogComponent,
+    UsersUpdateDialogComponent,
   ],
   imports: [
     // Angular core

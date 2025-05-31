@@ -4,7 +4,7 @@
 
 export interface ServiceUpsertDto {
   description?: string | null;
-  isAvailable: boolean;
+  isAvailable?: boolean;
   name: string;
   price?: number;
 }

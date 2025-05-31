@@ -15,6 +15,7 @@ namespace MiniHotel.Infrastructure.Mapping
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<HotelUser, UserDto>().ReverseMap();
+            CreateMap<HotelUser, UserUpdateDto>().ReverseMap();
 
             CreateMap<Room, RoomDto>()
                 .ForMember(dest => dest.RoomCategory, opt => opt.MapFrom(src => src.RoomType.RoomCategory))

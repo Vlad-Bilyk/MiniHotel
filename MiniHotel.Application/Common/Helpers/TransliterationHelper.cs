@@ -2,12 +2,12 @@
 {
     public static class TransliterationHelper
     {
-        private static readonly Dictionary<char, string> _translitMap = new()
+        private static readonly Dictionary<char, string> TranslitMap = new()
         {
             {'а',"a"}, {'б',"b"}, {'в',"v"}, {'г',"h"}, {'ґ',"g"}, {'д',"d"}, {'е',"e"}, {'є',"ye"}, {'ж',"zh"},
             {'з',"z"}, {'и',"y"}, {'і',"i"}, {'ї',"yi"}, {'й',"y"}, {'к',"k"}, {'л',"l"}, {'м',"m"}, {'н',"n"},
             {'о',"o"}, {'п',"p"}, {'р',"r"}, {'с',"s"}, {'т',"t"}, {'у',"u"}, {'ф',"f"}, {'х',"kh"}, {'ц',"ts"},
-            {'ч',"ch"}, {'ш',"sh"}, {'щ',"shch"}, {'ь',""}, {'ю',"yu"}, {'я',"ya"}, {'’',"-"}
+            {'ч',"ch"}, {'ш',"sh"}, {'щ',"sch"}, {'ь',""}, {'ю',"yu"}, {'я',"ya"}, {'’',"-"}
         };
 
         public static string Transliterate(string input)
@@ -17,7 +17,7 @@
 
             foreach (var ch in input)
             {
-                result.Append(_translitMap.ContainsKey(ch) ? _translitMap[ch] : ch);
+                result.Append(TranslitMap.ContainsKey(ch) ? TranslitMap[ch] : ch);
             }
 
             return result.ToString();

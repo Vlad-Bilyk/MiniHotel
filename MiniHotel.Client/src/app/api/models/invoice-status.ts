@@ -8,5 +8,5 @@ export enum InvoiceStatus {
   PartiallyPaid = 'PartiallyPaid',
   Cancelled = 'Cancelled',
   Refunded = 'Refunded',
-  Undefiend = 'Undefiend'
+  Undefined = 'Undefined'
 }

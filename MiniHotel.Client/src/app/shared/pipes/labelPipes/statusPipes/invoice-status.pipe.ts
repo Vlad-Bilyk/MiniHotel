@@ -19,7 +19,7 @@ export class InvoiceStatusPipe implements PipeTransform {
         return 'Скасовано';
       case InvoiceStatus.Refunded:
         return 'Повернення коштів';
-      case InvoiceStatus.Undefiend:
+      case InvoiceStatus.Undefined:
         return 'Невизначено';
       default:
         return value;

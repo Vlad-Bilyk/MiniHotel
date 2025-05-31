@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using MiniHotel.Application.DTOs;
 using MiniHotel.Application.Interfaces.IRepository;
 using MiniHotel.Domain.Constants;
-using MiniHotel.Domain.Entities;
 
 namespace MiniHotel.API.Controllers
 {
@@ -33,7 +32,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            IEnumerable<HotelUser> users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
@@ -51,7 +50,7 @@ namespace MiniHotel.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetUserById(string id)
         {
-            HotelUser user = await _userRepository.GetAsync(r => r.UserId == id);
+            var user = await _userRepository.GetAsync(r => r.UserId == id);
             return Ok(_mapper.Map<UserDto>(user));
         }
 
